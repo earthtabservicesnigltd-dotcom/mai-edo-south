@@ -83,13 +83,13 @@ export function Navbar() {
           <div className="flex items-center gap-2">
            <Link
               href="/sign-in"
-              className="block mt-3 text-[#f97316] bg-white border-2 border-[#f97316] text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#f97316] hover:text-white active:scale-95 transition-all duration-200"
+              className="hidden lg:block mt-3 text-[#f97316] bg-white border-2 border-[#f97316] text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#f97316] hover:text-white active:scale-95 transition-all duration-200"
             >
               Sign In
             </Link>
             <Link
               href="/sign-up"
-              className="block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#015b2d] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
+              className="hidden lg:block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#015b2d] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
             >
               Sign Up
             </Link>

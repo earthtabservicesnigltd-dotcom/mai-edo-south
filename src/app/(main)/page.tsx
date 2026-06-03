@@ -114,6 +114,19 @@ export default function HomePage() {
             <div className="order-1 lg:order-2">
               <div className="relative">
                 <div className="bg-gradient-to-b from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                  
+                  {/* ADC Logo — top left */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <Image
+                      src="/image-3.jpg"
+                      alt="ADC Logo"
+                      width={100}
+                      height={100}
+                      className="object-contain rounded-xl shadow-md w-20 lg:w-25 h-20 lg:h-25"
+                    />
+                  </div>
+
+                  {/* Candidate photo */}
                   <Image
                     src="/image-1-removebg-preview.png"
                     alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
@@ -123,14 +136,15 @@ export default function HomePage() {
                     priority
                   />
                 </div>
-                {/* Badge */}
-                <div className="absolute top-4 right-4 bg-white rounded-2xl p-3 shadow-xl text-center max-w-35">
+
+                {/* MAI Badge — top right */}
+                <div className="absolute top-4 right-4 bg-white rounded-2xl p-3 shadow-xl text-center max-w-25">
                   <Image
                     src="/image_4.png"
                     alt="MAI"
-                    width={80}
-                    height={40}
-                    className="object-contain mx-auto mb-1"
+                    width={60}
+                    height={20}
+                    className="object-contain mx-auto"
                   />
                   <p className="text-[#01381d] font-bold text-[10px] leading-tight">
                     Edo South 2027
