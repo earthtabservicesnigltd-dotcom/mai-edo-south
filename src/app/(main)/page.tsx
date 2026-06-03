@@ -113,7 +113,7 @@ export default function HomePage() {
             {/* Right — candidate photo + badge */}
             <div className="order-1 lg:order-2">
               <div className="relative">
-                <div className="bg-gradient-to-b from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <div className="bg-gradient-to-b h-100 md:h-full from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                   
                   {/* ADC Logo — top left */}
                   <div className="absolute top-4 left-4 z-10">
@@ -132,18 +132,18 @@ export default function HomePage() {
                     alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
                     width={480}
                     height={560}
-                    className="object-contain object-bottom"
+                    className="object-contain object-bottom h-full"
                     priority
                   />
                 </div>
 
                 {/* MAI Badge — top right */}
-                <div className="absolute top-50 right-1 md:top-80 bg-white rounded-2xl p-3 shadow-xl text-center max-w-25">
+                <div className="absolute top-60 right-1 md:top-80 bg-white rounded-2xl p-3 shadow-xl text-center max-w-35">
                   <Image
                     src="/image_4.png"
                     alt="MAI"
-                    width={60}
-                    height={20}
+                    width={70}
+                    height={70}
                     className="object-contain mx-auto"
                   />
                   <p className="text-[#01381d] font-bold text-[10px] leading-tight">
