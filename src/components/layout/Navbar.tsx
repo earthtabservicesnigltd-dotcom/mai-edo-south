@@ -7,11 +7,13 @@ import { usePathname } from 'next/navigation'
 const NAV_LINKS = [
   { label: 'HOME',          href: '/' },
   { label: 'ABOUT MAI',     href: '/about' },
+  { label: 'MANIFESTO',     href: '/manifesto' },
   { label: 'AGENDA',        href: '/agenda' },
   { label: 'NEWS & UPDATES',href: '/news' },
   { label: 'MEDIA',         href: '/media' },
   { label: 'EVENTS',        href: '/events' },
   { label: 'VOLUNTEER',     href: '/volunteer' },
+  { label: 'DONATE',        href: '/donate'},
   { label: 'CONTACT',       href: '/contact' },
 ]
 
@@ -23,7 +25,7 @@ export function Navbar() {
     <>
       {/* Top bar */}
       <div className="bg-[#01381d] text-white text-[13px] py-0 md:py-2.5 px-0 md:px-4">
-        <div className="max-w-6xl mx-auto hidden md:flex items-center justify-between">
+        <div className="max-w-7xl mx-auto hidden md:flex items-center justify-between">
           <span className="hidden sm:block">
             Driven by Experience, Inspired by the People and Committed to Real Representation.
           </span>
@@ -46,7 +48,7 @@ export function Navbar() {
 
       {/* Main navbar */}
       <nav className="bg-[#F7F7F7] sticky top-0 z-50 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-[72px]">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-[72px]">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -79,11 +81,17 @@ export function Navbar() {
 
           {/* Donate button + mobile toggle */}
           <div className="flex items-center gap-2">
-            <Link
-              href="/donate"
-              className="bg-[#f97316] text-white text-[0.75rem] font-bold px-5 py-2 rounded-[10px] hover:bg-[#015b2d] transition-colors"
+           <Link
+              href="/sign-in"
+              className="block mt-3 text-[#f97316] bg-white border-2 border-[#f97316] text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#f97316] hover:text-white active:scale-95 transition-all duration-200"
             >
-              DONATE
+              Sign In
+            </Link>
+            <Link
+              href="/sign-up"
+              className="block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#015b2d] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              Sign Up
             </Link>
             <button
               className="lg:hidden p-2 text-gray-700"
@@ -115,12 +123,18 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/donate"
-              className="block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 rounded-[10px] hover:bg-[#015b2d] transition-colors"
-            >
-              DONATE
-            </Link>
+           <Link
+            href="/sign-in"
+            className="block mt-3 text-[#f97316] bg-white border-2 border-[#f97316] text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#f97316] hover:text-white active:scale-95 transition-all duration-200"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/sign-up"
+            className="block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#015b2d] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            Sign Up
+          </Link>
           </div>
         )}
       </nav>

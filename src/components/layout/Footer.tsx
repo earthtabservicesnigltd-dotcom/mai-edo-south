@@ -4,10 +4,12 @@ import Link from 'next/link'
 const QUICK_LINKS = [
   { label: 'Home',          href: '/' },
   { label: 'About MAI',     href: '/about' },
+  { label: 'MANIFESTO',     href: '/manifesto' },
   { label: 'Agenda',        href: '/agenda' },
   { label: 'News & Updates',href: '/news' },
   { label: 'Media Gallery', href: '/media' },
   { label: 'Events',        href: '/events' },
+  { label: 'DONATE',        href: '/donate'},
   { label: 'Volunteer',     href: '/volunteer' },
   { label: 'Contact',       href: '/contact' },
 ]
