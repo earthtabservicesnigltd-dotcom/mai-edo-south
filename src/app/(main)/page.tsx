@@ -122,7 +122,7 @@ export default function HomePage() {
                       alt="ADC Logo"
                       width={100}
                       height={100}
-                      className="object-contain rounded-xl shadow-md w-20 lg:w-25 h-20 lg:h-25"
+                      className="object-contain rounded-lg shadow-md w-20 lg:w-25 h-20 lg:h-25"
                     />
                   </div>
 
@@ -138,7 +138,7 @@ export default function HomePage() {
                 </div>
 
                 {/* MAI Badge — top right */}
-                <div className="absolute top-4 right-4 bg-white rounded-2xl p-3 shadow-xl text-center max-w-25">
+                <div className="absolute top-50 right-1 md:top-80 bg-white rounded-2xl p-3 shadow-xl text-center max-w-25">
                   <Image
                     src="/image_4.png"
                     alt="MAI"
@@ -236,7 +236,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-heading text-5xl md:text-6xl leading-tight mb-6">
+              <h2 className="font-heading text-4xl md:text-6xl leading-tight mb-6">
                 TOGETHER, LET&apos;S BUILD<br />
                 A GREATER <span className="text-[#f97316]">EDO SOUTH</span>
               </h2>
@@ -245,16 +245,16 @@ export default function HomePage() {
                 for real representation, meaningful development and
                 a better future for our people.
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2">
                 <Link
                   href="/volunteer"
-                  className="bg-[#f97316] text-white font-bold px-4 py-3.5 rounded-xl hover:bg-[#015b2d] transition-colors"
+                  className="bg-[#f97316] text-white font-bold px-2 py-3.5 rounded-xl hover:bg-[#015b2d] transition-colors"
                 >
                   JOIN THE MOVEMENT
                 </Link>
                 <Link
                   href="/donate"
-                  className="border-2 border-gray-800 text-gray-800 font-bold px-8 py-3.5 rounded-xl hover:bg-gray-800 hover:text-white transition-colors"
+                  className="border-2 border-gray-800 text-gray-800 font-bold px-4 py-3.5 rounded-xl hover:bg-gray-800 hover:text-white transition-colors"
                 >
                   DONATE NOW
                 </Link>
