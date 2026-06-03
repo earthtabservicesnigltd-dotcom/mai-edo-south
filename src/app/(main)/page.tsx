@@ -113,7 +113,7 @@ export default function HomePage() {
             {/* Right — candidate photo + badge */}
             <div className="order-1 lg:order-2">
               <div className="relative">
-                <div className="bg-gradient-to-b h-100 md:h-full from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <div className="bg-linear-to-b h-100 md:h-full from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                   
                   {/* ADC Logo — top left */}
                   <div className="absolute top-4 left-4 z-10">
@@ -128,17 +128,17 @@ export default function HomePage() {
 
                   {/* Candidate photo */}
                   <Image
-                    src="/image-1-removebg-preview.png"
-                    alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
-                    width={480}
-                    height={560}
-                    className="object-contain object-bottom h-full"
-                    priority
-                  />
+                  src="/honourable.jpeg"
+                  alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
+                  width={480}
+                  height={560}
+                  className="object-cover object-top w-full h-full"
+                  priority
+                />
                 </div>
 
                 {/* MAI Badge — top right */}
-                <div className="absolute top-60 right-1 md:top-80 bg-white rounded-2xl p-3 shadow-xl text-center max-w-35">
+                <div className="absolute top-60 right-1 md:top-95 bg-white rounded-2xl p-3 shadow-xl text-center max-w-35">
                   <Image
                     src="/image_4.png"
                     alt="MAI"
@@ -248,13 +248,13 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-2">
                 <Link
                   href="/volunteer"
-                  className="bg-[#f97316] text-white font-bold px-2 py-3.5 rounded-xl hover:bg-[#015b2d] transition-colors"
+                  className="bg-[#f97316] text-white px-2 py-3.5 rounded-xl hover:bg-[#015b2d] transition-colors"
                 >
                   JOIN THE MOVEMENT
                 </Link>
                 <Link
                   href="/donate"
-                  className="border-2 border-gray-800 text-gray-800 font-bold px-4 py-3.5 rounded-xl hover:bg-gray-800 hover:text-white transition-colors"
+                  className="border-2 border-gray-800 text-gray-800 px-4 py-3.5 rounded-xl hover:bg-gray-800 hover:text-white transition-colors"
                 >
                   DONATE NOW
                 </Link>
