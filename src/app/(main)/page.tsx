@@ -61,7 +61,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="relative min-h-screen bg-[#01381d] overflow-hidden flex items-center">
+      <section className="relative min-h-screen  overflow-hidden flex items-center">
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
