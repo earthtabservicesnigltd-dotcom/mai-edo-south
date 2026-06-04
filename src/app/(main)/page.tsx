@@ -128,7 +128,7 @@ export default function HomePage() {
 
                   {/* Candidate photo */}
                   <Image
-                  src="/image-20.png"
+                  src="/image-24.png"
                   alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
                   width={480}
                   height={560}
@@ -138,7 +138,7 @@ export default function HomePage() {
                 </div>
 
                 {/* MAI Badge — top right */}
-                <div className="absolute top-60 right-1 md:top-95 bg-white rounded-2xl p-3 shadow-xl text-center max-w-35">
+                <div className="absolute right-1 bottom-4 bg-white rounded-2xl p-3 shadow-xl text-center max-w-35">
                   <Image
                     src="/image_4.png"
                     alt="MAI"
