@@ -13,11 +13,38 @@ const bebasNeue = Bebas_Neue({
   display: 'swap',
 });
 
+const SITE_NAME = 'MAI EDO SOUTH'
+const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mai4senate.com'
+const SITE_DESC = 'Driven by Experience, Inspired by the People and Committed to Real Representation. Vote MAI for Edo South Senatorial District 2027.'
+
 export const metadata: Metadata = {
   title: 'MAI Edo South 2027 — Hon. Matthew Aigbuhenze Iduoriyekemwen',
   description: 'Driven by Experience, Inspired by the People and Committed to Real Representation. Vote MAI for Edo South Senatorial District 2027.',
   keywords: ['MAI', 'Edo South', '2027', 'Senate', 'Matthew Aigbuhenze Iduoriyekemwen', 'ADC', 'Edo State'],
-
+  authors: [{name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_NG',
+    url: SITE_URL,
+    title: SITE_URL,
+    description: SITE_DESC,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@PinnacleNewspaper',
+    creator: '@PinnacleNewspaper',
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+  },
+  alternates: { canonical: SITE_URL },
 };
 
 export default function RootLayout({
