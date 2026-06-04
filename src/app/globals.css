@@ -28,6 +28,14 @@
   --color-dark-green: var(--dark-green);
   --color-orange: var(--orange);
 
+    --color-ink:         oklch(0.14 0 0);        /* #1a1a1a */
+    --color-ink-light:   oklch(0.32 0 0);        /* #444 */
+    --color-ink-muted:   oklch(0.50 0 0);        /* #767676 */
+    --color-ink-faint:   oklch(0.62 0 0);        /* #999 */
+    --color-rule:        oklch(0.89 0 0);        /* #e0e0e0 */
+      --color-navy:        oklch(0.28 0.09 255);   /* #1B2D5E */
+    --color-navy-light:  oklch(0.38 0.09 255);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +89,14 @@
 
   .max-w-site {
     max-width: var(--max-width-site);
+  }
+
+  @layer components {
+      .field {
+        @apply w-full border rounded px-3 py-2 text-sm
+              focus:outline-none focus:ring-1 focus:ring-navy focus:border-navy
+              transition-colors placeholder:text-ink-faint bg-white;
+      }
   }
 
   /* Preloader */

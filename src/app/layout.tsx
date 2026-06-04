@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const outfit = Outfit({subsets:['latin'], variable:'--font-outfit', display: 'swap'});
 
@@ -30,7 +31,9 @@ export default function RootLayout({
       className={`${outfit.variable} ${bebasNeue.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}
+        <Toaster position="bottom-right" richColors/>
+      </body>
     </html>
   );
 }

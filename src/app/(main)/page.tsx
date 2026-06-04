@@ -118,7 +118,7 @@ export default function HomePage() {
                   {/* ADC Logo — top left */}
                   <div className="absolute top-4 left-4 z-10">
                     <Image
-                      src="/image-3.jpg"
+                      src="/image-21.jpg"
                       alt="ADC Logo"
                       width={100}
                       height={100}
@@ -128,7 +128,7 @@ export default function HomePage() {
 
                   {/* Candidate photo */}
                   <Image
-                  src="/honourable.jpeg"
+                  src="/image-20.png"
                   alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
                   width={480}
                   height={560}

@@ -1,8 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { supabaseBrowser } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
 
 const NAV_LINKS = [
   { label: 'HOME',          href: '/' },
@@ -18,8 +20,26 @@ const NAV_LINKS = [
 ]
 
 export function Navbar() {
+  const router = useRouter();
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const supabase = supabaseBrowser();
+    supabase.auth.getUser().then(({data}) => setUser(data.user));
+    const {data: {subscription}} = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    })
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = supabaseBrowser();
+    await supabase.auth.signOut();
+    router.push('/');
+    router.refresh();
+  }
 
   return (
     <>
@@ -81,18 +101,38 @@ export function Navbar() {
 
           {/* Donate button + mobile toggle */}
           <div className="flex items-center gap-2">
-           <Link
-              href="/sign-in"
-              className="hidden lg:block mt-3 text-[#f97316] bg-white border-2 border-[#f97316] text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#f97316] hover:text-white active:scale-95 transition-all duration-200"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/sign-up"
-              className="hidden lg:block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#015b2d] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              Sign Up
-            </Link>
+            {user ? (
+                <>
+                  <Link
+                    href="/account"
+                    className="text-[12px] font-medium text-gray-700 hover:text-[#f97316] transition-colors"
+                  >
+                    Hello, {user.user_metadata?.first_name?.split(' ')[0] ?? 'Account'}
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-[12px] font-semibold text-[#f97316] cursor-pointer border border-[#f97316] px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    Sign out
+                  </button>
+                </>
+            ) : (
+              <>
+                 <Link
+                  href="/sign-in"
+                  className="hidden lg:block mt-3 text-[#f97316] bg-white border-2 border-[#f97316] text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#f97316] hover:text-white active:scale-95 transition-all duration-200"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="hidden lg:block mt-3 bg-[#f97316] text-white text-center font-bold py-2.5 px-4 rounded-[10px] hover:bg-[#015b2d] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          
             <button
               className="lg:hidden p-2 text-gray-700"
               onClick={() => setMenuOpen(!menuOpen)}

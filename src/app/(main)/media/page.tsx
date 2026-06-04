@@ -15,7 +15,7 @@ const GALLERY_ITEMS = [
     id: 1,
     type: 'image',
     category: 'campaign',
-    src: '/IMG-20260529-WA0007.jpg',
+    src: '/img-1.jpeg',
     title: 'MAI Campaign Portrait',
     caption: 'Hon. Matthew Aigbuhenze Iduoriyekemwen',
   },
@@ -23,7 +23,7 @@ const GALLERY_ITEMS = [
     id: 2,
     type: 'image',
     category: 'campaign',
-    src: '/IMG-20260529-WA0008.jpg',
+    src: '/img-2.jpeg',
     title: 'Campaign Photo',
     caption: 'MAI for Edo South Senate 2027',
   },
@@ -31,7 +31,7 @@ const GALLERY_ITEMS = [
     id: 3,
     type: 'image',
     category: 'community',
-    src: '/Image-2.png',
+    src: '/img-3.jpeg',
     title: 'Community Rally',
     caption: 'Supporters rally for MAI across Edo South',
   },
@@ -39,7 +39,7 @@ const GALLERY_ITEMS = [
     id: 4,
     type: 'image',
     category: 'campaign',
-    src: '/image.png',
+    src: '/img-4.jpeg',
     title: 'MAI in Traditional Attire',
     caption: 'Hon. MAI in traditional Edo regalia',
   },
@@ -47,7 +47,7 @@ const GALLERY_ITEMS = [
     id: 5,
     type: 'image',
     category: 'campaign',
-    src: '/image-1-removebg-preview.png',
+    src: '/img-5.jpeg',
     title: 'Official Campaign Portrait',
     caption: 'Official portrait of the senatorial candidate',
   },
@@ -74,7 +74,7 @@ export default function MediaPage() {
   return (
     <>
       {/* Page Hero */}
-      <section className="bg-gradient-to-br from-[#01381d] to-[#015b2d] py-20 px-4 text-white relative overflow-hidden">
+      <section className="bg-linear-to-br from-[#01381d] to-[#015b2d] py-20 px-4 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#f97316]/10 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="max-w-6xl mx-auto relative z-10">
