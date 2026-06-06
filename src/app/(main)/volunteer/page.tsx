@@ -161,7 +161,7 @@ export default function VolunteerPage() {
       </section>
 
       {/* Roles */}
-      <section className="py-20 bg-white">
+      <section className="hidden lg:block py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
             <p className="text-[#015b2d] font-bold text-sm uppercase tracking-widest mb-2">How You Can Help</p>
