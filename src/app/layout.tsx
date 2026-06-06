@@ -3,6 +3,13 @@ import { Bebas_Neue, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import { Dancing_Script } from 'next/font/google'
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-dancing',
+})
 
 const outfit = Outfit({subsets:['latin'], variable:'--font-outfit', display: 'swap'});
 
@@ -55,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${bebasNeue.variable} antialiased`}
+      className={`${outfit.variable} ${bebasNeue.variable} ${dancingScript.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">{children}

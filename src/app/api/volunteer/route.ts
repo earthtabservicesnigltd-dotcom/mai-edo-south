@@ -10,19 +10,22 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const {
-      first_name, last_name, email, phone,
-      location, lga, availability,
-      area_of_interest, message, photoBase64
+      first_name, last_name, gender, date_of_birth,
+      phone, whatsapp_number, email,
+      residential_address, lga, ward, polling_unit, community,
+      motivation, physical_availability,
+      previous_experience, experience_details,
+      volunteer_areas, skills,
+      commitment, photoBase64,
     } = body
 
-    if (!first_name || !last_name || !email || !phone || !location || !lga || !availability || !area_of_interest) {
+    if (!first_name || !last_name || !gender || !date_of_birth || !phone || !lga || !ward || !physical_availability) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     let photo_url = ''
 
     if (photoBase64) {
-      // Convert base64 to buffer
       const base64Data = photoBase64.split(',')[1]
       const mimeType = photoBase64.split(';')[0].split(':')[1]
       const buffer = Buffer.from(base64Data, 'base64')
@@ -34,7 +37,7 @@ export async function POST(req: NextRequest) {
         .upload(fileName, buffer, { contentType: mimeType })
 
       if (uploadError) {
-        console.log('Storage error:', uploadError) // 👈
+        console.log('Storage error:', uploadError)
         return NextResponse.json({ error: 'Photo upload failed' }, { status: 500 })
       }
 
@@ -45,20 +48,28 @@ export async function POST(req: NextRequest) {
       photo_url = publicUrl
     }
 
-    const { error } = await supabase.from('volunteers').insert({
-      first_name, last_name, email, phone,
-      location, lga, availability,
-      area_of_interest, message, photo_url
-    })
+    const { data: volunteer, error } = await supabase
+      .from('volunteers')
+      .insert({
+        first_name, last_name, gender, date_of_birth,
+        phone, whatsapp_number, email,
+        residential_address, lga, ward, polling_unit, community,
+        motivation, physical_availability,
+        previous_experience, experience_details,
+        volunteer_areas, skills,
+        commitment, photo_url,
+      })
+      .select()
+      .single()
 
     if (error) {
-      console.log('Insert error:', error) // 👈
+      console.log('Insert error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true }, { status: 201 })
+    return NextResponse.json({ success: true, volunteer }, { status: 201 })
   } catch (err) {
-        console.log('Caught error:', err) // 👈 this is the key one
-        return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
+    console.log('Caught error:', err)
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }
 }
