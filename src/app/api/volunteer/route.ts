@@ -23,6 +23,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    const {data: existing} = await supabase.from('volunteers').select('id').eq('email', email).single();
+
+    if(existing) {
+      return NextResponse.json({error: 'This email is already registered as a volunteer.'}, {status: 409})
+    }
+
     let photo_url = ''
 
     if (photoBase64) {

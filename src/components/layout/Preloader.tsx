@@ -7,7 +7,7 @@ export function Preloader() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(false)
-    }, 2000)
+    }, 1000)
     return () => clearTimeout(timer)
   }, [])
 

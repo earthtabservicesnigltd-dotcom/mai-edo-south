@@ -9,7 +9,7 @@ const CONTACT_INFO = [
       </svg>
     ),
     label: 'Campaign Office',
-    value: 'Benin City, Edo State, Nigeria',
+    value: 'House 19 Anineh Avenue off GRA, Benin City',
   },
   {
     icon: (

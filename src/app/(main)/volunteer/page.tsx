@@ -50,6 +50,7 @@ export default function VolunteerPage() {
     motivation: '', physical_availability: '',
     previous_experience: false, experience_details: '',
     commitment: false,
+    declaration: false,
   })
   const [volunteerAreas, setVolunteerAreas] = useState<string[]>([])
   const [skills, setSkills] = useState<string[]>([])
@@ -87,6 +88,12 @@ export default function VolunteerPage() {
       toast.error('Please agree to the commitment declaration before submitting.')
       return
     }
+
+     if (!form.declaration) {
+      toast.error('Please agree to the declaration before submitting.')
+      return
+    }
+
     if (volunteerAreas.length === 0) {
       toast.error('Please select at least one area of service.')
       return
@@ -195,15 +202,15 @@ export default function VolunteerPage() {
               <div className="flex flex-col items-center gap-3 pb-6 border-b border-gray-100">
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
+                  className="w-36 h-36 rounded-full border-4 border-dashed border-[#f97316] flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
                 >
                   {photoPreview ? (
-                    <Image src={photoPreview} alt="Preview" width={96} height={96} className="w-full h-full object-cover" />
+                    <Image src={photoPreview} alt="Preview" width={100} height={100} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="text-center"><div className="text-2xl">📷</div><p className="text-xs text-gray-400 mt-1">Upload Photo</p></div>
+                    <div className="text-center"><div className="text-2xl">📷</div><p className="text-md text-gray-400 mt-1">Upload Photo</p></div>
                   )}
                 </div>
-                <p className="text-xs text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
+                <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" />
               </div>
 
@@ -250,7 +257,7 @@ export default function VolunteerPage() {
 
                   <div>
                     <label className={labelClass}>Email Address</label>
-                    <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="your@email.com" className={inputClass} />
+                    <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="your@email.com" required className={inputClass} />
                   </div>
 
                   <div>
@@ -379,9 +386,18 @@ export default function VolunteerPage() {
                     I support the vision of <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> and agree to volunteer peacefully and responsibly in support of the campaign.
                   </span>
                 </label>
-                <span className="text-sm text-gray-700 leading-relaxed mt-2">
-                    I hereby declare that the information provided is true and correct to the best of my knowledge.
+                <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="declaration"
+                  checked={form.declaration}
+                  onChange={handleChange}
+                  className="w-4 h-4 accent-[#f97316] mt-0.5 shrink-0"
+                />
+                <span className="text-sm text-gray-700 leading-relaxed">
+                  I hereby declare that the information provided is true and correct to the best of my knowledge.
                 </span>
+              </label>
               </div>
 
               <button
