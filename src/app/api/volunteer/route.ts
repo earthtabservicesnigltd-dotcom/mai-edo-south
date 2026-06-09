@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { sendMail } from '@/lib/mail'
+import { volunteerConfirmationEmail, volunteerAdminEmail } from '@/lib/email-templates'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -72,6 +74,29 @@ export async function POST(req: NextRequest) {
       console.log('Insert error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    // After successful insert, send emails
+    await Promise.all([
+      sendMail({
+        to: email,
+        subject: 'Welcome to the MAI Movement — Application Received',
+        html: volunteerConfirmationEmail(first_name, volunteer.volunteer_id),
+      }),
+      sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: `New Volunteer Application — ${first_name} ${last_name}`,
+        html: volunteerAdminEmail({
+          firstName: first_name,
+          lastName: last_name,
+          email,
+          phone,
+          lga,
+          ward,
+          volunteerId: volunteer.volunteer_id,
+          volunteerAreas: volunteer_areas,
+        }),
+      }),
+    ])
 
     return NextResponse.json({ success: true, volunteer }, { status: 201 })
   } catch (err) {

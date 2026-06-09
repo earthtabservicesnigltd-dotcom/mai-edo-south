@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import { useSidebar } from '@/components/ui/sidebar'
+import { toast } from 'sonner'
 
 interface Volunteer {
   id: string
@@ -69,6 +70,19 @@ export default function VolunteersPage() {
     setVolunteers(prev => prev.map(v => v.id === id ? { ...v, status } : v))
   }
 
+  async function approveAll() {
+    const res = await fetch('/api/admin/volunteers', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ approveAll: true }),
+    })
+    const data = await res.json()
+    if (res.ok) {
+      setVolunteers(prev => prev.map(v => v.status === 'pending' ? { ...v, status: 'approved' } : v))
+      toast.success(`${data.approved} volunteer(s) approved successfully.`)
+    }
+  }
+
   const STATUS_TABS = ['all', 'pending', 'approved', 'rejected']
 
   return (
@@ -98,12 +112,20 @@ export default function VolunteersPage() {
             <CardTitle className="font-heading text-xl text-[#01381d]">
               ALL VOLUNTEERS <span className="text-ink-muted font-sans text-sm font-normal">({filtered.length})</span>
             </CardTitle>
-            <Input
-              placeholder="Search by name, email, ID, LGA..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="field sm:w-72"
-            />
+            <div className="flex gap-3 items-center">
+              <button
+                onClick={approveAll}
+                className="px-4 py-2 bg-green-600 text-white text-xs font-bold rounded-xl hover:bg-green-700 transition-colors uppercase tracking-wider whitespace-nowrap"
+              >
+                ✅ Approve All Pending
+              </button>
+              <Input
+                placeholder="Search by name, email, ID, LGA..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="field sm:w-72"
+              />
+            </div>
           </div>
 
           {/* Status tabs */}
