@@ -148,7 +148,7 @@ const SignUp = () => {
               <p className="text-sm text-ink-muted leading-relaxed">
                 We sent a confirmation link to <strong>{form.email}</strong>. Click it to activate your account.
               </p>
-              <Link href="/sign" className="text-[#f97316] text-sm hover:underline block mt-4">
+              <Link href="/sign-in" className="text-[#f97316] text-sm hover:underline block mt-4">
                 Back to sign in
               </Link>
             </CardContent>

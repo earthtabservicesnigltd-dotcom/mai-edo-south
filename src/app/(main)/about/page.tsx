@@ -75,7 +75,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="bg-gradient-to-b from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/IMG-20260529-WA0008.jpg"
+                  src="/img-2.jpeg"
                   alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
                   width={500}
                   height={750}
