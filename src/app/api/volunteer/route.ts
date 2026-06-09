@@ -25,10 +25,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const {data: existing} = await supabase.from('volunteers').select('id').eq('email', email).single();
+    const { data: existing } = await supabase
+      .from('volunteers')
+      .select('id')
+      .eq('email', email)
+      .single()
 
-    if(existing) {
-      return NextResponse.json({error: 'This email is already registered as a volunteer.'}, {status: 409})
+    if (existing) {
+      return NextResponse.json({ error: 'This email is already registered as a volunteer.' }, { status: 409 })
     }
 
     let photo_url = ''
@@ -75,32 +79,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // After successful insert, send emails
-    await Promise.all([
-      sendMail({
-        to: email,
-        subject: 'Welcome to the MAI Movement — Application Received',
-        html: volunteerConfirmationEmail(first_name, volunteer.volunteer_id),
-      }),
-      sendMail({
-        to: process.env.ADMIN_EMAIL!,
-        subject: `New Volunteer Application — ${first_name} ${last_name}`,
-        html: volunteerAdminEmail({
-          firstName: first_name,
-          lastName: last_name,
-          email,
-          phone,
-          lga,
-          ward,
-          volunteerId: volunteer.volunteer_id,
-          volunteerAreas: volunteer_areas,
+    // Send emails — don't fail the request if email fails
+    try {
+      await Promise.all([
+        sendMail({
+          to: email,
+          subject: 'Welcome to the MAI Movement — Application Received',
+          html: volunteerConfirmationEmail(first_name, volunteer.volunteer_id),
         }),
-      }),
-    ])
+        sendMail({
+          to: process.env.ADMIN_EMAIL!,
+          subject: `New Volunteer Application — ${first_name} ${last_name}`,
+          html: volunteerAdminEmail({
+            firstName: first_name,
+            lastName: last_name,
+            email,
+            phone,
+            lga,
+            ward,
+            volunteerId: volunteer.volunteer_id,
+            volunteerAreas: volunteer_areas,
+          }),
+        }),
+      ])
+    } catch (emailErr: any) {
+      console.log('Email error:', emailErr.message)
+    }
 
     return NextResponse.json({ success: true, volunteer }, { status: 201 })
-  } catch (err) {
-    console.log('Caught error:', err)
+
+  } catch (err: any) {
+    console.log('Caught error:', err.message)
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }
 }
