@@ -4,21 +4,27 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = new URL(req.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/confirm'
+  const token_hash = searchParams.get('token_hash')
+  const type = searchParams.get('type')
 
-  if (code) {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
-    if (error) {
-      console.log('Exchange error:', error.message)
-    } else {
-      return NextResponse.redirect(new URL(next, origin))
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({ token_hash, type: type as any })
+    if (!error) {
+      return NextResponse.redirect(new URL('/confirm', origin))
     }
   }
 
-  return NextResponse.redirect(new URL('/login?error=confirmation_failed', origin))
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      return NextResponse.redirect(new URL('/confirm', origin))
+    }
+  }
+
+  return NextResponse.redirect(new URL('/confirm', origin))
 }
