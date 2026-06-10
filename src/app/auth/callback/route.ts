@@ -1,17 +1,18 @@
-import { createClient } from '@supabase/supabase-js'
+import { supabaseBrowser } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
+  const { searchParams, origin } = new URL(req.url)
   const code = searchParams.get('code')
+  const next = searchParams.get('next') ?? '/confirm'
 
   if (code) {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-    await supabase.auth.exchangeCodeForSession(code)
+    const supabase = supabaseBrowser()
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      return NextResponse.redirect(new URL(next, origin))
+    }
   }
 
-  return NextResponse.redirect(new URL('/confirm', req.url))
+  return NextResponse.redirect(new URL('/login?error=confirmation_failed', origin))
 }

@@ -44,6 +44,7 @@ export async function PATCH(req: NextRequest) {
       if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
 
       // Send approval emails to all
+     try {
       await Promise.all(
         (pending ?? []).map(v =>
           sendMail({
@@ -53,6 +54,9 @@ export async function PATCH(req: NextRequest) {
           })
         )
       )
+    } catch (emailErr: any) {
+      console.log('Approve all email error:', emailErr.message)
+    }
 
       return NextResponse.json({ success: true, approved: pending?.length ?? 0 })
     }
@@ -74,18 +78,22 @@ export async function PATCH(req: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     // Send email based on status
-    if (status === 'approved') {
-      await sendMail({
-        to: volunteer.email,
-        subject: 'Your Volunteer Application Has Been Approved — MAI Edo South',
-        html: volunteerApprovalEmail(volunteer.first_name, volunteer.volunteer_id),
-      })
-    } else if (status === 'rejected') {
-      await sendMail({
-        to: volunteer.email,
-        subject: 'Update on Your Volunteer Application — MAI Edo South',
-        html: volunteerRejectionEmail(volunteer.first_name),
-      })
+      try {
+      if (status === 'approved') {
+        await sendMail({
+          to: volunteer.email,
+          subject: 'Your Volunteer Application Has Been Approved — MAI Edo South',
+          html: volunteerApprovalEmail(volunteer.first_name, volunteer.volunteer_id),
+        })
+      } else if (status === 'rejected') {
+        await sendMail({
+          to: volunteer.email,
+          subject: 'Update on Your Volunteer Application — MAI Edo South',
+          html: volunteerRejectionEmail(volunteer.first_name),
+        })
+      }
+    } catch (emailErr: any) {
+      console.log('Email error:', emailErr.message)
     }
 
     return NextResponse.json({ success: true })
