@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 const CONTACT_INFO = [
   {
@@ -49,9 +50,27 @@ export default function ContactPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    await new Promise(r => setTimeout(r, 1000))
-    setSubmitted(true)
-    setLoading(false)
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      if (!res.ok) throw new Error()
+
+      setSubmitted(true)
+      toast.success('Message received!', {
+        description: 'Our team will get back to you within 24 hours.',
+      })
+    } catch {
+      toast.error('Something went wrong.', {
+        description: 'Please try again or reach us directly via phone.',
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
