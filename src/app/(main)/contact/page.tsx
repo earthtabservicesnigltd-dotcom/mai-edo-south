@@ -27,7 +27,7 @@ const CONTACT_INFO = [
       </svg>
     ),
     label: 'Email',
-    value: 'info@maiedosouth2027.com',
+    value: 'info@mai4senate.com',
   },
 ]
 
@@ -69,7 +69,7 @@ export default function ContactPage() {
           </h1>
           <p className="text-gray-200 text-lg max-w-xl">
             Have a question, suggestion or want to get involved?
-            We'd love to hear from you.
+            We&apos;d love to hear from you.
           </p>
         </div>
       </section>
