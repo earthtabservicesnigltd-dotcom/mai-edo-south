@@ -1,15 +1,3 @@
-import nodemailer from 'nodemailer'
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-})
-
 interface MailOptions {
   to: string
   subject: string
@@ -17,21 +5,43 @@ interface MailOptions {
 }
 
 export async function sendMail({ to, subject, html }: MailOptions) {
-  console.log('Sending email to:', to)
-  console.log('SMTP Host:', process.env.SMTP_HOST)
-  console.log('SMTP Port:', process.env.SMTP_PORT)
-  console.log('SMTP User:', process.env.SMTP_USER)
+  const apiKey = process.env.BREVO_API_KEY
+
+  if (!apiKey) {
+    console.error('Email error: BREVO_API_KEY is not defined in environment variables.')
+    return
+  }
 
   try {
-    const result = await transporter.sendMail({
-      from: `MAI Edo South Campaign <noreply@mai4senate.com>`,
-      to,
-      subject,
-      html,
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': apiKey,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: {
+          name: 'MAI Edo South Campaign',
+          email: 'noreply@mai4senate.com',
+        },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: html,
+      }),
     })
-    console.log('Email sent:', result.messageId)
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      // This will print the EXACT error reason from Brevo (e.g. Account suspended, domain unverified)
+      console.log('Brevo API Refusal Details:', JSON.stringify(data))
+      throw new Error(data.message || 'Brevo API call failed')
+    }
+
+    console.log('Email sent successfully via Brevo HTTP API! Message ID:', data.messageId)
   } catch (err: any) {
-    console.log('SMTP Error:', err.message)
+    console.error('Mail trigger failed:', err.message)
     throw err
   }
 }
