@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendMail } from '@/lib/mail'
-import { maiListensAcknowledgementEmail } from '@/lib/email-templates';
+import { maiListensAcknowledgementEmail, maiListensAdminEmail } from '@/lib/email-templates';
 
 // ── GET — fetch all submissions (admin) ──
 export async function GET() {
@@ -45,6 +45,27 @@ export async function POST(req: NextRequest) {
       } catch (emailErr: any) {
         console.log('Acknowledgement email error:', emailErr.message)
       }
+    }
+
+    // Notify admin of new submission
+    try {
+      await sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: `New MAI Listens Submission — ${body.full_name}`,
+        html: maiListensAdminEmail({
+          fullName: body.full_name,
+          email: body.email,
+          phone: body.phone,
+          categories: body.categories,
+          issue: body.issue,
+          lga: body.lga,
+          ward: body.ward,
+          community: body.community,
+          priority: body.priority,
+        }),
+      })
+    } catch (emailErr: any) {
+      console.log('Admin notification error:', emailErr.message)
     }
 
     return NextResponse.json({ success: true, submission: data }, { status: 201 })

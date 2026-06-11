@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useSidebar } from '@/components/ui/sidebar'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 interface Submission {
   id: string
@@ -36,6 +37,7 @@ export default function MAIListensPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [expanded, setExpanded] = useState<string | null>(null)
   const { toggleSidebar } = useSidebar()
+  const router = useRouter()
 
   useEffect(() => {
     async function fetchSubmissions() {
@@ -167,7 +169,12 @@ export default function MAIListensPage() {
                         {s.status === 'unread' && (
                           <span className="w-2 h-2 rounded-full bg-[#f97316] shrink-0" />
                         )}
-                        <span className="font-semibold text-sm">{s.full_name}</span>
+                       <span
+                        className="font-semibold text-sm cursor-pointer hover:text-[#f97316] transition-colors"
+                        onClick={() => router.push(`/admin/mai-listens/${s.id}`)}
+                      >
+                        {s.full_name}
+                      </span>
                         <span className="text-ink-muted text-xs">{s.email}</span>
                         {s.phone && <span className="text-ink-muted text-xs">{s.phone}</span>}
                       </div>

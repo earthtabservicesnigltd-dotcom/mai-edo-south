@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import VolunteerIDCard from '@/components/VolunteerIDCard'
+import Loader from '@/components/Loader'
 
 export default function VolunteerCardPage() {
   const { id } = useParams()
@@ -27,7 +28,7 @@ export default function VolunteerCardPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="loader" />
+        <Loader/>
       </div>
     )
   }

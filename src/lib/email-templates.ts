@@ -369,6 +369,13 @@ export function diasporaApprovalEmail(fullName: string, diasporaId: string) {
           <p style="margin: 8px 0 0; font-size: 28px; font-weight: 900; color: #f97316; letter-spacing: 2px;">${diasporaId}</p>
         </div>
 
+         <div style="text-align: center; margin: 0 0 32px;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL}/diaspora/card/${diasporaId.replace(/\//g, '-')}"
+             style="display: inline-block; background: #01381d; color: #ffffff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
+            Download Your ID Card
+          </a>
+        </div>
+
         <!-- Sign off -->
         <div style="border-top: 1px solid #e5e5e5; padding-top: 24px;">
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
@@ -486,6 +493,98 @@ export function maiListensAcknowledgementEmail(fullName: string) {
         </p>
       </div>
 
+    </div>
+  `
+}
+
+export function maiListensAdminEmail(data: {
+  fullName: string
+  email?: string
+  phone: string
+  categories: string[]
+  issue: string
+  lga: string
+  ward: string
+  community: string
+  priority: string
+}) {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden;">
+      <div style="background: #01381d; padding: 24px;">
+        <h2 style="color: #ffffff; margin: 0;">New MAI Listens Submission</h2>
+        <p style="color: #f97316; margin: 4px 0 0; font-size: 12px; letter-spacing: 2px;">MAI EDO SOUTH 2027</p>
+      </div>
+      <div style="padding: 24px; background: #ffffff;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 12px; text-transform: uppercase; width: 40%;">From</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; font-weight: bold;">${data.fullName}</td>
+          </tr>
+          ${data.email ? `<tr><td style="padding: 10px; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 12px; text-transform: uppercase;">Email</td><td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${data.email}</td></tr>` : ''}
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 12px; text-transform: uppercase;">Phone</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${data.phone}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 12px; text-transform: uppercase;">Location</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${data.community}, ${data.ward}, ${data.lga}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 12px; text-transform: uppercase;">Categories</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${data.categories?.join(', ')}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 12px; text-transform: uppercase;">Priority</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; font-weight: bold; color: #f97316;">${data.priority}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; color: #888; font-size: 12px; text-transform: uppercase;">Issue</td>
+            <td style="padding: 10px; line-height: 1.7;">${data.issue}</td>
+          </tr>
+        </table>
+        <div style="margin-top: 24px; text-align: center;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL}/admin/mai-listens"
+             style="background: #01381d; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
+            View in Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  `
+}
+
+export function maiListensReplyEmail(fullName: string, reply: string) {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden;">
+      <div style="background: #01381d; padding: 32px; text-align: center;">
+        <img src="https://www.mai4senate.com/image_4.png" alt="MAI Logo" style="height: 70px; width: auto; margin-bottom: 16px;" />
+        <h1 style="color: #ffffff; font-size: 32px; margin: 0; letter-spacing: 4px;">MAI</h1>
+        <p style="color: #f97316; font-size: 11px; letter-spacing: 3px; margin: 6px 0 0; text-transform: uppercase;">MAI Listens</p>
+      </div>
+      <div style="padding: 40px 32px; background: #ffffff;">
+        <h2 style="color: #111; font-size: 24px; margin: 0 0 24px;">Dear ${fullName},</h2>
+        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
+          Thank you for reaching out through MAI Listens. We have reviewed your submission and would like to share the following response:
+        </p>
+        <div style="background: #f5f5f5; border-left: 4px solid #01381d; border-radius: 8px; padding: 20px 24px; margin: 24px 0; line-height: 1.8; color: #333;">
+          ${reply}
+        </div>
+        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
+          We remain committed to addressing the needs of our communities across Edo South. Thank you for your continued support.
+        </p>
+        <div style="border-top: 1px solid #e5e5e5; padding-top: 24px; margin-top: 32px;">
+          <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mathew Aigbuhenze Iduoriyekemwen</p>
+          <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
+          <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
+        </div>
+      </div>
+      <div style="background: #01381d; padding: 20px 32px; text-align: center;">
+        <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">
+          © 2027 MAI Edo South Campaign. All Rights Reserved.<br/>
+          55, Second East Circular Road, Benin City, Edo State, Nigeria.
+        </p>
+      </div>
     </div>
   `
 }
