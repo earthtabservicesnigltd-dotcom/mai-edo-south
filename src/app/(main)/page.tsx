@@ -97,13 +97,13 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/about"
-                  className="bg-[#f97316] text-white font-bold px-8 py-3.5 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors"
+                  className="bg-[#f97316] text-white font-bold px-4 py-3.5 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors"
                 >
                   ABOUT MAI
                 </Link>
                 <Link
                   href="/agenda"
-                  className="border-2 border-white text-white font-bold px-8 py-3.5 rounded-xl hover:bg-white hover:text-[#01381d] transition-colors"
+                  className="border-2 border-white text-white font-bold px-4 py-3.5 rounded-xl hover:bg-white hover:text-[#01381d] transition-colors"
                 >
                   OUR AGENDA
                 </Link>
