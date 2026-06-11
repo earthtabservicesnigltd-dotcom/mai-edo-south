@@ -2,7 +2,11 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-const LGAS = ['Oredo', 'Ikpoba-Okha', 'Egor', 'Ovia North East', 'Ovia South West', 'Uhunmwonde', 'Orhionmwon']
+const LGAS = [
+  'Akoko-Edo','Egor','Esan Central','Esan North-East','Esan South-East','Esan West',
+  'Etsako Central','Etsako East','Etsako West','Igueben','Ikpoba-Okha','Orhionmwon',
+  'Oredo','Ovia North-East','Ovia South-West','Owan East','Owan West','Uhunmwonde',
+]
 const INDUSTRIES = ['Healthcare', 'Education', 'Agriculture', 'Technology', 'Finance', 'Manufacturing', 'Construction', 'Public Service', 'Business', 'Other']
 const PROJECTS = ['Borehole', 'Road Construction', 'Solar Street Lights', 'Health Centre', 'School Renovation', 'ICT Centre', 'Skills Acquisition Centre', 'Market Development', 'Agricultural Support', 'Other']
 const CITIZENSHIP = ['Citizen', 'Permanent Resident', 'Work Permit', 'Student', 'Other']
@@ -112,7 +116,7 @@ export default function DiasporaPage() {
       </section>
 
       {/* Form */}
-      <section className="py-20 -mt-10 mb-16">
+      <section className="py-20 -mt-10 mb-16 overflow-hidden">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white border border-[#015b2d]/[0.08] rounded-[28px] shadow-[0_16px_40px_rgba(1,56,29,0.10)] overflow-hidden">
             <div className="p-8 md:p-10">
@@ -154,14 +158,15 @@ export default function DiasporaPage() {
 
                 {/* 3. Edo South Connection */}
                 <div>
-                  <SectionHead num={3} title="Edo South Connection" note="Tell us your origin in Edo South." />
-                  <div className="mb-4">
-                    <label className={labelClass}>LGA of Origin <span className="text-[#f97316]">*</span></label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
-                      {LGAS.map(l => <OptionItem key={l} name="lga_origin" value={l} checked={form.lga_origin === l} onChange={handleChange} label={l} />)}
-                    </div>
-                  </div>
+                  <SectionHead num={3} title="Edo South Connection" note="Tell us your origin in Edo South." />     
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="mb-4">
+                    <label className={labelClass}>LGA of Origin <span className="text-[#f97316]">*</span></label>
+                    <select name="lga_origin" value={form.lga_origin} onChange={handleChange} required className={inputClass}>
+                        <option value="">Select LGA...</option>
+                        {LGAS.map(l => <option key={l} value={l}>{l}</option>)}
+                    </select>
+                  </div>
                     <div><label className={labelClass}>Ward <span className="text-[#f97316]">*</span></label><input type="text" name="ward" value={form.ward} onChange={handleChange} required placeholder="Ward" className={inputClass} /></div>
                     <div><label className={labelClass}>Community <span className="text-[#f97316]">*</span></label><input type="text" name="community" value={form.community} onChange={handleChange} required placeholder="Community" className={inputClass} /></div>
                   </div>
@@ -269,7 +274,7 @@ export default function DiasporaPage() {
                   <SectionHead num={11} title="MAI Diaspora Network Pledge" note="Please accept the pledge to complete registration." />
                   <div className="bg-[#eef3ea] border-[1.5px] border-[#015b2d]/[0.12] rounded-[18px] p-5">
                     <p className="text-[#667065] leading-[1.8] mb-4 text-sm">
-                      "I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities."
+                      &apos;I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities.&apos;
                     </p>
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input type="checkbox" name="pledge" checked={form.pledge} onChange={handleChange} className="w-4 h-4 accent-[#015b2d] mt-0.5 shrink-0" />

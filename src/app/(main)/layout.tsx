@@ -8,7 +8,7 @@ const Layout = ({children}: PropsWithChildren) => {
     <>  
         <Preloader/>  
         <Navbar/>
-        <main>{children}</main>
+        <main className="overflow-hidden">{children}</main>
         <Footer/>
     </>
   )

@@ -16,6 +16,8 @@ const NAV_ITEMS = [
   { icon: '🙋', label: 'Volunteers', href: '/admin/volunteers' },
   { icon: '💰', label: 'Donations', href: '/admin/donations' },
   { icon: '💬', label: 'Feedback', href: '/admin/feedback' },
+  { icon: '🌍', label: 'Diaspora', href: '/admin/diaspora' },
+  { icon: '🎙️', label: 'MAI Listens', href: '/admin/mai-listens' },
 ]
 
 export function AppSidebar() {

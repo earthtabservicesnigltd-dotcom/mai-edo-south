@@ -1,17 +1,24 @@
+"use client";
 import Image from 'next/image'
 import Link from 'next/link'
+import {usePathname} from 'next/navigation';
 
-const QUICK_LINKS = [
-  { label: 'Home',          href: '/' },
-  { label: 'About MAI',     href: '/about' },
-  { label: 'MANIFESTO',     href: '/manifesto' },
-  { label: 'Agenda',        href: '/agenda' },
-  { label: 'News & Updates',href: '/news' },
-  { label: 'Media Gallery', href: '/media' },
-  { label: 'Events',        href: '/events' },
-  { label: 'DONATE',        href: '/donate'},
-  { label: 'Volunteer',     href: '/volunteer' },
-  { label: 'Contact',       href: '/contact' },
+const PRIMARY_LINKS = [
+  { label: 'HOME',           href: '/' },
+  { label: 'ABOUT',      href: '/about' },
+  { label: 'MANIFESTO',      href: '/manifesto' },
+  { label: 'AGENDA',         href: '/agenda' },
+  { label: 'NEWS & UPDATES', href: '/news' },
+  { label: 'MEDIA',          href: '/media' },
+]
+
+const SECONDARY_LINKS = [
+  { label: 'EVENTS',    href: '/events' },
+  { label: 'VOLUNTEER', href: '/volunteer' },
+  { label: 'DONATE',    href: '/donate' },
+  { label: 'CONTACT',   href: '/contact' },
+  { label: 'MAI DIASPORA NETWORK',    href: '/diaspora' },
+  { label: 'MAI LISTENS', href: '/mai-listens' },
 ]
 
 const SOCIAL_LINKS = [
@@ -38,6 +45,7 @@ const SOCIAL_LINKS = [
 ]
 
 export function Footer() {
+  const pathname = usePathname()
   return (
     <footer className="bg-[#01381d] text-white pt-16 pb-6">
       <div className="max-w-6xl mx-auto px-4">
@@ -73,22 +81,45 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
+          {/* Quick Links */}
           <div>
             <h4 className="font-bold text-base mb-5 uppercase tracking-wider">
               Quick Links
             </h4>
-            <ul className="space-y-2.5">
-              {QUICK_LINKS.map(link => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 text-sm hover:text-[#f97316] transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="flex items-center gap-10">
+              <ul className="space-y-2.5">
+                {PRIMARY_LINKS.map(link => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={`text-sm transition-colors ${
+                        pathname === link.href
+                          ? 'text-[#f97316]'
+                          : 'text-gray-300 hover:text-[#f97316]'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <ul className="space-y-2.5">
+                {SECONDARY_LINKS.map(link => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={`text-sm transition-colors ${
+                        pathname === link.href
+                          ? 'text-[#f97316]'
+                          : 'text-gray-300 hover:text-[#f97316]'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Newsletter */}

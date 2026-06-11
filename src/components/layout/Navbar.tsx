@@ -15,7 +15,7 @@ const SOCIAL_LINKS = [
 
 const PRIMARY_LINKS = [
   { label: 'HOME',           href: '/' },
-  { label: 'ABOUT MAI',      href: '/about' },
+  { label: 'ABOUT',      href: '/about' },
   { label: 'MANIFESTO',      href: '/manifesto' },
   { label: 'AGENDA',         href: '/agenda' },
   { label: 'NEWS & UPDATES', href: '/news' },
@@ -27,7 +27,7 @@ const SECONDARY_LINKS = [
   { label: 'VOLUNTEER', href: '/volunteer' },
   { label: 'DONATE',    href: '/donate' },
   { label: 'CONTACT',   href: '/contact' },
-  { label: 'DIASPORA',    href: '/diaspora' },
+  { label: 'MAI DIASPORA NETWORK',    href: '/diaspora' },
   { label: 'MAI LISTENS', href: '/mai-listens' },
 ]
 
