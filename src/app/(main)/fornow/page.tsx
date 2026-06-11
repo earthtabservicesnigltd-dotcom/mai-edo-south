@@ -187,24 +187,123 @@ export default function DonatePage() {
                   This campaign is run under the platform of the Alliance for Democracy and Credibility (ADC).
                 </p>
               </div>
-            <div className="mx-auto">
+            <div>
               <h3 className="font-bold text-2xl mb-6">Contribution</h3>
-              
+
+              {/* Amount selector */}
+              {errors.amount && <p className="text-xs text-red-500 mb-3">{errors.amount}</p>}
+
+              <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+
+                {/* First + Last Name */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5 text-gray-700">
+                      First Name <span className="text-[#f97316]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={form.firstName}
+                      onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
+                      placeholder="John"
+                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                    />
+                    {errors.firstName && <p className="text-xs text-red-500 mt-1">{errors.firstName}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5 text-gray-700">
+                      Last Name <span className="text-[#f97316]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={form.lastName}
+                      onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
+                      placeholder="Doe"
+                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                    />
+                    {errors.lastName && <p className="text-xs text-red-500 mt-1">{errors.lastName}</p>}
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-semibold mb-1.5 text-gray-700">
+                    Email Address <span className="text-[#f97316]">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="your@email.com"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                  />
+                  {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-sm font-semibold mb-1.5 text-gray-700">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={form.phone}
+                    onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                    placeholder="+234 800 000 0000"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                  />
+                </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5 text-gray-700">
+                      Custom Amount (₦) <span className="text-[#f97316]">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      value={form.customAmount}
+                      onChange={e => setForm(f => ({ ...f, customAmount: e.target.value }))}
+                      placeholder="Enter amount in Naira"
+                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                    />
+                  </div>
+
                 {/* Payment Method */}
                 <div>
-                 <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-                   <label className="block text-sm font-semibold mb-2 text-gray-700 whitespace-nowrap">Account Name:</label>
-                   <span className="w-sm text-gray-700 px-4 font-bold py-4 rounded-xl">MAI SENATORIAL CAMPAIGN ORGANIZATION</span>
-                 </div>
-                 <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-                   <label className="block text-sm font-semibold mb-2 text-gray-700 whitespace-nowrap">Account Number:</label>
-                   <span className="w-sm text-gray-700 px-4 font-bold py-4 rounded-xl">1140492000</span>
-                 </div>
-                 <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-                   <label className="block text-sm font-semibold mb-2 text-gray-700 whitespace-nowrap">Bank Name:</label>
-                   <span className="w-sm text-gray-700 px-4 font-bold py-4 rounded-xl">POLARIS BANK</span>
-                 </div>
+                  <label className="block text-sm font-semibold mb-2 text-gray-700">Payment Method</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {PAYMENT_METHODS.map(m => (
+                      <button
+                        key={m.value}
+                        type="button"
+                        onClick={() => setPaymentMethod(m.value)}
+                        className={`border-2 rounded-xl py-3 text-sm font-bold flex flex-col items-center gap-1 transition-colors ${
+                          paymentMethod === m.value
+                            ? 'border-[#f97316] text-[#f97316] bg-[#f97316]/5'
+                            : 'border-gray-200 hover:border-[#f97316] hover:text-[#f97316]'
+                        }`}
+                      >
+                        <span className="text-lg">{m.icon}</span>
+                        <span>{m.label}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
+                {serverError && <p className="text-sm text-red-500">{serverError}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#f97316] text-white font-bold py-4 rounded-xl hover:bg-[#015b2d] transition-colors uppercase tracking-wider disabled:opacity-60"
+                >
+                  {loading ? 'Processing...' : 'Proceed to Payment'}
+                </button>
+
+                <div className="flex items-center gap-2 justify-center">
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"/>
+                  </svg>
+                  <p className="text-xs text-gray-400">Payments are secured and processed via Paystack</p>
+                </div>
+              </form>
             </div>
 
             {/* Impact */}
