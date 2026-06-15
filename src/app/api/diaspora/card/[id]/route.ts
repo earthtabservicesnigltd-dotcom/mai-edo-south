@@ -8,10 +8,10 @@ const supabase = createClient(
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const diasporaId = params.id.replace(/-/g, '/')
+   const diasporaId = (await params).id.replace(/-/g, '/')
 
     const { data: member, error } = await supabase
       .from('diaspora')
