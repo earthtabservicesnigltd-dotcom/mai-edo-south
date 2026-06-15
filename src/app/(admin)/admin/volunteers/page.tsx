@@ -168,7 +168,7 @@ export default function VolunteersPage() {
                     <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">LGA</th>
                     <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Status</th>
                     <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Date</th>
-                    <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Actions</th>
+                    {/* <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Actions</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -210,14 +210,14 @@ export default function VolunteersPage() {
                               Approve
                             </button>
                           )}
-                          {v.status !== 'rejected' && (
+                          {/* {v.status !== 'rejected' && (
                             <button
                               onClick={() => updateStatus(v.id, 'rejected')}
                               className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors"
                             >
                               Reject
                             </button>
-                          )}
+                          )} */}
                         </div>
                       </td>
                     </tr>

@@ -12,7 +12,7 @@ export default function VolunteerCardPage() {
 
   useEffect(() => {
     async function fetchMember() {
-      const res = await fetch(`/api/member/card/${id}`)
+      const res = await fetch(`/api/diaspora/card/${id}`)
       const data = await res.json()
       if (!res.ok) {
         setError('Member not found.')

@@ -1,6 +1,7 @@
 'use client'
 import { useRef } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
+import Image from 'next/image'
 
 interface VolunteerData {
   first_name: string
@@ -66,10 +67,10 @@ async function downloadCard(ref: React.MutableRefObject<HTMLDivElement | null>, 
 
             {/* Header */}
             <div className="bg-[#01381d] px-4 py-3 flex items-center gap-3">
-              <img src="/image-3.jpg" alt="ADC" className="h-12 w-12 object-contain rounded" />
+              <Image src="/image-3.jpg" alt="ADC" width={48} height={48} className="object-contain rounded" />
               <div className="w-px h-10 bg-white/30" />
               <div className="flex items-center gap-2">
-                <img src="/image_4.png" alt="MAI" className="h-10 w-10 object-contain" />
+                <Image src="/image_4.png" alt="MAI" width={40} height={40} className="object-contain" />
                 <div>
                   <p className="text-white font-black text-xl leading-none tracking-tight">MAI</p>
                   <p className="text-white text-[9px] leading-tight font-semibold">SENATORIAL CAMPAIGN<br />ORGANIZATION</p>
@@ -95,14 +96,14 @@ async function downloadCard(ref: React.MutableRefObject<HTMLDivElement | null>, 
             {/* Body */}
             <div className="px-4 pt-4 pb-2 flex gap-4 relative">
               <div className="absolute right-2 top-2 opacity-[0.06]">
-                <img src="/image_4.png" alt="" className="w-32 h-32 object-contain" />
+                <Image src="/image_4.png" alt="" width={128} height={128} className="object-contain" />
               </div>
 
               {/* Photo */}
               <div className="shrink-0">
                 <div className="w-[100px] h-[120px] border-2 border-[#01381d] rounded overflow-hidden bg-gray-100">
                   {volunteer.photo_url ? (
-                    <img src={volunteer.photo_url} alt="Volunteer" className="w-full h-full object-cover" crossOrigin="anonymous" />
+                    <Image src={volunteer.photo_url} alt="Volunteer" width={100} height={120} className="w-full h-full object-cover" crossOrigin="anonymous" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl">👤</div>
                   )}

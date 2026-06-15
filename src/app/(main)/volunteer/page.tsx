@@ -198,22 +198,6 @@ export default function VolunteerPage() {
           <div className="bg-white rounded-2xl p-8 md:p-10 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
 
-              {/* Photo Upload */}
-              <div className="flex flex-col items-center gap-3 pb-6 border-b border-gray-100">
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-36 h-36 rounded-full border-4 border-dashed border-[#f97316] flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
-                >
-                  {photoPreview ? (
-                    <Image src={photoPreview} alt="Preview" width={100} height={100} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="text-center"><div className="text-2xl">📷</div><p className="text-md text-gray-400 mt-1">Upload Photo</p></div>
-                  )}
-                </div>
-                <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
-                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" />
-              </div>
-
               {/* Personal Info */}
               <div>
                 <p className="text-[#01381d] font-black text-sm uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">Personal Information</p>
@@ -369,6 +353,22 @@ export default function VolunteerPage() {
                     </label>
                   ))}
                 </div>
+              </div>
+
+              {/* Photo Upload */}
+              <div className="flex flex-col items-center gap-3 pb-6 pt-6 border-b border-gray-100">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-36 h-36 rounded-full border-4 border-dashed border-[#f97316] flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
+                >
+                  {photoPreview ? (
+                    <Image src={photoPreview} alt="Preview" width={100} height={100} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center"><div className="text-2xl">📷</div><p className="text-md text-gray-400 mt-1">Upload Photo</p></div>
+                  )}
+                </div>
+                <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
+                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" />
               </div>
 
               {/* Commitment */}

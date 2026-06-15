@@ -1,5 +1,7 @@
 'use client'
-import { useState } from 'react'
+import DiasporaIDCard from '@/components/DiasporaIDCard'
+import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 const LGAS = [
@@ -54,11 +56,22 @@ export default function DiasporaPage() {
   })
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submittedMember, setSubmittedMember] = useState<any>(null);
+  const [photo, setPhoto] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target
     const checked = (e.target as HTMLInputElement).checked
     setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
+  }
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPhoto(file)
+    setPhotoPreview(URL.createObjectURL(file))
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -69,14 +82,24 @@ export default function DiasporaPage() {
     }
     setLoading(true)
     try {
+      let photoBase64 = ''
+      if (photo) {
+        const reader = new FileReader()
+        photoBase64 = await new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string)
+          reader.onerror = reject
+          reader.readAsDataURL(photo)
+        })
+      }
       const res = await fetch('/api/diaspora', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, photo: photoBase64 }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Submission failed')
       setSubmitted(true)
+      setSubmittedMember(data.diaspora)  // 👈 change data.member to data.diaspora
       toast.success('Registration submitted successfully!')
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong. Please try again.')
@@ -84,18 +107,26 @@ export default function DiasporaPage() {
       setLoading(false)
     }
   }
+  useEffect(() => {
+  if (submitted) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  }, [submitted])
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#f7f8f3] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#f7f8f3] flex flex-col items-center justify-center px-4 py-20">
         <div className="bg-white rounded-2xl p-12 text-center max-w-md w-full shadow-sm border border-[#dfe5da]">
           <div className="text-6xl mb-4">🎉</div>
           <h2 className="font-heading text-3xl text-[#01381d] mb-3">REGISTRATION <span className="text-[#f97316]">RECEIVED!</span></h2>
           <p className="text-[#667065] text-sm leading-relaxed mb-6">
             Thank you for joining the MAI Diaspora Network. We will be in touch shortly.
           </p>
-          <p className="text-[#f97316] font-black text-sm tracking-widest uppercase">The Time Is MAI</p>
+           <p className="text-[#f97316] font-black text-sm tracking-widest uppercase">Scroll down to download your card</p>
         </div>
+          <section className="bg-gray-50 py-12">
+            <DiasporaIDCard member={submittedMember} />
+          </section>
       </div>
     )
   }
@@ -269,9 +300,26 @@ export default function DiasporaPage() {
                   <div><label className={labelClass}>What development project would you like to see in Edo South?</label><textarea name="message_to_mai" value={form.message_to_mai} onChange={handleChange} rows={4} className={`${inputClass} resize-y`} /></div>
                 </div>
 
-                {/* 11. Pledge */}
+              {/* 11 Photo Upload */}
+              <div className="flex flex-col items-start gap-3 pb-6 pt-6 border-b border-gray-100">
+                <SectionHead num={11} title="Photo Upload" note="Take a photo for id card" />
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-36 h-36 rounded-full border-4 border-dashed border-[#f97316] flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
+                >
+                  {photoPreview ? (
+                    <Image src={photoPreview} alt="Preview" width={100} height={100} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center"><div className="text-2xl">📷</div><p className="text-md text-gray-400 mt-1">Upload Photo</p></div>
+                  )}
+                </div>
+                <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
+                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" />
+              </div>
+
+                {/* 12. Pledge */}
                 <div>
-                  <SectionHead num={11} title="MAI Diaspora Network Pledge" note="Please accept the pledge to complete registration." />
+                  <SectionHead num={12} title="MAI Diaspora Network Pledge" note="Please accept the pledge to complete registration." />
                   <div className="bg-[#eef3ea] border-[1.5px] border-[#015b2d]/[0.12] rounded-[18px] p-5">
                     <p className="text-[#667065] leading-[1.8] mb-4 text-sm">
                       &apos;I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities.&apos;

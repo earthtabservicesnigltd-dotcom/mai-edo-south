@@ -72,11 +72,9 @@ export default function AdminDashboard() {
 
   const STAT_CARDS = [
     { label: 'Total Volunteers',    value: stats.volunteers,        icon: '🙋',  color: 'bg-[#01381d]',  href: '/admin/volunteers' },
-    { label: 'Pending Approvals',   value: stats.pendingVolunteers, icon: '⏳',  color: 'bg-[#f97316]',  href: '/admin/volunteers?status=pending' },
     { label: 'Total Donations',     value: stats.donations,         icon: '💰',  color: 'bg-[#015b2d]',  href: '/admin/donations' },
     { label: 'Feedback Received',   value: stats.feedback,          icon: '💬',  color: 'bg-[#01381d]',  href: '/admin/feedback' },
     { label: 'Diaspora Members',    value: stats.diasporaMembers,   icon: '🌍',  color: 'bg-[#01381d]',  href: '/admin/diaspora' },
-    { label: 'Pending Diaspora',    value: stats.pendingDiaspora,   icon: '⏳',  color: 'bg-[#f97316]',  href: '/admin/diaspora?status=pending' },
     { label: 'MAI Listens',         value: stats.maiListensTotal,   icon: '🎙️', color: 'bg-[#015b2d]',  href: '/admin/mai-listens' },
     { label: 'Unread Submissions',  value: stats.maiListensUnread,  icon: '🔴',  color: 'bg-[#01381d]',  href: '/admin/mai-listens?status=unread' },
   ]

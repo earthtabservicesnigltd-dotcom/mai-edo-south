@@ -34,13 +34,18 @@ export async function POST(req: NextRequest) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-    // Send acknowledgement email if consent was given and email exists
     if (body.consent && body.email) {
       try {
         await sendMail({
           to: body.email,
-          subject: "We've Received Your Issue — MAI Listens",
-          html: maiListensAcknowledgementEmail(body.full_name),
+          subject: "We've Received Your Submission — MAI Listens",
+          html: maiListensAcknowledgementEmail({
+            firstName: body.full_name.split(' ')[0],
+            referenceId: data.id,
+            dateSubmitted: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }),
+            community: body.community,
+            categories: body.categories,
+          }),
         })
       } catch (emailErr: any) {
         console.log('Acknowledgement email error:', emailErr.message)

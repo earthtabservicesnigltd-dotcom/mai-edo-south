@@ -1,6 +1,7 @@
 'use client'
 import { useRef } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
+import Image from 'next/image'
 
 interface DiasporaData {
   full_name: string
@@ -77,194 +78,198 @@ export default function DiasporaIDCard({ member }: { member: DiasporaData }) {
       <div className="flex flex-col gap-8 items-center w-full">
 
         {/* ── FRONT ── */}
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Front</p>
+        <div className="w-full overflow-x-auto">
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Front</p>
 
-          <div
-            ref={frontRef}
-            className="w-[620px] h-[240px] rounded-2xl overflow-hidden shadow-xl border border-gray-100 bg-white relative font-sans flex flex-col"
-          >
-            {/* World map watermark */}
-            <WorldMap />
+            <div
+              ref={frontRef}
+              className="w-[620px] h-[280px] rounded-2xl overflow-hidden shadow-xl border border-gray-100 bg-white relative font-sans flex flex-col p-4"
+            >
+              {/* World map watermark */}
+              <WorldMap />
 
-            {/* Orange arc top-right */}
-            <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-full bg-[#f97316]/10 pointer-events-none" />
+              {/* Orange arc top-right */}
+              <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-full bg-[#f97316]/10 pointer-events-none" />
 
-            {/* Green arc bottom-left */}
-            <div className="absolute bottom-0 left-0 w-24 h-24 rounded-tr-full bg-[#01381d]/10 pointer-events-none" />
+              {/* Green arc bottom-left */}
+              <div className="absolute bottom-0 left-0 w-24 h-24 rounded-tr-full bg-[#01381d]/10 pointer-events-none" />
 
-            <div className="relative z-10 flex flex-col h-full">
+              <div className="relative z-10 flex flex-col h-full items-start">
 
-              {/* Header */}
-              <div className="flex items-center justify-center gap-3 pt-4 pb-2 border-b border-gray-100">
-                <div className="flex items-center gap-2">
-                  <img src="/image_4.png" alt="MAI" className="h-8 w-8 object-contain" />
-                  <div>
-                    <p className="text-[#01381d] font-black text-2xl leading-none tracking-tight">MAI</p>
-                  </div>
-                </div>
-                <div className="w-px h-8 bg-gray-300" />
-                <div>
-                  <p className="text-[#01381d] font-black text-lg leading-none tracking-wide">DIASPORA</p>
-                  <p className="text-[#f97316] font-black text-lg leading-none tracking-wide">NETWORK</p>
-                </div>
-                <p className="text-gray-400 text-[9px] tracking-[0.2em] self-end pb-0.5">CONNECTING EDO SOUTH TO THE WORLD</p>
-              </div>
-
-              {/* Body */}
-              <div className="flex flex-1 px-4 py-3 gap-4">
-
-                {/* Photo */}
-                <div className="shrink-0">
-                  <div className="w-[90px] h-[110px] border-2 border-[#01381d] rounded-lg overflow-hidden bg-gray-100">
-                    {member.photo_url ? (
-                      <img src={member.photo_url} alt="Member" className="w-full h-full object-cover" crossOrigin="anonymous" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl">👤</div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Info grid */}
-                <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-2 content-center">
-                  <div>
-                    <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Name</p>
-                    <p className="font-black text-sm leading-tight text-gray-900">{fullName}</p>
-                  </div>
-                  <div>
-                    <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Country of Residence</p>
-                    <p className="font-black text-sm leading-tight text-gray-900">{member.country.toUpperCase()}</p>
-                  </div>
-                  <div>
-                    <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">LGA of Origin</p>
-                    <p className="font-black text-sm leading-tight text-gray-900">{member.lga_origin.toUpperCase()}</p>
-                  </div>
-                  <div>
-                    <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Industry</p>
-                    <p className="font-bold text-sm leading-tight text-gray-900">{member.industry.toUpperCase()}</p>
-                  </div>
-
-                  {/* Bottom row: ID | Date | Status */}
-                  <div className="col-span-2 flex items-end gap-4 border-t border-gray-100 pt-2 mt-1">
-                    <div>
-                      <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Member ID</p>
-                      <p className="font-black text-sm text-[#01381d]">{member.diaspora_id}</p>
+                {/* Header */}
+                <div className="flex items-start justify-center gap-3 border-b border-gray-100 px-4">
+                  <div className="">
+                    <div className="flex items-center gap-6">
+                      <p className="text-[#01381d] font-black text-2xl leading-none tracking-tight">MAI</p>
+                      <div className="w-px h-8 bg-gray-300" />
+                      <div>
+                        <p className="text-[#01381d] font-black text-lg leading-none tracking-wide">DIASPORA</p>
+                        <p className="text-[#f97316] font-black text-lg leading-none tracking-wide">NETWORK</p>
                     </div>
-                    <div className="w-px h-8 bg-gray-200" />
-                    <div>
-                      <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Date Joined</p>
-                      <p className="font-bold text-sm text-gray-900">{dateJoined}</p>
                     </div>
-                    <div className="ml-auto">
-                      <p className="text-[8px] font-bold tracking-widest uppercase text-gray-400 text-center mb-1">Status</p>
-                      <div className="bg-[#01381d] text-white font-black text-[10px] tracking-widest px-3 py-1.5 rounded">
-                        ACTIVE MEMBER
+                    <p className="text-[#01381d] text-[9px] tracking-[0.2em] pb-0.5">CONNECTING EDO SOUTH TO THE WORLD</p>
+                  </div>
+                                    
+                </div>
+
+                {/* Body */}
+                <div className="flex flex-1 px-4 py-3 gap-4">
+
+                  {/* Photo */}
+                  <div className="shrink-0">
+                    <div className="w-[90px] h-[110px] border-2 border-[#01381d] rounded-lg overflow-hidden bg-gray-100">
+                      {member.photo_url ? (
+                        <Image src={member.photo_url} alt="Member" width={90} height={110} className="w-full h-full object-cover" crossOrigin="anonymous" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl">👤</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Info grid */}
+                  <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-2 content-center">
+                    <div>
+                      <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Name</p>
+                      <p className="font-black text-sm leading-tight text-gray-900">{fullName}</p>
+                    </div>
+                    <div>
+                      <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Country of Residence</p>
+                      <p className="font-black text-sm leading-tight text-gray-900">{member.country.toUpperCase()}</p>
+                    </div>
+                    <div>
+                      <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">LGA of Origin</p>
+                      <p className="font-black text-sm leading-tight text-gray-900">{member.lga_origin.toUpperCase()}</p>
+                    </div>
+                    <div>
+                      <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Industry</p>
+                      <p className="font-bold text-sm leading-tight text-gray-900">{member.industry.toUpperCase()}</p>
+                    </div>
+
+                    {/* Bottom row: ID | Date | Status */}
+                    <div className="col-span-2 flex items-end justify-space-between gap-4 border-t border-gray-100 pt-2 mt-4">
+                      <div>
+                        <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Member ID</p>
+                        <p className="font-black text-sm text-[#01381d]">{member.diaspora_id}</p>
+                      </div>
+                      <div className="w-px h-8 bg-gray-200" />
+                      <div className="whitespace-nowrap">
+                        <p className="text-[#f97316] text-[8px] font-bold tracking-widest uppercase">Date Joined</p>
+                        <p className="font-bold text-sm text-gray-900">{dateJoined}</p>
+                      </div>
+                      <div className="ml-auto">
+                        <p className="text-[8px] font-bold tracking-widest uppercase text-gray-400 text-center mb-1">Status</p>
+                        <div className="bg-[#01381d] text-white font-black text-[10px] tracking-widest px-3 py-1.5 rounded whitespace-nowrap">
+                          ACTIVE MEMBER
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* QR */}
-                <div className="shrink-0 flex flex-col items-center justify-center gap-1">
-                  <div className="border-2 border-[#f97316] p-1 rounded">
-                    <QRCodeSVG value={verifyUrl} size={68} fgColor="#01381d" bgColor="#ffffff" />
-                  </div>
-                  <p className="text-[7px] text-gray-400 tracking-widest">SCAN TO VERIFY</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={() => downloadCard(frontRef, `MAI-DIA-Front-${member.diaspora_id.replace(/\//g, '-')}`)}
-            className="bg-[#01381d] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#f97316] transition-colors text-sm"
-          >
-            Download Front
-          </button>
-        </div>
-
-        {/* ── BACK ── */}
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Back</p>
-
-          <div
-            ref={backRef}
-            className="w-[620px] h-[240px] rounded-2xl overflow-hidden shadow-xl font-sans flex flex-col"
-          >
-            {/* Top section - dark green */}
-            <div className="flex flex-1">
-
-              {/* Left panel */}
-              <div className="bg-[#01381d] w-[200px] shrink-0 px-5 py-5 flex flex-col justify-between relative overflow-hidden">
-                {/* Orange swoosh accent */}
-                <div className="absolute bottom-0 right-0 w-16 h-20 rounded-tl-full bg-[#f97316]/30 pointer-events-none" />
-
-                <div>
-                  <p className="text-white font-black text-3xl leading-none tracking-tight">MAI</p>
-                  <div className="w-6 h-0.5 bg-[#f97316] my-1" />
-                  <p className="text-white font-black text-sm tracking-widest">DIASPORA</p>
-                  <p className="text-white font-black text-sm tracking-widest">NETWORK</p>
-                </div>
-
-                <div>
-                  <p className="text-[#f97316] text-lg leading-none font-black">&apos;</p>
-                  <p className="text-white/80 text-[10px] leading-relaxed italic">
-                    Though we live across the world, Edo South remains home.
-                  </p>
-                  <p className="text-[#f97316] text-lg leading-none font-black text-right">&apos;</p>
-                </div>
-
-                <p className="text-white/50 text-[8px] leading-relaxed relative z-10">
-                  This card identifies the holder as a registered member of the MAI Diaspora Network.
-                </p>
-              </div>
-
-              {/* Middle panel - mission */}
-              <div className="bg-white flex-1 px-5 py-5 border-r border-gray-100">
-                <p className="text-[#01381d] font-black text-xs tracking-widest mb-1">OUR MISSION</p>
-                <div className="w-6 h-0.5 bg-[#f97316] mb-3" />
-                <p className="text-gray-600 text-[10px] leading-relaxed">
-                  To connect Edo South indigenes across the globe and harness our collective expertise, influence, experience and resources for the development of Edo South.
-                </p>
-              </div>
-
-              {/* Right panel - categories */}
-              <div className="bg-white w-[190px] shrink-0 px-5 py-5">
-                <p className="text-[#01381d] font-black text-xs tracking-widest mb-1">MEMBER CATEGORY</p>
-                <div className="w-6 h-0.5 bg-[#f97316] mb-3" />
-                <div className="space-y-2">
-                  {[
-                    { label: 'Diaspora Member',      active: true  },
-                    { label: 'Diaspora Professional', active: false },
-                    { label: 'Diaspora Investor',     active: true  },
-                    { label: 'Diaspora Adviser',      active: false },
-                    { label: 'Diaspora Ambassador',   active: true  },
-                  ].map((cat, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className={`w-3 h-0.5 ${cat.active ? 'bg-[#01381d]' : 'bg-[#f97316]'}`} />
-                      <p className="text-gray-700 text-[10px]">{cat.label}</p>
+                  {/* QR */}
+                  <div className="shrink-0 flex flex-col items-center justify-center gap-1">
+                    <div className="border-2 border-[#f97316] p-1 rounded">
+                      <QRCodeSVG value={verifyUrl} size={68} fgColor="#01381d" bgColor="#ffffff" />
                     </div>
-                  ))}
+                    <p className="text-[7px] text-gray-400 tracking-widest">SCAN TO VERIFY</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Footer bar */}
-            <div className="bg-[#01381d] px-6 py-2 flex items-center justify-between">
-              <p className="text-white font-black text-[10px] tracking-[0.3em]">MAI DIASPORA NETWORK</p>
-              <div className="w-px h-4 bg-white/30" />
-              <p className="text-[#f97316] font-black text-[10px] tracking-[0.2em]">EDO SOUTH BEYOND BORDERS</p>
-            </div>
+            <button
+              onClick={() => downloadCard(frontRef, `MAI-DIA-Front-${member.diaspora_id.replace(/\//g, '-')}`)}
+              className="bg-[#01381d] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#f97316] transition-colors text-sm"
+            >
+              Download Front
+            </button>
           </div>
 
-          <button
-            onClick={() => downloadCard(backRef, `MAI-DIA-Back-${member.diaspora_id.replace(/\//g, '-')}`)}
-            className="bg-[#01381d] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#f97316] transition-colors text-sm"
-          >
-            Download Back
-          </button>
         </div>
-      </div>
+        {/* ── BACK ── */}
+        <div className="w-full overflow-x-auto">
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Back</p>
+
+            <div
+              ref={backRef}
+              className="w-[620px] h-[240px] rounded-2xl shadow-xl font-sans flex flex-col"
+            >
+              {/* Top section - dark green */}
+              <div className="flex flex-1">
+
+                {/* Left panel */}
+                <div className="bg-[#01381d] w-[200px] shrink-0 px-5 py-5 flex flex-col justify-between relative overflow-hidden">
+                  {/* Orange swoosh accent */}
+                  <div className="absolute bottom-0 right-0 w-16 h-20 rounded-tl-full bg-[#f97316]/30 pointer-events-none" />
+
+                  <div>
+                    <p className="text-white font-black text-3xl leading-none tracking-tight">MAI</p>
+                    <div className="w-6 h-0.5 bg-[#f97316] my-1" />
+                    <p className="text-white font-black text-sm tracking-widest">DIASPORA</p>
+                    <p className="text-white font-black text-sm tracking-widest">NETWORK</p>
+                  </div>
+
+                  <div>
+                    <p className="text-[#f97316] text-lg leading-none font-black">&apos;</p>
+                    <p className="text-white/80 text-[10px] leading-relaxed italic">
+                      Though we live across the world, Edo South remains home.
+                    </p>
+                    <p className="text-[#f97316] text-lg leading-none font-black text-right">&apos;</p>
+                  </div>
+
+                  <p className="text-white/50 text-[8px] leading-relaxed relative z-10">
+                    This card identifies the holder as a registered member of the MAI Diaspora Network.
+                  </p>
+                </div>
+
+                {/* Middle panel - mission */}
+                <div className="bg-white flex-1 px-5 py-5 border-r border-gray-100">
+                  <p className="text-[#01381d] font-black text-xs tracking-widest mb-1">OUR MISSION</p>
+                  <div className="w-6 h-0.5 bg-[#f97316] mb-3" />
+                  <p className="text-gray-600 text-[10px] leading-relaxed">
+                    To connect Edo South indigenes across the globe and harness our collective expertise, influence, experience and resources for the development of Edo South.
+                  </p>
+                </div>
+
+                {/* Right panel - categories */}
+                <div className="bg-white w-[190px] shrink-0 px-5 py-5">
+                  <p className="text-[#01381d] font-black text-xs tracking-widest mb-1">MEMBER CATEGORY</p>
+                  <div className="w-6 h-0.5 bg-[#f97316] mb-3" />
+                  <div className="space-y-2">
+                    {[
+                      { label: 'Diaspora Member',      active: true  },
+                      { label: 'Diaspora Professional', active: false },
+                      { label: 'Diaspora Investor',     active: true  },
+                      { label: 'Diaspora Adviser',      active: false },
+                      { label: 'Diaspora Ambassador',   active: true  },
+                    ].map((cat, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <div className={`w-3 h-0.5 ${cat.active ? 'bg-[#01381d]' : 'bg-[#f97316]'}`} />
+                        <p className="text-gray-700 text-[10px]">{cat.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer bar */}
+              <div className="bg-[#01381d] px-6 py-2 flex items-center justify-between">
+                <p className="text-white font-black text-[10px] tracking-[0.3em]">MAI DIASPORA NETWORK</p>
+                <div className="w-px h-4 bg-white/30" />
+                <p className="text-[#f97316] font-black text-[10px] tracking-[0.2em]">EDO SOUTH BEYOND BORDERS</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => downloadCard(backRef, `MAI-DIA-Back-${member.diaspora_id.replace(/\//g, '-')}`)}
+              className="bg-[#01381d] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#f97316] transition-colors text-sm"
+            >
+              Download Back
+            </button>
+          </div>
+        </div>
+        </div>
 
       {/* Download Both */}
       <button
