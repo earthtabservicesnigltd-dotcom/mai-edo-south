@@ -10,9 +10,11 @@ export async function GET() {
   try {
     const [
       { count: volunteers },
+      { count: pendingVolunteers },
       { count: donations },
       { count: feedback },
       { count: diasporaMembers },
+      { count: pendingDiaspora },
       { count: maiListensTotal },
       { count: maiListensUnread },
       { data: recentVolunteers },
@@ -35,9 +37,11 @@ export async function GET() {
     return NextResponse.json({
       stats: {
         volunteers: volunteers ?? 0,
+        pendingVolunteers: pendingVolunteers ?? 0,
         donations: donations ?? 0,
         feedback: feedback ?? 0,
         diasporaMembers: diasporaMembers ?? 0,
+        pendingDiaspora: pendingDiaspora ?? 0,
         maiListensTotal: maiListensTotal ?? 0,
         maiListensUnread: maiListensUnread ?? 0,
       },
