@@ -96,7 +96,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
-                  href="/about"
+                  href="/biography"
                   className="bg-[#f97316] text-white font-bold px-4 py-3.5 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors"
                 >
                   ABOUT MAI
@@ -223,7 +223,7 @@ export default function HomePage() {
           </div>
           <div className="text-center">
             <Link
-              href="/about"
+              href="/biography"
               className="inline-block border-2 border-white text-white font-bold px-10 py-3.5 rounded-xl hover:bg-white hover:text-[#01381d] transition-colors"
             >
               VIEW FULL PROFILE
