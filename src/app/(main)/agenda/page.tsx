@@ -99,7 +99,7 @@ export default function AgendaPage() {
             Our Plan for Edo South
           </p>
           <h1 className="font-heading text-6xl md:text-7xl mb-4">
-            THE <span className="text-[#f97316]">AGENDA</span>
+            MAI <span className="text-[#f97316]">AGENDA</span>
           </h1>
           <p className="text-gray-200 text-lg max-w-lg text-center">
             A comprehensive, people-centred development agenda for

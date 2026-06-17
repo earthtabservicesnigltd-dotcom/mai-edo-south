@@ -98,7 +98,7 @@ export default function NewsPage() {
             Latest From The Campaign
           </p>
           <h1 className="font-heading text-6xl md:text-7xl mb-4">
-            NEWS & <span className="text-[#f97316]">UPDATES</span>
+            MAI <span className="text-[#f97316]">NEWS</span>
           </h1>
           <p className="text-gray-200 text-lg max-w-xl">
             Stay informed with the latest news, press releases and

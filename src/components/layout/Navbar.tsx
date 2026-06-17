@@ -327,8 +327,8 @@ export function Navbar() {
 
       {/* ── Desktop nav links ── */}
       <nav className="hidden lg:block bg-[#01381d] sticky top-0 z-50 shadow-md">
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-11">
-          <ul className="flex items-center h-full">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-around h-11">
+          <ul className="flex items-center h-full gap-4">
             {LEFT_NAV.map(group => (
               <li key={group.label} className="h-full">
                 <NavDropdown group={group} pathname={pathname} />
@@ -336,7 +336,7 @@ export function Navbar() {
             ))}
           </ul>
           <div className="w-px h-5 bg-white/20" />
-          <ul className="flex items-center h-full">
+          <ul className="flex items-center h-full gap-4">
             {RIGHT_NAV.map(group => (
               <li key={group.label} className="h-full">
                 <NavDropdown group={group} pathname={pathname} />
