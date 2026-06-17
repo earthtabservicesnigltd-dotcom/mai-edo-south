@@ -59,7 +59,7 @@ export default function AboutPage() {
             The Man Behind The Movement
           </p>
           <h1 className="font-heading text-6xl md:text-7xl mb-4">
-            ABOUT <span className="text-[#f97316]">MAI</span>
+            BIOG<span className="text-[#f97316]">RAPHY</span>
           </h1>
           <p className="text-gray-200 text-lg max-w-lg text-center">
             A tested leader with a proven record of service, legislative

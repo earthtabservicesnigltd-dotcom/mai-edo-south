@@ -2,23 +2,52 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation';
+import { FormEvent, useState } from 'react';
+import { toast } from 'sonner';
 
-const PRIMARY_LINKS = [
-  { label: 'HOME',           href: '/' },
-  { label: 'ABOUT',      href: '/about' },
-  { label: 'MANIFESTO',      href: '/manifesto' },
-  { label: 'AGENDA',         href: '/agenda' },
-  { label: 'NEWS & UPDATES', href: '/news' },
-  { label: 'MEDIA',          href: '/media' },
-]
-
-const SECONDARY_LINKS = [
-  { label: 'EVENTS',    href: '/events' },
-  { label: 'VOLUNTEER', href: '/volunteer' },
-  { label: 'DONATE',    href: '/donate' },
-  { label: 'CONTACT',   href: '/contact' },
-  { label: 'MAI DIASPORA NETWORK',    href: '/diaspora' },
-  { label: 'MAI LISTENS', href: '/mai-listens' },
+const NAV_LINK_GROUPS = [
+  {
+    label: 'HOME',
+    items: [
+      {label: 'Home', href:'/'},
+    ]
+  },
+  {
+    label: 'About',
+    items: [
+      { label: 'Biography',   href: '/biography' },
+      { label: 'MAI Agenda',  href: '/agenda' },
+      { label: 'Contact',     href: '/contact' },
+    ],
+  },
+  {
+    label: 'Explore',
+    items: [
+      { label: 'Manifesto',       href: '/manifesto' },
+      { label: 'MAI News',        href: '/news' },
+      { label: 'Media & Gallery', href: '/media' },
+      { label: 'Events',          href: '/events' },
+    ],
+  },
+  {
+    label: 'Partner With MAI',
+    items: [
+      { label: 'Volunteer',  href: '/volunteer' },
+      { label: 'Donate',     href: '/donate' },
+    ],
+  },
+  {
+    label: 'MAI Connect',
+    items: [
+      { label: 'MAI Listens', href: '/mai-listens' },
+    ],
+  },
+  {
+    label: 'MAI Networks',
+    items: [
+      { label: 'MAI Diaspora Network', href: '/diaspora' },
+    ],
+  },
 ]
 
 const SOCIAL_LINKS = [
@@ -46,13 +75,38 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   const pathname = usePathname()
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email}),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to subscribe');
+      toast.success("You're now subscribed! 🎉", {
+        description: 'Thank you for joining the MAI movement. You will receive updates on campaign events, policy announcements, and community development initiatives.'
+      });
+      setEmail("");
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred while subscribing. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <footer className="bg-[#01381d] text-white pt-16 pb-6">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
 
           {/* Brand */}
-          <div>
+          <div className="md:col-span-1">
             <Image
               src="/image_4.png"
               alt="MAI Logo"
@@ -66,7 +120,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-4 mt-6">
               {SOCIAL_LINKS.map(s => (
-                <a           
+                <a
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
@@ -80,71 +134,65 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          {/* Quick Links */}
-          <div>
+          {/* Quick Links — grouped columns */}
+          <div className="md:col-span-2">
             <h4 className="font-bold text-base mb-5 uppercase tracking-wider">
               Quick Links
             </h4>
-            <div className="flex items-center gap-10">
-              <ul className="space-y-2.5">
-                {PRIMARY_LINKS.map(link => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className={`text-sm transition-colors ${
-                        pathname === link.href
-                          ? 'text-[#f97316]'
-                          : 'text-gray-300 hover:text-[#f97316]'
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <ul className="space-y-2.5">
-                {SECONDARY_LINKS.map(link => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className={`text-sm transition-colors ${
-                        pathname === link.href
-                          ? 'text-[#f97316]'
-                          : 'text-gray-300 hover:text-[#f97316]'
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-6">
+              {NAV_LINK_GROUPS.map(group => (
+                <div key={group.label}>
+                  <p className="text-[10px] font-bold tracking-widest uppercase text-[#f97316] mb-2">
+                    {group.label}
+                  </p>
+                  <ul className="space-y-2">
+                    {group.items.map(link => (
+                      <li key={link.href}>
+                        <Link
+                          href={link.href}
+                          className={`text-sm transition-colors ${
+                            pathname === link.href
+                              ? 'text-[#f97316]'
+                              : 'text-gray-300 hover:text-[#f97316]'
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Newsletter */}
-          <div>
-            <h4 className="font-bold text-base mb-5 uppercase tracking-wider">
-              Stay Updated
-            </h4>
-            <p className="text-gray-300 text-sm mb-5 leading-relaxed">
-              Subscribe to get the latest news and updates from the campaign.
-            </p>
-            <div className="flex flex-col gap-3">
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="bg-white/10 border border-white/20 text-white placeholder:text-gray-400 text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:border-[#f97316] transition-colors"
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                className="bg-white/10 border border-white/20 text-white placeholder:text-gray-400 text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:border-[#f97316] transition-colors"
-              />
-              <button className="bg-[#f97316] text-white text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-[#015b2d] transition-colors">
-                SUBSCRIBE
-              </button>
-            </div>
+          <div className="md:col-span-1">
+            <form onSubmit={handleSubmit}>
+              <h4 className="font-bold text-base mb-5 uppercase tracking-wider">
+                Stay Updated
+              </h4>
+              <p className="text-gray-300 text-sm mb-5 leading-relaxed">
+                Subscribe to get the latest news and updates from the campaign.
+              </p>
+              <div className="flex flex-col gap-3">
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  className="bg-white/10 border border-white/20 text-white placeholder:text-gray-400 text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:border-[#f97316] transition-colors"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <button
+                  className="bg-[#f97316] text-white text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-[#015b2d] transition-colors"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? '...' : 'Subscribe'}
+                </button>
+              </div>
+            </form>
           </div>
 
         </div>
