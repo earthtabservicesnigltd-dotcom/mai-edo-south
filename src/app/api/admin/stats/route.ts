@@ -17,9 +17,12 @@ export async function GET() {
       { count: pendingDiaspora },
       { count: maiListensTotal },
       { count: maiListensUnread },
+      { count: supportGroups },
+      { count: pendingSupportGroups },
       { data: recentVolunteers },
       { data: recentDiaspora },
       { data: recentSubmissions },
+      { data: recentSupportGroups },
     ] = await Promise.all([
       supabase.from('volunteers').select('*', { count: 'exact', head: true }),
       supabase.from('volunteers').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
@@ -29,9 +32,12 @@ export async function GET() {
       supabase.from('diaspora').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
       supabase.from('mai_listens').select('*', { count: 'exact', head: true }),
       supabase.from('mai_listens').select('*', { count: 'exact', head: true }).eq('status', 'unread'),
+      supabase.from('support_groups').select('*', { count: 'exact', head: true }),
+      supabase.from('support_groups').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
       supabase.from('volunteers').select('id, volunteer_id, first_name, last_name, lga, status, created_at').order('created_at', { ascending: false }).limit(5),
       supabase.from('diaspora').select('id, diaspora_id, full_name, country, industry, status, created_at').order('created_at', { ascending: false }).limit(5),
       supabase.from('mai_listens').select('id, full_name, categories, issue, status, created_at').order('created_at', { ascending: false }).limit(5),
+      supabase.from('support_groups').select('id, support_group_id, org_name, lga, status, created_at').order('created_at', { ascending: false }).limit(5),
     ])
 
     return NextResponse.json({
@@ -44,10 +50,13 @@ export async function GET() {
         pendingDiaspora: pendingDiaspora ?? 0,
         maiListensTotal: maiListensTotal ?? 0,
         maiListensUnread: maiListensUnread ?? 0,
+        supportGroups: supportGroups ?? 0,
+        pendingSupportGroups: pendingSupportGroups ?? 0,
       },
       recentVolunteers: recentVolunteers ?? [],
       recentDiaspora: recentDiaspora ?? [],
       recentSubmissions: recentSubmissions ?? [],
+      recentSupportGroups: recentSupportGroups ?? [],
     })
   } catch {
     return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 })

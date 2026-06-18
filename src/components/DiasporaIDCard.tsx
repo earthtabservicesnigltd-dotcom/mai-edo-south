@@ -96,7 +96,7 @@ export default function DiasporaIDCard({ member }: { member: DiasporaData }) {
             <div className="relative z-10 flex flex-col h-full">
 
               {/* Header */}
-              <div className="bg-[#01381d] px-6 pt-6 pb-5 relative overflow-hidden">
+              <div className="bg-[#01381d] px-6 py-6 relative">
                 <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-[#f97316]/20" />
                 <div className="flex items-center gap-3 mb-1">
                   <p className="text-white font-black text-3xl leading-none tracking-tight">MAI</p>

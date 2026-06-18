@@ -168,7 +168,7 @@ export default function SupportGroupPage() {
         fileToBase64(form.groupPhoto),
       ])
 
-      const res = await fetch('/api/support-group', {
+      const res = await fetch('/api/support', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -514,14 +514,14 @@ export default function SupportGroupPage() {
                   <button
                     type="button"
                     onClick={next}
-                    disabled={isLast && !form.agreed}
+                    disabled={(isLast && !form.agreed) || submitting}
                     className={`px-6 py-3 rounded-xl font-bold text-sm text-white transition-colors disabled:opacity-50
                       ${isLast
                         ? 'bg-[#015b2d] hover:bg-[#01381d]'
                         : 'bg-[#f97316] hover:bg-orange-600'
                       }`}
                   >
-                    {isLast ? 'Submit' : 'Next'}
+                    {isLast ? (submitting ? 'Submitting...' : 'Submit') : 'Next'}
                   </button>
                 </div>
 
