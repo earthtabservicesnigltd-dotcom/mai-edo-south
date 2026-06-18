@@ -287,7 +287,7 @@ export default function DiasporaPage() {
                 <div>
                   <SectionHead num={9} title="Advisory Council" note="Offer your time and experience." />
                   <div>
-                    <label className={labelClass}>Would you serve on a Diaspora Advisory Council? <span className="text-[#f97316]">*</span></label>
+                    <label className={labelClass}>Would you like to serve on a Diaspora Advisory Council? <span className="text-[#f97316]">*</span></label>
                     <div className="grid grid-cols-2 gap-3 mt-2">
                       {['Yes', 'No'].map(v => <OptionItem key={v} name="advisory_council" value={v} checked={form.advisory_council === v} onChange={handleChange} label={v} />)}
                     </div>

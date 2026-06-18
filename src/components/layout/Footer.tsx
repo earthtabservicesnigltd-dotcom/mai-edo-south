@@ -48,6 +48,13 @@ const NAV_LINK_GROUPS = [
       { label: 'MAI Diaspora Network', href: '/diaspora' },
     ],
   },
+    {
+      label: 'MAI ACADEMY',
+      items: [
+        { label: 'Global Skill & Opportunity Hub', href: '/academy/hub' },
+        { label: 'Take Our Courses',                        href: '/academy/join'},
+      ],
+    },
 ]
 
 const SOCIAL_LINKS = [

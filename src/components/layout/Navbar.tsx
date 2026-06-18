@@ -26,7 +26,6 @@ import {
   Briefcase,
   BookOpen,
   ScrollText,
-  Home,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -106,8 +105,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'MAI ACADEMY',
     items: [
-      { label: 'Global Skill & Opportunity Hub', href: '/academy/skills',  icon: Briefcase, soon: true },
-      { label: 'Schools',                        href: '/academy/schools', icon: BookOpen,  soon: true },
+      { label: 'Global Skill & Opportunity Hub', href: '/academy/hub',  icon: Briefcase },
+      { label: 'Take Our Courses',                        href: '/academy/join', icon: BookOpen },
     ],
   },
 ]
@@ -204,7 +203,7 @@ function NavDropdown({
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] font-semibold transition-colors
                       ${active
                         ? 'text-[#f97316] bg-orange-50'
-                        : 'text-gray-700 hover:text-[#01381d] hover:bg-gray-50'
+                        : 'text-gray-700 hover:text-[#f97316] hover:bg-gray-50'
                       }`}
                   >
                     <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${active ? 'text-[#f97316]' : 'text-gray-400'}`} />
