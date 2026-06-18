@@ -106,7 +106,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'MAI ACADEMY',
     items: [
       { label: 'Global Skill & Opportunity Hub', href: '/academy/hub',  icon: Briefcase },
-      { label: 'Take Our Courses',                        href: '/academy/join', icon: BookOpen },
+      { label: 'Take Our Courses',                        href: '/academy/courses', icon: BookOpen },
     ],
   },
 ]
