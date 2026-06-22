@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import { useSidebar } from '@/components/ui/sidebar'
 import { toast } from 'sonner'
+import Link from 'next/link';
+import * as XLSX from 'xlsx';
 
 interface DiasporaMember {
   id: string
@@ -30,6 +32,25 @@ export default function DiasporaPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const { toggleSidebar } = useSidebar()
+
+  function exportToExcel() {
+    const exportData = filtered.map(m => ({
+      'Member ID': m.diaspora_id,
+      'Full Name': m.full_name,
+      'Email': m.email,
+      'Phone': m.phone,
+      'Country': m.country,
+      'LGA of Origin': m.lga_origin,
+      'Industry': m.industry,
+      'Status': m.status,
+      'Date Registered': new Date(m.created_at).toLocaleDateString('en-GB'),
+    }))
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Diaspora')
+    XLSX.writeFile(workbook, `MAI-Diaspora-${new Date().toISOString().split('T')[0]}.xlsx`)
+  }
 
   useEffect(() => {
     async function fetchMembers() {
@@ -114,6 +135,12 @@ export default function DiasporaPage() {
                 onChange={e => setSearch(e.target.value)}
                 className="field sm:w-72"
               />
+              <button
+              onClick={exportToExcel}
+              className="px-4 py-2 bg-[#01381d] text-white text-xs font-bold rounded-xl hover:bg-[#015b2d] transition-colors uppercase tracking-wider whitespace-nowrap"
+            >
+              📊 Export to Excel
+            </button>
             </div>
           </div>
 
@@ -164,7 +191,11 @@ export default function DiasporaPage() {
                         </div>
                       </td>
                       <td className="py-3 px-2 font-mono text-xs text-[#f97316] font-bold whitespace-nowrap">{m.diaspora_id}</td>
-                      <td className="py-3 px-2 font-semibold whitespace-nowrap">{m.full_name}</td>
+                      <td className="py-3 px-2 font-semibold whitespace-nowrap">
+                        <Link href={`/admin/diaspora/${m.id}`} className="hover:text-[#f97316] transition-colors">
+                          {m.full_name}
+                        </Link>
+                      </td>
                       <td className="py-3 px-2 text-ink-muted">{m.email}</td>
                       <td className="py-3 px-2 text-ink-muted whitespace-nowrap">{m.country}</td>
                       <td className="py-3 px-2 text-ink-muted whitespace-nowrap">{m.lga_origin}</td>

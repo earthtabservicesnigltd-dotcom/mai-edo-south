@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import { useSidebar } from '@/components/ui/sidebar'
 import { toast } from 'sonner'
+import Link from 'next/link'
+import * as XLSX from 'xlsx';
 
 interface Volunteer {
   id: string
@@ -31,6 +33,25 @@ export default function VolunteersPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const {toggleSidebar } = useSidebar();
+
+
+  function exportToExcel() {
+    const exportData = filtered.map(v => ({
+      'Volunteer ID': v.volunteer_id,
+      'First Name': v.first_name,
+      'Last Name': v.last_name,
+      'Email': v.email,
+      'Phone': v.phone,
+      'LGA': v.lga,
+      'Status': v.status,
+      'Date Registered': new Date(v.created_at).toLocaleDateString('en-GB'),
+    }))
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Volunteers')
+    XLSX.writeFile(workbook, `MAI-Volunteers-${new Date().toISOString().split('T')[0]}.xlsx`)
+  }
 
 
   useEffect(() => {
@@ -125,6 +146,12 @@ export default function VolunteersPage() {
                 onChange={e => setSearch(e.target.value)}
                 className="field sm:w-72"
               />
+              <button
+                onClick={exportToExcel}
+                className="px-4 py-2 bg-[#01381d] text-white text-xs font-bold rounded-xl hover:bg-[#015b2d] transition-colors uppercase tracking-wider whitespace-nowrap"
+              >
+                📊 Export to Excel
+              </button>
             </div>
           </div>
 
@@ -184,7 +211,11 @@ export default function VolunteersPage() {
                         </div>
                       </td>
                       <td className="py-3 px-2 font-mono text-xs text-[#f97316] font-bold whitespace-nowrap">{v.volunteer_id}</td>
-                      <td className="py-3 px-2 font-semibold whitespace-nowrap">{v.first_name} {v.last_name}</td>
+                      <td className="py-3 px-2 font-semibold whitespace-nowrap">
+                        <Link href={`/admin/volunteers/${v.id}`} className="hover:text-[#f97316] transition-colors">
+                          {v.first_name} {v.last_name}
+                        </Link>
+                      </td>
                       <td className="py-3 px-2 text-ink-muted">{v.email}</td>
                       <td className="py-3 px-2 text-ink-muted whitespace-nowrap">{v.phone}</td>
                       <td className="py-3 px-2 text-ink-muted">{v.lga}</td>

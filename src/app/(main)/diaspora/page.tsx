@@ -314,7 +314,7 @@ export default function DiasporaPage() {
                   )}
                 </div>
                 <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
-                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" />
+                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" required />
               </div>
 
                 {/* 12. Pledge */}
