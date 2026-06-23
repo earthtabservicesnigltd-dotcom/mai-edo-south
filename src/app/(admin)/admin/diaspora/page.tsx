@@ -16,6 +16,8 @@ interface DiasporaMember {
   email: string
   phone: string
   country: string
+  ward: string
+  community: string;
   lga_origin: string
   industry: string
   status: string
@@ -34,15 +36,24 @@ export default function DiasporaPage() {
   const { toggleSidebar } = useSidebar()
 
   function exportToExcel() {
-    const exportData = filtered.map(m => ({
+    const exportData = filtered.sort((a, b) => {
+        // First sort by LGA alphabetically
+        const lgaCompare = a.lga_origin.localeCompare(b.lga_origin)
+        if (lgaCompare !== 0) return lgaCompare
+
+        // Then sort by ward numerically within each LGA
+        const wardA = parseInt(a.ward)
+        const wardB = parseInt(b.ward)
+        return wardA - wardB
+      }).map(m => ({
       'Member ID': m.diaspora_id,
       'Full Name': m.full_name,
+      'LGA of Origin': m.lga_origin,
+      'Ward': m.ward,
+      'Community / Polling Unit': m.community,
       'Email': m.email,
       'Phone': m.phone,
       'Country': m.country,
-      'LGA of Origin': m.lga_origin,
-      'Industry': m.industry,
-      'Status': m.status,
       'Date Registered': new Date(m.created_at).toLocaleDateString('en-GB'),
     }))
 

@@ -199,7 +199,7 @@ export default function DiasporaPage() {
                     </select>
                   </div>
                     <div><label className={labelClass}>Ward <span className="text-[#f97316]">*</span></label><input type="text" name="ward" value={form.ward} onChange={handleChange} required placeholder="Ward" className={inputClass} /></div>
-                    <div><label className={labelClass}>Community <span className="text-[#f97316]">*</span></label><input type="text" name="community" value={form.community} onChange={handleChange} required placeholder="Community" className={inputClass} /></div>
+                    <div><label className={labelClass}>Community / Polling Unit<span className="text-[#f97316]">*</span></label><input type="text" name="community" value={form.community} onChange={handleChange} required placeholder="Community" className={inputClass} /></div>
                   </div>
                 </div>
 

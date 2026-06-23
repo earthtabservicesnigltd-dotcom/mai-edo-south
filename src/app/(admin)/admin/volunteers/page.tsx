@@ -36,14 +36,23 @@ export default function VolunteersPage() {
 
 
   function exportToExcel() {
-    const exportData = filtered.map(v => ({
+    const exportData = filtered  .sort((a, b) => {
+      // First sort by LGA alphabetically
+      const lgaCompare = a.lga.localeCompare(b.lga)
+      if (lgaCompare !== 0) return lgaCompare
+
+      // Then sort by ward numerically within each LGA
+      const wardA = parseInt(a.ward)
+      const wardB = parseInt(b.ward)
+      return wardA - wardB
+    }).map(v => ({
       'Volunteer ID': v.volunteer_id,
       'First Name': v.first_name,
       'Last Name': v.last_name,
+      'LGA': v.lga,
+      'Ward': v.ward,
       'Email': v.email,
       'Phone': v.phone,
-      'LGA': v.lga,
-      'Status': v.status,
       'Date Registered': new Date(v.created_at).toLocaleDateString('en-GB'),
     }))
 
