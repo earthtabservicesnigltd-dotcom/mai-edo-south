@@ -74,12 +74,21 @@ export default function VolunteerPage() {
     setSkills(prev => prev.includes(skill) ? prev.filter(s => s !== skill) : [...prev, skill])
   }
 
-  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setPhoto(file)
-    setPhotoPreview(URL.createObjectURL(file))
-  }
+    function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+      const file = e.target.files?.[0]
+      if (!file) return
+  
+      if(file.size > 2 * 1024 * 1024) {
+        toast.error('Photo is too large. Maximum size is 2MB.');
+        e.target.value = ''
+        setPhoto(null);
+        setPhotoPreview(null);
+        return
+      }
+  
+      setPhoto(file)
+      setPhotoPreview(URL.createObjectURL(file))
+    }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

@@ -70,6 +70,15 @@ export default function DiasporaPage() {
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+
+    if(file.size > 2 * 1024 * 1024) {
+      toast.error('Photo is too large. Maximum size is 2MB.');
+      e.target.value = ''
+      setPhoto(null);
+      setPhotoPreview(null);
+      return
+    }
+
     setPhoto(file)
     setPhotoPreview(URL.createObjectURL(file))
   }
