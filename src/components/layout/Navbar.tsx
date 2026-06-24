@@ -284,14 +284,14 @@ export function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link href="/sign-in" className="text-[11px] text-white/70 hover:text-white transition-colors">
+                {/* <Link href="/sign-in" className="text-[11px] text-white/70 hover:text-white transition-colors">
                   Sign In
-                </Link>
+                </Link> */}
                 <Link
-                  href="/sign-up"
+                  href="/academy/start"
                   className="text-[11px] font-bold bg-[#f97316] text-white px-3 py-1 rounded-md hover:bg-orange-500 transition-colors"
                 >
-                  Sign Up
+                  Enroll into MAI Academy
                 </Link>
               </div>
             )}
@@ -357,7 +357,7 @@ export function Navbar() {
           </Link>
 
           <div className="flex items-center gap-3">
-            {user ? (
+            {/* {user ? (
               <div className="flex items-center gap-3">
                 <Link href="/account" className="text-[11px] text-white/70 hover:text-white transition-colors">
                   {user.user_metadata?.first_name?.split(' ')[0] ?? 'Account'}
@@ -371,12 +371,12 @@ export function Navbar() {
               </div>
             ) : (
               <Link
-                href="/sign-up"
+                href="/academy/start"
                 className="text-[11px] font-bold bg-[#f97316] text-white px-3 py-1.5 rounded-lg"
               >
-                Sign Up
+                Enroll into MAI
               </Link>
-            )}
+            )} */}
             <button
               className="p-1.5 text-white/80 hover:text-white transition-colors"
               onClick={() => setMenuOpen(o => !o)}
@@ -465,19 +465,19 @@ export function Navbar() {
             {/* Auth buttons */}
             {!user && (
               <div className="flex gap-3 mt-4 pb-1">
-                <Link
+                {/* <Link
                   href="/sign-in"
                   onClick={() => setMenuOpen(false)}
                   className="flex-1 text-center text-[12px] font-bold py-2.5 rounded-lg border border-[#f97316] text-[#f97316] hover:bg-[#f97316] hover:text-white transition-colors"
                 >
                   Sign In
-                </Link>
+                </Link> */}
                 <Link
-                  href="/sign-up"
+                  href="/academy/start"
                   onClick={() => setMenuOpen(false)}
                   className="flex-1 text-center text-[12px] font-bold py-2.5 rounded-lg bg-[#f97316] text-white hover:bg-orange-500 transition-colors"
                 >
-                  Sign Up
+                  Enroll into MAI Academy
                 </Link>
               </div>
             )}

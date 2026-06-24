@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import { SidebarContent } from '@/components/layout/sidebar'
-import { Avatar } from '@/components/ui/shared';
-import { PAGE_TITLES, PageKey } from '@/lib/constant';
+import { PAGE_TITLES, PageKey } from '@/lib/constant'
+import { supabaseBrowser } from '@/lib/supabase'
 
 function getPageTitle(pathname: string): string {
   const segment = pathname.split('/').pop() as PageKey
@@ -14,8 +14,56 @@ function getPageTitle(pathname: string): string {
 
 export default function AcademyLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [checking, setChecking] = useState(true)
   const pathname = usePathname()
+  const router = useRouter()
   const title = getPageTitle(pathname)
+
+  const isPublicRoute = pathname === '/academy/start'
+
+  useEffect(() => {
+    if (isPublicRoute) {
+      setChecking(false)
+      return
+    }
+    async function checkAuth() {
+      try {
+        const supabase = supabaseBrowser()
+        const { data: { user }, error } = await supabase.auth.getUser()
+        
+        if (error) {
+          // Network error or Supabase unreachable — don't crash, redirect to start
+          console.error('Auth check failed:', error.message)
+          router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
+          return
+        }
+
+        if (!user) {
+          router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
+          return
+        }
+
+        setChecking(false)
+      } catch (err) {
+        // "Failed to fetch" lands here
+        console.error('Supabase unreachable:', err)
+        router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
+      }
+    }
+    checkAuth()
+  }, [pathname])
+
+  if (isPublicRoute) {
+    return <>{children}</>
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f0ede6]">
+        <div className="w-8 h-8 border-3 border-[#01381d] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -23,12 +71,10 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
 
       <div className="flex min-h-screen bg-[#f0ede6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
-        {/* Desktop Sidebar */}
         <aside className="hidden lg:flex w-[240px] shrink-0 bg-[#01381d] flex-col sticky top-0 h-screen overflow-y-auto">
           <SidebarContent />
         </aside>
 
-        {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
@@ -38,10 +84,8 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
           </div>
         )}
 
-        {/* Main */}
         <div className="flex-1 flex flex-col overflow-hidden">
 
-          {/* Topbar */}
           <div className="bg-white border-b border-[#E5E7EB] px-5 lg:px-7 h-[62px] flex items-center justify-between sticky top-0 z-10">
             <div className="flex items-center gap-3">
               <button
@@ -56,30 +100,19 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
               </div>
             </div>
             <div className="flex items-center gap-2.5">
-              <Link
-                href="/academy/assignments"
-                className="hidden sm:inline-flex items-center gap-1.5 text-[12px] font-medium px-3.5 py-2 rounded-lg border border-[#E5E7EB] bg-white text-[#111827] hover:bg-[#F7F4EE] transition-colors"
+              <button
+                onClick={async () => {
+                  const supabase = supabaseBrowser()
+                  await supabase.auth.signOut()
+                  router.push('/academy/start')
+                }}
+                className="text-[12px] font-medium px-3.5 py-2 rounded-lg border border-[#E5E7EB] bg-white text-red-500 hover:bg-red-50 transition-colors"
               >
-                <i className="ti ti-clipboard-list text-sm" /> View tasks
-              </Link>
-              <Link
-                href="/academy/enroll"
-                className="inline-flex items-center gap-1.5 text-[12px] font-semibold px-3.5 py-2 rounded-lg bg-[#f97316] text-white hover:bg-[#ea6a05] transition-colors"
-              >
-                <i className="ti ti-circle-plus text-sm" /> Enroll
-              </Link>
-              <Link
-                href="/academy/notifications"
-                className="relative w-9 h-9 flex items-center justify-center rounded-lg border border-[#E5E7EB] text-[#6B7280] hover:bg-[#F7F4EE] transition-colors"
-              >
-                <i className="ti ti-bell text-base" />
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#f97316]" />
-              </Link>
-              <Avatar initials="EA" size="sm" />
+                Sign Out
+              </button>
             </div>
           </div>
 
-          {/* Page content */}
           <div className="flex-1 overflow-y-auto">
             <div className="max-w-6xl mx-auto p-5 lg:p-7">
               {children}
