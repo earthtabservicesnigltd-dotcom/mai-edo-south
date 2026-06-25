@@ -18,6 +18,7 @@ export default function LessonPage() {
   const [loading, setLoading] = useState(true)
   const [completing, setCompleting] = useState(false)
   const [headings, setHeadings] = useState<{ id: string; text: string }[]>([])
+  const [activeId, setActiveId] = useState('')
 
   useEffect(() => {
     async function fetchCourse() {
@@ -31,16 +32,62 @@ export default function LessonPage() {
         }
         setCourse(data.course)
 
-        // Extract h2 headings for table of contents
         if (data.course.lesson_content) {
           const matches = [...data.course.lesson_content.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)]
-          setHeadings(matches.map(m => ({ id: m[1], text: m[2] })))
+          const extracted = matches.map(m => ({ id: m[1], text: m[2] }))
+          setHeadings(extracted)
+          if (extracted.length > 0) setActiveId(extracted[0].id)
         }
       }
       setLoading(false)
     }
     fetchCourse()
-  }, [slug])
+  }, [slug, router])
+
+  // Scroll spy — watches headings inside layout scroll container
+  useEffect(() => {
+    if (!headings.length) return
+
+    const scrollRoot = document.querySelector('[data-academy-scroll]')
+    if (!scrollRoot) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+        if (visible.length > 0 && visible[0].target.id) {
+          setActiveId(visible[0].target.id)
+        }
+      },
+      {
+        root: scrollRoot,
+        rootMargin: '-10% 0px -60% 0px',
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      }
+    )
+
+    headings.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [headings, course?.lesson_content])
+
+  function scrollToHeading(id: string) {
+    setActiveId(id)
+    const scrollRoot = document.querySelector('[data-academy-scroll]')
+    const target = document.getElementById(id)
+    if (!scrollRoot || !target) return
+
+    const rootRect = scrollRoot.getBoundingClientRect()
+    const targetRect = target.getBoundingClientRect()
+    const offset = targetRect.top - rootRect.top + scrollRoot.scrollTop - 16
+
+    scrollRoot.scrollTo({ top: offset, behavior: 'smooth' })
+  }
 
   async function handleComplete() {
     setCompleting(true)
@@ -67,32 +114,46 @@ export default function LessonPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto flex gap-6">
+    <div className="max-w-5xl mx-auto flex gap-8 items-start">
 
-      {/* Table of contents — sticky sidebar on desktop */}
       {headings.length > 0 && (
-        <aside className="hidden lg:block w-56 shrink-0">
-          <div className="sticky top-4 bg-white border border-[#E5E7EB] rounded-xl p-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280] mb-3">On This Page</p>
-            <nav className="flex flex-col gap-2">
-              {headings.map(h => (
-                <a key={h.id} href={`#${h.id}`} className="text-[12px] text-[#374151] hover:text-[#f97316] transition-colors leading-snug">
-                  {h.text}
-                </a>
-              ))}
-            </nav>
-          </div>
+        <aside className="hidden lg:block w-56 shrink-0 sticky top-4 self-start">
+          <nav className="bg-white border border-[#E5E7EB] rounded-xl p-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280] mb-3">
+              On This Page
+            </p>
+            <div className="flex flex-col gap-1">
+              {headings.map(h => {
+                const isActive = activeId === h.id
+                return (
+                  <button
+                    key={h.id}
+                    type="button"
+                    onClick={() => scrollToHeading(h.id)}
+                    className={[
+                      'text-left text-[12px] leading-snug transition-all duration-200 rounded-lg px-2 py-1.5 w-full cursor-pointer',
+                      isActive
+                        ? 'text-[#f97316] font-semibold bg-[rgba(249,115,22,0.12)] border-l-2 border-[#f97316] pl-3 shadow-[0_0_12px_rgba(249,115,22,0.25)]'
+                        : 'text-[#374151] hover:text-[#f97316] hover:bg-[#F7F4EE] border-l-2 border-transparent',
+                    ].join(' ')}
+                  >
+                    {h.text}
+                  </button>
+                )
+              })}
+            </div>
+          </nav>
         </aside>
       )}
 
-      {/* Lesson content */}
-      <div className="flex-1 bg-white border border-[#E5E7EB] rounded-2xl p-7">
+
+      <div className="flex-1 min-w-0 bg-white border border-[#E5E7EB] rounded-2xl p-7">
         <h1 className="font-[Syne] text-2xl font-extrabold text-[#111827] mb-6">{course.title}</h1>
 
         {course.lesson_content ? (
           <div
             className="prose prose-sm max-w-none text-[#374151] leading-relaxed
-              [&>h2]:font-[Syne] [&>h2]:font-bold [&>h2]:text-xl [&>h2]:text-[#111827] [&>h2]:mt-10 [&>h2]:mb-3 [&>h2]:pb-2 [&>h2]:border-b [&>h2]:border-[#E5E7EB] [&>h2]:scroll-mt-4
+              [&>h2]:font-[Syne] [&>h2]:font-bold [&>h2]:text-xl [&>h2]:text-[#111827] [&>h2]:mt-10 [&>h2]:mb-3 [&>h2]:pb-2 [&>h2]:border-b [&>h2]:border-[#E5E7EB] [&>h2]:scroll-mt-6
               [&>h3]:font-[Syne] [&>h3]:font-bold [&>h3]:text-base [&>h3]:text-[#111827] [&>h3]:mt-6 [&>h3]:mb-2
               [&>p]:mb-3
               [&>ul]:mb-3 [&>ul]:list-disc [&>ul]:pl-5

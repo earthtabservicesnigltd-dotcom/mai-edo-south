@@ -30,9 +30,8 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
       try {
         const supabase = supabaseBrowser()
         const { data: { user }, error } = await supabase.auth.getUser()
-        
+
         if (error) {
-          // Network error or Supabase unreachable — don't crash, redirect to start
           console.error('Auth check failed:', error.message)
           router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
           return
@@ -45,13 +44,12 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
 
         setChecking(false)
       } catch (err) {
-        // "Failed to fetch" lands here
         console.error('Supabase unreachable:', err)
         router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
       }
     }
     checkAuth()
-  }, [pathname])
+  }, [pathname, isPublicRoute, router])
 
   if (isPublicRoute) {
     return <>{children}</>
@@ -69,9 +67,9 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
     <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 
-      <div className="flex min-h-screen bg-[#f0ede6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="flex h-screen bg-[#f0ede6] overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
-        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[#01381d] flex-col sticky top-0 h-screen overflow-y-auto">
+        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[#01381d] flex-col overflow-y-auto">
           <SidebarContent />
         </aside>
 
@@ -84,9 +82,10 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
           </div>
         )}
 
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col min-h-0 min-w-0">
 
-          <div className="bg-white border-b border-[#E5E7EB] px-5 lg:px-7 h-[62px] flex items-center justify-between sticky top-0 z-10">
+          {/* Fixed header — outside scroll area */}
+          <div className="bg-white border-b border-[#E5E7EB] px-5 lg:px-7 h-[62px] flex items-center justify-between shrink-0 z-10">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -113,7 +112,8 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          {/* Scroll container — TOC sticky + scroll spy use this */}
+          <div className="flex-1 min-h-0 overflow-y-auto" data-academy-scroll>
             <div className="max-w-6xl mx-auto p-5 lg:p-7">
               {children}
             </div>

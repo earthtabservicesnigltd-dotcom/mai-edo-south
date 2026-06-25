@@ -24,7 +24,7 @@ export default function NotFound() {
       {/* Actions */}
       <div className="flex gap-3 mt-8">
         <Link
-          href=""
+          href="/"
           className="bg-[#01381d] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#f97316] transition-colors text-sm uppercase tracking-wider"
         >
           Home

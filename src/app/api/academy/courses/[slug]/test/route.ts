@@ -108,20 +108,29 @@ export async function POST(
 
     if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
 
-    // Issue certificate if just passed
-    if (passed && !alreadyPassed) {
-      await supabase
-        .from('academy_certificates')
-        .upsert({ user_id: user.id, course_id: course.id }, { onConflict: 'user_id,course_id' })
-    }
+   const certificate_id =
+    passed && !alreadyPassed
+      ? (
+          await supabase
+            .from('academy_certificates')
+            .upsert(
+              { user_id: user.id, course_id: course.id },
+              { onConflict: 'user_id,course_id' }
+            )
+            .select('certificate_id')
+            .single()
+        ).data?.certificate_id ?? null
+      : null
 
-    return NextResponse.json({
-      success: true,
-      score,
-      totalQuestions,
-      percentage: Math.round((score / totalQuestions) * 100),
-      passed,
-    })
+  return NextResponse.json({
+    success: true,
+    score,
+    totalQuestions,
+    percentage: Math.round((score / totalQuestions) * 100),
+    passed,
+    certificate_id,
+  })
+
   } catch {
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }

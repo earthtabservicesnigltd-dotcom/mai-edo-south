@@ -24,7 +24,7 @@ export default function EmailConfirmedPage() {
           EMAIL <span className="text-[#f97316]">CONFIRMED!</span>
         </h1>
         <p className="text-ink-muted text-sm leading-relaxed mb-8">
-          Your email address has been successfully verified. You are now part of the MAI Edo South movement. Welcome!
+          Your email address has been successfully verified. You are now part of the MAI Academy. Welcome!
         </p>
 
         <div className="bg-[#01381d]/5 border border-[#01381d]/10 rounded-xl px-6 py-4 mb-8">
@@ -33,14 +33,14 @@ export default function EmailConfirmedPage() {
         </div>
 
         <Link
-          href="/login"
+          href="/sign-in"
           className="inline-block w-full bg-[#01381d] hover:bg-[#015b2d] text-white font-bold py-3 rounded-xl transition-colors text-sm uppercase tracking-wider"
         >
           Sign In to Your Account
         </Link>
 
         <p className="text-ink-faint text-xs mt-4">
-          © 2027 MAI Edo South Campaign. All Rights Reserved.
+          © 2027 MAI Academy. All Rights Reserved.
         </p>
       </div>
     </div>

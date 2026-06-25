@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 interface CertEntry {
@@ -34,9 +35,17 @@ export default function CertificatesPage() {
           let status: CertEntry['status'] = 'locked'
           let progress = 0
 
+         let certificate_id: string | undefined
+          let issued_at: string | undefined
+
           if (d.progress?.passed) {
             status = 'earned'
             progress = 100
+
+            const certRes = await fetch(`/api/academy/certificates?course_id=${c.id}`)
+            const certData = await certRes.json()
+            certificate_id = certData.certificate?.certificate_id
+            issued_at = certData.certificate?.issued_at
           } else if (d.enrollment) {
             status = 'progress'
             progress = d.progress?.lesson_completed ? 60 : 20
@@ -52,6 +61,9 @@ export default function CertificatesPage() {
             icon_color: c.icon_color,
             status,
             progress,
+            certificate_id,
+            issued_at,
+          
           }
         })
       )
@@ -84,9 +96,19 @@ export default function CertificatesPage() {
               <div className="text-[12px] text-[#6B7280] font-light mb-2">{c.short_label}</div>
 
               {c.status === 'earned' && (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#eaf3de] text-[#27500a]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3b6d11] inline-block" /> Earned
-                </span>
+                <>
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#eaf3de] text-[#27500a]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#3b6d11] inline-block" /> Earned
+                  </span>
+                  {c.certificate_id && (
+                    <Link
+                      href={`/academy/certificates/${c.certificate_id.replace(/\//g, '-')}`}
+                      className="inline-flex items-center gap-1 mt-2 text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-[#01381d] text-white hover:bg-[#f97316] transition-colors"
+                    >
+                      <i className="ti ti-certificate text-xs" /> View Certificate
+                    </Link>
+                  )}
+                </>
               )}
               {c.status === 'progress' && (
                 <div className="mb-2">
