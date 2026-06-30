@@ -474,6 +474,7 @@ export function Navbar() {
                 </Link> */}
                 <Link
                   href="/academic-auth"
+                  href="/academy/start"
                   onClick={() => setMenuOpen(false)}
                   className="flex-1 text-center text-[12px] font-bold py-2.5 rounded-lg bg-[#f97316] text-white hover:bg-orange-500 transition-colors"
                 >
