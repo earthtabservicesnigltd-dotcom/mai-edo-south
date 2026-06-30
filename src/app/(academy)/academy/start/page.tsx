@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabaseBrowser } from '@/lib/supabase'
-import { toast } from 'sonner'
 
 // ── TYPES ─────────────────────────────────────────────────────────────────────
 
@@ -11,33 +10,24 @@ interface Course {
   id: string
   slug: string
   short_label: string
+  title: string
   description: string
   icon: string
   icon_bg: string
   icon_color: string
 }
 
+interface School {
+  slug: string
+  title: string
+  description: string
+  icon: string
+  icon_bg: string
+  icon_color: string
+  courses: Course[]
+}
+
 // ── DATA ──────────────────────────────────────────────────────────────────────
-
-const LGAS = ['Oredo', 'Egor', 'Ikpoba-Okha', 'Ovia North-East', 'Ovia South-West', 'Orhionmwon', 'Uhunmwonde']
-
-const STATIC_COURSES = [
-  { id: '01', category: 'leadership', header: 'digital', level: 'Intermediate', icon: '📣', tag: 'Leadership', tagColor: 'blue', title: 'Leadership and Political Communication', desc: 'Master the art of persuasive communication, public speaking, and message strategy to lead, inspire, and mobilize communities effectively.', weeks: 10, lessons: 40, enrolled: '1,200+' },
-  { id: '02', category: 'leadership', header: 'digital', level: 'Beginner', icon: '🚩', tag: 'Leadership', tagColor: 'blue', title: 'Foundations of Leadership', desc: 'Build the core principles of effective leadership — vision, integrity, decision-making, and influence — to lead with confidence and purpose.', weeks: 8, lessons: 32, enrolled: '2,400+' },
-  { id: '03', category: 'personal', header: 'creative', level: 'Beginner', icon: '✅', tag: 'Personal Development', tagColor: 'orange', title: 'Personal Management Skills', desc: 'Develop time management, self-discipline, goal-setting, and productivity skills to take charge of your personal and professional growth.', weeks: 6, lessons: 24, enrolled: '3,100+' },
-  { id: '04', category: 'business', header: 'business', level: 'All Levels', icon: '🚀', tag: 'Business & Enterprise', tagColor: 'green', title: 'Foundations of Business and Entrepreneurship', desc: 'From idea to launch — learn business planning, funding, marketing, and how to build and grow a sustainable enterprise.', weeks: 9, lessons: 36, enrolled: '2,000+' },
-  { id: '05', category: 'governance', header: 'vocational', level: 'Intermediate', icon: '🏦', tag: 'Governance', tagColor: 'amber', title: 'Governance, Accountability & Institutions', desc: 'Understand how institutions work, the principles of accountability and transparency, and the structures that drive good governance.', weeks: 11, lessons: 44, enrolled: '980+' },
-  { id: '06', category: 'governance', header: 'agriculture', level: 'All Levels', icon: '🏗️', tag: 'Governance', tagColor: 'green', title: 'Local Government and Community Development', desc: 'Explore the role of local government in community development, grassroots mobilization, and delivering services that transform neighborhoods.', weeks: 10, lessons: 38, enrolled: '1,250+' },
-  { id: '08', category: 'leadership', header: 'creative', level: 'Advanced', icon: '🧩', tag: 'Leadership', tagColor: 'orange', title: 'Team Dynamics and Real World Challenges', desc: 'Apply teamwork and leadership skills to solve real-world problems through case studies, simulations, and hands-on collaborative projects.', weeks: 9, lessons: 34, enrolled: '1,600+' },
-]
-
-const FILTERS = [
-  { key: 'all', label: 'All Courses' },
-  { key: 'leadership', label: 'Leadership' },
-  { key: 'business', label: 'Business & Enterprise' },
-  { key: 'governance', label: 'Governance' },
-  { key: 'personal', label: 'Personal Development' },
-]
 
 const BENEFITS = [
   { icon: '✅', title: 'Certified', desc: 'Earn recognized certificates that boost your CV and credibility.' },
@@ -61,102 +51,56 @@ const FAQS = [
   { q: 'Can the courses help me find opportunities?', a: 'Yes. Top-performing graduates are connected to leadership roles, job placements, entrepreneurship grants, and our mentorship network through the MAI Skill & Opportunity Hub.' },
 ]
 
-const headerGradients: Record<string, string> = {
-  digital:     'linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)',
-  vocational:  'linear-gradient(135deg, #1c0a00 0%, #6b2c00 100%)',
-  business:    'linear-gradient(135deg, #0f2810 0%, #015b2d 100%)',
-  agriculture: 'linear-gradient(135deg, #1a2e05 0%, #3b6d11 100%)',
-  creative:    'linear-gradient(135deg, #2e0a3d 0%, #6b218a 100%)',
-}
-
-const tagStyles: Record<string, string> = {
-  orange: 'bg-orange-100 text-amber-700',
-  blue:   'bg-blue-50 text-blue-700',
-  green:  'bg-green-50 text-[#015b2d]',
-  amber:  'bg-amber-50 text-amber-800',
+const SCHOOL_COLORS: Record<string, { bg: string; from: string; to: string }> = {
+  'school-of-politics-policy-governance':  { bg: '#e6f1fb', from: '#0f172a', to: '#1e3a5f' },
+  'school-of-leadership-management':       { bg: '#e1f5ee', from: '#0f2810', to: '#015b2d' },
+  'school-of-business-entrepreneurship':   { bg: '#faeeda', from: '#1c0a00', to: '#6b2c00' },
+  'school-of-public-service':              { bg: '#fcebeb', from: '#2e0a3d', to: '#6b218a' },
+  'school-of-technology-digital-skills':   { bg: '#e8f0fe', from: '#0f172a', to: '#1a56db' },
+  'school-of-ai-machine-learning':         { bg: '#f3e8ff', from: '#2e0a3d', to: '#7c3aed' },
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────
 
-export default function AcademyCoursesPage() {
+export default function AcademyStartPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const next = searchParams.get('next') || '/academy'
 
-  const [activeFilter, setActiveFilter] = useState('all')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [mode, setMode] = useState<'intro' | 'signup' | 'login'>('intro')
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '' })
-  const [dbCourses, setDbCourses] = useState<Course[]>([])
+  const [schools, setSchools] = useState<School[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function checkExisting() {
+    async function init() {
       const supabase = supabaseBrowser()
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) router.push(next)
-    }
-    checkExisting()
+      if (user) {
+        router.push(next)
+        return
+      }
 
-    async function fetchCourses() {
       try {
-        const res = await fetch('/api/academy/courses')
+        const res = await fetch('/api/academy/schools')
         const data = await res.json()
-        if (data.courses?.length) setDbCourses(data.courses)
+        setSchools(data.schools ?? [])
       } catch {}
+      setLoading(false)
     }
-    fetchCourses()
+    init()
   }, [])
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    const supabase = supabaseBrowser()
-    const { error } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: { data: { first_name: form.firstName, last_name: form.lastName, phone: form.phone } },
-    })
-    if (error) { toast.error('Signup failed', { description: error.message }); setLoading(false); return }
-    try {
-      await fetch('/api/auth/welcome', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, firstName: form.firstName }),
-      })
-    } catch {}
-    toast.success('Account created! Please check your email to confirm, then log in.')
-    setMode('login')
-    setLoading(false)
-  }
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    const supabase = supabaseBrowser()
-    const { error } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password })
-    if (error) { toast.error('Login failed', { description: error.message }); setLoading(false); return }
-    router.push(next)
-  }
-
-  const filteredCourses = activeFilter === 'all' ? STATIC_COURSES : STATIC_COURSES.filter(c => c.category === activeFilter)
 
   return (
     <div className="font-['DM_Sans',sans-serif] text-[#111827] bg-white overflow-x-hidden">
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-[#01381d] text-white pt-[88px] pb-[72px]">
-        {/* Grid overlay */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px)',
           backgroundSize: '60px 60px',
         }} />
-        {/* Orange glow */}
-        <div className="absolute -top-[120px] -right-[120px] w-[520px] h-[520px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(249,115,22,.12) 0%, transparent 70%)' }} />
+        <div className="absolute -top-[120px] -right-[120px] w-[520px] h-[520px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(249,115,22,.12) 0%, transparent 70%)' }} />
 
         <div className="max-w-[1200px] mx-auto px-4 relative z-10">
           <div className="max-w-[720px]">
@@ -173,18 +117,17 @@ export default function AcademyCoursesPage() {
               <a href="#courses" className="inline-flex items-center gap-2 bg-[#f97316] text-white text-[.82rem] font-semibold tracking-[.04em] px-7 py-[14px] rounded-lg no-underline hover:bg-[#ea6a05] transition-colors">
                 Browse Courses →
               </a>
-              <a href="#enroll" className="inline-flex items-center gap-2 bg-white/[.08] text-white/85 text-[.82rem] font-medium px-7 py-[14px] rounded-lg border border-white/[.18] no-underline hover:bg-white/[.14] transition-colors">
+              <a href="/sign-up" className="inline-flex items-center gap-2 bg-white/[.08] text-white/85 text-[.82rem] font-medium px-7 py-[14px] rounded-lg border border-white/[.18] no-underline hover:bg-white/[.14] transition-colors">
                 Enroll Now →
               </a>
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 mt-[60px] pt-10 border-t border-white/10">
             {[
-              { num: '8', suffix: '+', label: 'Courses Available' },
+              { num: '6', suffix: '+', label: 'Schools Available' },
+              { num: '30', suffix: '+', label: 'Courses' },
               { num: '100', suffix: '%', label: 'Free Tuition' },
-              { num: '12', suffix: 'K', label: 'Learners Enrolled' },
               { num: '95', suffix: '%', label: 'Completion Rate' },
             ].map((s, i) => (
               <div key={s.label} className={`py-4 md:py-0 ${i < 3 ? 'md:border-r border-white/10' : ''} ${i === 0 ? 'md:pr-8' : i === 3 ? 'md:pl-8' : 'md:px-8'}`}>
@@ -225,59 +168,54 @@ export default function AcademyCoursesPage() {
         <div className="max-w-[1200px] mx-auto px-4">
           <div className="mb-12">
             <SectionLabel>Course Catalog</SectionLabel>
-            <SectionHeading>Explore Our <span className="text-[#f97316]">Courses</span></SectionHeading>
-            <SectionSub>Pick a course, learn at your pace, and graduate ready to lead. Filter by track to find your fit.</SectionSub>
+            <SectionHeading>Explore Our <span className="text-[#f97316]">Schools</span></SectionHeading>
+            <SectionSub>Choose a school, then progress through courses in order. Complete all courses in a school to earn your certificate.</SectionSub>
           </div>
 
-          {/* Filter bar */}
-          <div className="flex flex-wrap gap-2 mb-11">
-            {FILTERS.map(f => (
-              <button key={f.key} onClick={() => setActiveFilter(f.key)}
-                className={`text-[.75rem] font-semibold tracking-[.06em] uppercase border-[1.5px] rounded-full px-[22px] py-[9px] cursor-pointer transition-all duration-300
-                  ${activeFilter === f.key ? 'bg-[#f97316] text-white border-[#f97316]' : 'bg-white text-[#6B7280] border-[#E5E7EB] hover:border-[#f97316] hover:text-[#f97316]'}`}>
-                {f.label}
-              </button>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="w-8 h-8 border-3 border-[#01381d] border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-10">
+              {schools.map(school => {
+                const colors = SCHOOL_COLORS[school.slug] || { bg: '#f0ede6', from: '#333', to: '#555' }
+                return (
+                  <div key={school.slug}>
+                    {/* School header */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+                        style={{ background: colors.bg }}>
+                        <i className={`ti ${school.icon}`} />
+                      </div>
+                      <div>
+                        <h3 className="font-['Syne',sans-serif] text-[1.1rem] font-bold text-[#111827]">{school.title}</h3>
+                        <p className="text-[.78rem] text-[#6B7280]">{school.courses.length} courses · complete in order</p>
+                      </div>
+                    </div>
 
-          {/* Course grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.map(course => (
-              <div key={course.id} className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-[5px] hover:shadow-[0_16px_40px_rgba(0,0,0,.09)]">
-                {/* Card header */}
-                <div className="h-[170px] relative overflow-hidden flex flex-col justify-between p-5" style={{ background: headerGradients[course.header] }}>
-                  <span className="inline-flex items-center gap-1 self-start text-[.62rem] font-bold tracking-[.08em] uppercase px-3 py-1 rounded-full bg-white/[.14] text-white border border-white/20 relative z-10">
-                    📊 {course.level}
-                  </span>
-                  <div className="w-12 h-12 rounded-xl bg-white/[.12] backdrop-blur-sm flex items-center justify-center text-[1.3rem] border border-white/20">
-                    {course.icon}
+                    {/* Course cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {school.courses.map((course, idx) => (
+                        <div key={course.id}
+                          className="bg-white border border-[#E5E7EB] rounded-2xl p-5 flex flex-col transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(0,0,0,.07)]">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-[.6rem] font-bold text-white px-2 py-0.5 rounded"
+                              style={{ background: colors.from }}>
+                              {course.short_label}
+                            </span>
+                            <span className="text-[.6rem] text-[#6B7280]">Course {idx + 1} of {school.courses.length}</span>
+                          </div>
+                          <h4 className="font-['Syne',sans-serif] text-[.9rem] font-bold leading-snug">{course.title}</h4>
+                          <p className="text-[.78rem] text-[#6B7280] leading-relaxed mt-1.5 flex-1">{course.description}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="font-['Syne',sans-serif] text-[6rem] font-extrabold leading-none absolute -right-2 -bottom-4 text-white/[.06] select-none pointer-events-none">
-                    {course.id}
-                  </div>
-                </div>
-
-                {/* Card body */}
-                <div className="p-6 flex flex-col flex-1">
-                  <span className={`inline-flex items-center gap-1.5 text-[.66rem] font-bold tracking-[.1em] uppercase px-3.5 py-[5px] rounded ${tagStyles[course.tagColor]}`}>
-                    {course.tag}
-                  </span>
-                  <h5 className="font-['Syne',sans-serif] text-[1.02rem] font-bold mt-2.5 leading-snug">{course.title}</h5>
-                  <p className="text-[.85rem] text-[#6B7280] leading-[1.7] mt-2 flex-1 font-light">{course.desc}</p>
-                  <div className="flex flex-wrap gap-3.5 mt-4 pt-4 border-t border-[#E5E7EB]">
-                    {[`🕐 ${course.weeks} Weeks`, `🎥 ${course.lessons} Lessons`, `👥 ${course.enrolled}`].map(m => (
-                      <span key={m} className="flex items-center gap-1.5 text-[.74rem] text-[#6B7280]">{m}</span>
-                    ))}
-                  </div>
-                  <div className="mt-5">
-                    <span className="font-['Syne',sans-serif] font-extrabold text-[1.05rem] text-[#015b2d]">
-                      FREE <small className="text-[.68rem] text-[#6B7280] font-normal">/ certified</small>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -301,31 +239,28 @@ export default function AcademyCoursesPage() {
         </div>
       </section>
 
-      {/* ── ENROLLMENT / AUTH ── */}
+      {/* ── ENROLLMENT ── */}
       <section id="enroll" className="py-[88px] bg-[#F7F4EE]">
         <div className="max-w-[1200px] mx-auto px-4">
           <div className="bg-[#01381d] rounded-[20px] px-8 md:px-14 py-16 text-white relative overflow-hidden">
-            {/* Grid overlay */}
             <div className="absolute inset-0 pointer-events-none" style={{
               backgroundImage: 'linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)',
               backgroundSize: '56px 56px',
             }} />
-            {/* Glow */}
-            <div className="absolute -top-[60px] -right-[60px] w-[300px] h-[300px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(249,115,22,.1) 0%, transparent 70%)' }} />
+            <div className="absolute -top-[60px] -right-[60px] w-[300px] h-[300px] rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(249,115,22,.1) 0%, transparent 70%)' }} />
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 items-start relative z-10">
-
-              {/* Left — copy */}
               <div>
                 <div className="text-[.68rem] font-bold tracking-[.16em] uppercase text-[#f97316] mb-2.5">Start Today</div>
                 <h2 className="font-['Syne',sans-serif] text-[2.2rem] font-extrabold tracking-tight leading-tight">
                   Enroll in a Course Now
                 </h2>
                 <p className="text-white/60 text-[.92rem] leading-[1.8] font-light mt-3">
-                  Fill out the form to reserve your free spot. Our team will reach out within 48 hours to confirm your enrollment and next steps.
+                  Create your account, pick a school, and start your first course — all in one go.
                 </p>
                 <div className="mt-6 flex flex-col gap-3">
-                  {['No fees, no hidden charges', 'Open to all Edo South residents', 'Flexible online & on-site learning'].map(item => (
+                  {['No fees, no hidden charges', 'Open to all Edo South residents', 'Complete courses at your own pace'].map(item => (
                     <div key={item} className="flex items-center gap-2 text-white/75 text-[.88rem] font-light">
                       <span className="text-[#f97316]">✅</span> {item}
                     </div>
@@ -333,59 +268,18 @@ export default function AcademyCoursesPage() {
                 </div>
               </div>
 
-              {/* Right — auth card */}
-              <div className="bg-white/[.08] border border-white/[.15] rounded-[14px] p-7">
-                <p className="text-[.78rem] text-white/50 mb-4 uppercase tracking-[.08em] font-semibold">
-                  Create or log in to your account
+              <div className="bg-white/[.08] border border-white/[.15] rounded-[14px] p-7 text-center">
+                <p className="text-white/60 text-sm mb-4">
+                  Create your account and enroll in a course in one step.
                 </p>
-
-                {mode === 'intro' && (
-                  <div className="flex flex-col gap-2.5">
-                    <button onClick={() => setMode('signup')}
-                      className="w-full py-3 rounded-lg border-none cursor-pointer bg-[#f97316] text-white font-bold text-[.88rem] hover:bg-[#ea6a05] transition-colors">
-                      Create Account
-                    </button>
-                    <button onClick={() => setMode('login')}
-                      className="w-full py-3 rounded-lg cursor-pointer bg-transparent text-white/80 font-semibold text-[.88rem] border border-white/20 hover:bg-white/[.08] transition-colors">
-                      Already have an account? Log in
-                    </button>
-                  </div>
-                )}
-
-                {mode === 'signup' && (
-                  <form onSubmit={handleSignup} className="flex flex-col gap-2.5">
-                    <div className="grid grid-cols-2 gap-2.5">
-                      <AuthInput name="firstName" placeholder="First name" value={form.firstName} onChange={handleChange} required />
-                      <AuthInput name="lastName" placeholder="Last name" value={form.lastName} onChange={handleChange} required />
-                    </div>
-                    <AuthInput name="email" type="email" placeholder="Email address" value={form.email} onChange={handleChange} required />
-                    <AuthInput name="phone" placeholder="Phone number" value={form.phone} onChange={handleChange} required />
-                    <AuthInput name="password" type="password" placeholder="Password (min 6 chars)" value={form.password} onChange={handleChange} required />
-                    <button type="submit" disabled={loading}
-                      className="w-full py-3 rounded-lg border-none cursor-pointer bg-[#f97316] text-white font-bold text-[.88rem] hover:bg-[#ea6a05] transition-colors disabled:opacity-60">
-                      {loading ? 'Creating account...' : 'Sign Up →'}
-                    </button>
-                    <button type="button" onClick={() => setMode('login')}
-                      className="bg-transparent border-none text-white/55 text-[.8rem] cursor-pointer text-center hover:text-white/80 transition-colors">
-                      Already have an account? Log in
-                    </button>
-                  </form>
-                )}
-
-                {mode === 'login' && (
-                  <form onSubmit={handleLogin} className="flex flex-col gap-2.5">
-                    <AuthInput name="email" type="email" placeholder="Email address" value={form.email} onChange={handleChange} required />
-                    <AuthInput name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-                    <button type="submit" disabled={loading}
-                      className="w-full py-3 rounded-lg border-none cursor-pointer bg-[#f97316] text-white font-bold text-[.88rem] hover:bg-[#ea6a05] transition-colors disabled:opacity-60">
-                      {loading ? 'Logging in...' : 'Log In →'}
-                    </button>
-                    <button type="button" onClick={() => setMode('signup')}
-                      className="bg-transparent border-none text-white/55 text-[.8rem] cursor-pointer text-center hover:text-white/80 transition-colors">
-                      Don&apos;t have an account? Sign up
-                    </button>
-                  </form>
-                )}
+                <a href="/sign-up"
+                  className="block w-full py-3 rounded-lg bg-[#f97316] text-white font-bold text-[.88rem] hover:bg-[#ea6a05] transition-colors no-underline">
+                  Create Account & Enroll →
+                </a>
+                <p className="text-white/40 text-xs mt-3">
+                  Already have an account?{' '}
+                  <a href="/sign-in" className="text-[#f97316] no-underline hover:underline">Log in</a>
+                </p>
               </div>
             </div>
           </div>
@@ -424,19 +318,6 @@ export default function AcademyCoursesPage() {
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
-
-function AuthInput({ name, type = 'text', placeholder, value, onChange, required }: {
-  name: string; type?: string; placeholder: string; value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; required?: boolean
-}) {
-  return (
-    <input
-      name={name} type={type} placeholder={placeholder}
-      value={value} onChange={onChange} required={required}
-      className="w-full px-3.5 py-[11px] border border-white/[.15] bg-white/[.06] rounded-lg text-[.86rem] text-white outline-none placeholder:text-white/30 focus:border-[#f97316] transition-colors box-border"
-    />
-  )
-}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (

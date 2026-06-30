@@ -62,7 +62,7 @@ const SignIn = () => {
 
     console.log('Profile:', profile); // remove after confirming
 
-    router.push('/');
+    router.push('/academy');
     router.refresh();
   }
 

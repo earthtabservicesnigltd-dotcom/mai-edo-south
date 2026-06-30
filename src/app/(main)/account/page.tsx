@@ -97,25 +97,45 @@ export default function AccountPage() {
     fetchData()
   }, [])
 
-  async function handleSave() {
-    setSaving(true)
-    const supabase = supabaseBrowser()
-    const { error } = await supabase.auth.updateUser({
-      data: {
-        first_name: profile.first_name,
-        last_name: profile.last_name,
-        phone: profile.phone,
-        lga: profile.lga,
-      }
-    })
+    async function handleSave() {
+      setSaving(true)
+      const supabase = supabaseBrowser()
+      
+      // 1. Update auth metadata (existing)
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          phone: profile.phone,
+          lga: profile.lga,
+        }
+      })
 
-    if (error) {
-      toast.error('Failed to update profile', { description: error.message })
-    } else {
-      toast.success('Profile updated successfully')
+      if (error) {
+        toast.error('Failed to update profile', { description: error.message })
+        setSaving(false)
+        return
+      }
+
+      // 2. ALSO update the profiles table (new — fixes certificate names)
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          phone: profile.phone,
+          lga: profile.lga,
+        })
+        .eq('id', user.id)
+
+      if (profileError) {
+        toast.error('Failed to save profile data')
+      } else {
+        toast.success('Profile updated successfully')
+      }
+
+      setSaving(false)
     }
-    setSaving(false)
-  }
 
   async function handleSignOut() {
     const supabase = supabaseBrowser()

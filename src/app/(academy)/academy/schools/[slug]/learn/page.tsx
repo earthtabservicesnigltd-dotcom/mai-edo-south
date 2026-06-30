@@ -21,10 +21,18 @@ export default function LessonPage() {
   const [activeId, setActiveId] = useState('')
 
   useEffect(() => {
+    // In LessonPage, replace the existing fetchCourse function:
     async function fetchCourse() {
       const res = await fetch(`/api/academy/courses/${slug}`)
       const data = await res.json()
       if (res.ok) {
+        // Check lock first
+        if (data.locked?.locked) {
+          toast.error(data.locked.reason)
+          router.push(`/academy/schools`)
+          return
+        }
+
         if (!data.enrollment) {
           toast.error('Please enroll in this course first.')
           router.push(`/academy/schools/${slug}`)
@@ -41,6 +49,7 @@ export default function LessonPage() {
       }
       setLoading(false)
     }
+
     fetchCourse()
   }, [slug, router])
 

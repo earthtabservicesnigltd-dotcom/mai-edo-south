@@ -32,17 +32,35 @@ export default function TestPage() {
   const [result, setResult] = useState<Result | null>(null)
 
   useEffect(() => {
-    async function fetchQuestions() {
-      const res = await fetch(`/api/academy/courses/${slug}/test`)
+    async function fetchData() {
+      const res = await fetch(`/api/academy/courses/${slug}`)
       const data = await res.json()
-      if (res.ok) {
-        setCourseTitle(data.course.title)
-        setQuestions(data.questions ?? [])
+      
+      // Lock check first
+      if (data.locked?.locked) {
+        toast.error(data.locked.reason)
+        router.push(`/academy/schools`)
+        return
+      }
+
+      if (!data.enrollment) {
+        toast.error('Please enroll in this course first.')
+        router.push(`/academy/schools/${slug}`)
+        return
+      }
+
+      // Now fetch the test
+      const testRes = await fetch(`/api/academy/courses/${slug}/test`)
+      const testData = await testRes.json()
+      if (testRes.ok) {
+        setCourseTitle(testData.course.title)
+        setQuestions(testData.questions ?? [])
       }
       setLoading(false)
     }
-    fetchQuestions()
+    fetchData()
   }, [slug])
+
 
   function selectAnswer(questionId: string, option: string) {
     setAnswers(prev => ({ ...prev, [questionId]: option }))
@@ -92,7 +110,7 @@ export default function TestPage() {
           </p>
           {result.passed ? (
             <>
-              <p className="text-green-600 text-sm mb-6">You've passed and earned your certificate for {courseTitle}.</p>
+              <p className="text-green-600 text-sm mb-6">You&apos;ve passed and earned your certificate for {courseTitle}.</p>
               <button onClick={() => router.push('/academy/certificates')} className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm">
                 View Certificate
               </button>
@@ -101,7 +119,7 @@ export default function TestPage() {
             <>
               <p className="text-[#6B7280] text-sm mb-6">You need at least 70% to pass. Review the lesson and try again.</p>
               <div className="flex flex-col gap-2">
-                <button onClick={() => router.push(`/academy/schools/${slug}/learn`)} className="w-full bg-white border border-[#E5E7EB] text-[#111827] font-bold py-3 rounded-xl hover:bg-[#F7F4EE] transition-colors text-sm">
+                <button onClick={() => router.push(`/academy/schools/${slug}/lesson`)} className="w-full bg-white border border-[#E5E7EB] text-[#111827] font-bold py-3 rounded-xl hover:bg-[#F7F4EE] transition-colors text-sm">
                   Review Lesson
                 </button>
                 <button onClick={() => { setResult(null); setAnswers({}) }} className="w-full bg-[#01381d] text-white font-bold py-3 rounded-xl hover:bg-[#015b2d] transition-colors text-sm">
