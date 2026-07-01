@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+// import { Lock, Check, ArrowRight, BookOpen, Users, Briefcase, Landmark, Devices, Brain, Certificate } from 'lucide-react'
 
 interface Course {
   id: string
@@ -12,7 +14,6 @@ interface Course {
   icon: string
   icon_bg: string
   icon_color: string
-  certificate_title: string
 }
 
 interface School {
@@ -33,6 +34,15 @@ interface ProgressInfo {
   lock_reason: string
 }
 
+const SCHOOL_ICONS: Record<string, any> = {
+  'school-of-politics-policy-governance': 'ti ti-building-community',
+  'school-of-leadership-management': 'ti ti-users',
+  'school-of-business-entrepreneurship': 'ti ti-briefcase',
+  'school-of-public-service': 'ti ti-landmark',
+  'school-of-technology-digital-skills': 'ti ti-devices',
+  'school-of-ai-machine-learning': 'ti ti-brain',
+}
+
 export default function SchoolsPage() {
   const [schools, setSchools] = useState<School[]>([])
   const [progressMap, setProgressMap] = useState<Record<string, ProgressInfo>>({})
@@ -40,12 +50,10 @@ export default function SchoolsPage() {
 
   useEffect(() => {
     async function fetchData() {
-      // Fetch schools with courses
       const schoolsRes = await fetch('/api/academy/schools')
       const schoolsData = await schoolsRes.json()
       setSchools(schoolsData.schools ?? [])
 
-      // Fetch progress for each course
       const allCourses = (schoolsData.schools ?? []).flatMap((s: School) => s.courses)
       const progressEntries = await Promise.all(
         allCourses.map(async (c: Course) => {
@@ -66,6 +74,15 @@ export default function SchoolsPage() {
     fetchData()
   }, [])
 
+  const schoolData = [
+    { slug: 'school-of-politics-policy-governance', num: '01', iconBg: '#e6f1fb', iconColor: '#185fa5', cert: 'MAI Professional Certificate in Politics, Policy & Governance', days: ['Mon: Foundations', 'Tue: Policy Making', 'Wed: Communication', 'Thu: Accountability', 'Fri: Capstone Build', 'Sat: Graduation'], activeDays: [0,1,2,3,4] },
+    { slug: 'school-of-leadership-management', num: '02', iconBg: '#e1f5ee', iconColor: '#0f6e56', cert: 'MAI Professional Certificate in Leadership & Management', days: ['Mon: Foundations', 'Tue: Team Dynamics', 'Wed: Personal Mgmt', 'Thu: Execution', 'Fri: Capstone Build', 'Sat: Graduation'], activeDays: [0,1,2] },
+    { slug: 'school-of-business-entrepreneurship', num: '03', iconBg: '#faeeda', iconColor: '#854f0b', cert: 'MAI Professional Certificate in Business & Entrepreneurship', days: ['Mon: Foundations', 'Tue: Market Research', 'Wed: Business Plan', 'Thu: Marketing', 'Fri: Capstone Build', 'Sat: Graduation'], activeDays: [0,1] },
+    { slug: 'school-of-public-service', num: '04', iconBg: '#f0eaff', iconColor: '#6d28d9', cert: 'MAI Professional Certificate in Public Service & Civic Delivery', days: ['Mon: Foundations', 'Tue: Service Mapping', 'Wed: Service Design', 'Thu: Team Delivery', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
+    { slug: 'school-of-technology-digital-skills', num: '05', iconBg: '#e0e7ff', iconColor: '#3730a3', cert: 'MAI Professional Certificate in Technology & Digital Skills', days: ['Mon: Cybersecurity', 'Tue: Digital Marketing', 'Wed: Social Media', 'Thu: Graphics', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
+    { slug: 'school-of-ai-machine-learning', num: '06', iconBg: '#fce7f3', iconColor: '#831843', cert: 'MAI Professional Certificate in AI & Machine Learning', days: ['Mon: AI Foundations', 'Tue: Data & AI', 'Wed: Prompt Eng', 'Thu: ML Project', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
+  ]
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -76,86 +93,89 @@ export default function SchoolsPage() {
 
   return (
     <div>
-      <p className="text-[13px] text-[#6B7280] font-light leading-relaxed mb-6">
-        MAI Academy offers 6 schools with multiple courses each. Complete courses in order within a school to earn your certificate.
+      <p className="text-[13px] text-[#6B7280] font-light leading-relaxed mb-5">
+        MAI Academy offers 6 schools with multiple courses each. Complete all courses in a school to earn your certificate.
       </p>
 
-      <div className="flex flex-col gap-8">
-        {schools.map(school => (
-          <div key={school.slug} className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
-            {/* School header */}
-            <div className="px-5 py-4 border-b border-[#E5E7EB]" style={{ background: `${school.icon_bg}40` }}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
-                  style={{ background: school.icon_bg, color: school.icon_color }}>
-                  <i className={`ti ${school.icon}`} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        {schools.map((school, idx) => {
+          const meta = schoolData.find(s => s.slug === school.slug)!
+          const enrolledCourses = school.courses.filter(c => progressMap[c.id]?.enrolled)
+          const passedCourses = school.courses.filter(c => progressMap[c.id]?.passed)
+          const isEnrolled = enrolledCourses.length > 0
+          const progress = school.courses.length > 0 ? Math.round((passedCourses.length / school.courses.length) * 100) : 0
+          const firstIncomplete = school.courses.find(c => !progressMap[c.id]?.passed)
+          const isLocked = firstIncomplete ? progressMap[firstIncomplete.id]?.locked : false
+
+          return (
+            <div key={school.slug}
+              className={`bg-white border border-[#E5E7EB] rounded-2xl p-5 flex flex-col gap-3 transition-all duration-200 hover:border-[#f97316] hover:shadow-[0_4px_24px_rgba(1,56,29,0.1)] hover:-translate-y-0.5 ${!isEnrolled ? 'opacity-75' : ''}`}>
+              
+              {/* Header */}
+              <div className="flex items-start gap-3">
+                <div className="w-[46px] h-[46px] rounded-xl flex items-center justify-center text-xl shrink-0"
+                  style={{ background: meta.iconBg, color: meta.iconColor }}>
+                  <i className={SCHOOL_ICONS[school.slug] || 'ti ti-book'} />
                 </div>
-                <div>
-                  <h2 className="font-[Syne] text-[16px] font-bold text-[#111827]">{school.title}</h2>
-                  <p className="text-[11px] text-[#6B7280]">{school.courses.length} courses</p>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[10px] font-extrabold text-[#f97316] uppercase tracking-widest mb-1">
+                    School {meta.num} · {isEnrolled ? 'Enrolled' : 'Not enrolled'}
+                  </div>
+                  <h2 className="font-[Syne] text-[14px] font-bold text-[#111827] leading-snug">{school.title}</h2>
                 </div>
               </div>
-            </div>
 
-            {/* Courses */}
-            <div className="divide-y divide-[#E5E7EB]">
-              {school.courses.map(c => {
-                const info = progressMap[c.id]
-                const isLocked = info?.locked
-                const isPassed = info?.passed
-                const isEnrolled = info?.enrolled
+              {/* Description */}
+              <p className="text-[12px] text-[#6B7280] leading-relaxed font-light">{school.description}</p>
 
-                return (
-                  <div key={c.id} className={`flex items-center gap-4 px-5 py-3.5 transition-colors ${
-                    isLocked ? 'opacity-50' : 'hover:bg-[#F7F4EE]'
+              {/* Day pills */}
+              <div className="flex flex-wrap gap-1">
+                {meta.days.map((day, i) => (
+                  <span key={i}
+                    className={`text-[10px] font-semibold px-2 py-[3px] rounded-full border transition-colors
+                      ${meta.activeDays.includes(i)
+                        ? 'bg-[rgba(249,115,22,0.1)] text-[#f97316] border-[rgba(249,115,22,0.25)]'
+                        : 'text-[#6B7280] border-[#E5E7EB] bg-[#F7F4EE]'}`}>
+                    {day}
+                  </span>
+                ))}
+              </div>
+
+              {/* Certificate */}
+              <div className="text-[11px] text-[#6B7280] flex items-center gap-1.5 font-light">
+                <i className="ti ti-certificate text-[#f97316]" />
+                {meta.cert}
+              </div>
+
+              {/* Status / Action */}
+              {isEnrolled ? (
+                <div className="flex items-center justify-between mt-1">
+                  <span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full ${
+                    progress === 100
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-blue-50 text-blue-700'
                   }`}>
-                    {/* Status indicator */}
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 ${
-                      isPassed ? 'bg-green-100 text-green-700' :
-                      isEnrolled ? 'bg-[rgba(249,115,22,0.1)] text-[#f97316]' :
-                      isLocked ? 'bg-gray-100 text-gray-400' :
-                      'bg-[#F7F4EE] text-[#6B7280]'
-                    }`}>
-                      {isPassed ? <i className="ti ti-check" /> :
-                       isEnrolled ? <i className="ti ti-book" /> :
-                       isLocked ? <i className="ti ti-lock" /> :
-                       <span className="text-[10px] font-bold">{c.short_label}</span>}
-                    </div>
-
-                    {/* Course info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[13px] font-semibold text-[#111827]">{c.title}</div>
-                      <div className="text-[11px] text-[#6B7280] truncate">{c.short_label}</div>
-                    </div>
-
-                    {/* Lock reason or action */}
-                    <div className="shrink-0">
-                      {isPassed ? (
-                        <span className="text-[11px] text-green-600 font-semibold flex items-center gap-1">
-                          <i className="ti ti-certificate" /> Completed
-                        </span>
-                      ) : isLocked ? (
-                        <span className="text-[11px] text-gray-400 max-w-[180px] text-right leading-tight block">
-                          {info?.lock_reason || 'Locked'}
-                        </span>
-                      ) : isEnrolled ? (
-                        <Link href={`/academy/schools/${c.slug}/lesson`}
-                          className="text-[11px] font-semibold text-[#f97316] flex items-center gap-1 hover:underline">
-                          Continue <i className="ti ti-arrow-right text-xs" />
-                        </Link>
-                      ) : (
-                        <Link href={`/academy/schools/${c.slug}`}
-                          className="text-[11px] font-semibold text-[#f97316] flex items-center gap-1 hover:underline">
-                          Start <i className="ti ti-arrow-right text-xs" />
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
+                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${
+                      progress === 100 ? 'bg-green-500' : 'bg-blue-500'
+                    }`} />
+                    {progress === 100 ? 'Completed' : `${passedCourses.length}/${school.courses.length} courses · ${progress}%`}
+                  </span>
+                  {firstIncomplete && !progressMap[firstIncomplete.id]?.locked && (
+                    <Link href={`/academy/schools/${firstIncomplete.slug}`}
+                      className="text-[12px] font-semibold text-[#f97316] flex items-center gap-1 hover:underline">
+                      Continue <ArrowRight size={14} />
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <button onClick={() => window.location.href = `/academy/schools/${school.courses[0]?.slug}`}
+                  className="text-[12px] font-semibold text-[#f97316] flex items-center gap-1 hover:text-[#015b2d] transition-colors bg-transparent border-none p-0 cursor-pointer mt-1">
+                  Enroll in this school <ArrowRight size={14} />
+                </button>
+              )}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -300,57 +300,45 @@ export function feedbackAdminEmail(data: {
   `
 }
 
-export function signupWelcomeEmail(firstName: string) {
+export function academyWelcomeEmail(firstName: string, courseTitle?: string) {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden;">
       <div style="background: #01381d; padding: 32px; text-align: center;">
-        <img src="https://www.mai4senate.com/image_4.png" alt="MAI Logo" style="height: 70px; width: auto; margin-bottom: 16px;" />
-        <h1 style="color: #ffffff; font-size: 32px; margin: 0; letter-spacing: 4px;">MAI</h1>
-        <p style="color: #f97316; font-size: 11px; letter-spacing: 3px; margin: 6px 0 0; text-transform: uppercase;">Senatorial Campaign Organization</p>
-        <p style="color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 2px; margin: 4px 0 0; text-transform: uppercase;">Edo South 2027</p>
+        <img src="https://www.mai4senate.com/image_4.png" alt="MAI Academy Logo" style="height: 70px; width: auto; margin-bottom: 16px;" />
+        <h1 style="color: #ffffff; font-size: 32px; margin: 0; letter-spacing: 4px;">MAI ACADEMY</h1>
+        <p style="color: #f97316; font-size: 11px; letter-spacing: 3px; margin: 6px 0 0; text-transform: uppercase;">Free Certified Courses</p>
+        <p style="color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 2px; margin: 4px 0 0; text-transform: uppercase;">Inspire • Reform • Impact</p>
       </div>
-
       <div style="padding: 40px 32px; background: #ffffff;">
         <h2 style="color: #111; font-size: 24px; margin: 0 0 24px;">Dear ${firstName},</h2>
-
-        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          Thank you for registering with the <strong>MAI Senatorial Campaign Organization</strong>.
-        </p>
-        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          We are delighted to welcome you to a growing community of individuals who believe in the vision of a stronger, more prosperous, and more inclusive Edo South.
-        </p>
-        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          Your registration has been successfully received and your profile has been created on our platform.
-        </p>
-        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          By joining this movement, you become part of a people-driven initiative committed to advancing development, effective representation, and meaningful engagement across Edo South Senatorial District.
-        </p>
-        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          We encourage you to stay connected for updates, community initiatives, events, volunteer opportunities, policy discussions, and other activities aimed at building a better future for our people.
-        </p>
-        <p style="color: #555; line-height: 1.8; margin: 0 0 32px;">
-          Thank you for taking this important step and for believing in leadership founded on <strong>Experience, Capacity, and Genuine Commitment to the People</strong>.
-        </p>
-
+        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Welcome to <strong>MAI Academy</strong> — your gateway to free, certified learning in leadership, governance, entrepreneurship, public service, technology, and artificial intelligence.</p>
+        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Your account has been created successfully${courseTitle ? `, and you have been enrolled in <strong>${courseTitle}</strong>` : ''}. You now have access to all course materials, lessons, assessments, and certificates.</p>
+        <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">As a learner, you can:</p>
+        <ul style="color: #555; line-height: 1.8; padding-left: 20px; margin: 0 0 24px;">
+          <li>Access course lessons and learning materials anytime</li>
+          <li>Complete assessments and track your progress</li>
+          <li>Earn recognized certificates for each completed course</li>
+          <li>Progress through multiple schools at your own pace</li>
+          <li>Build skills in leadership, governance, business, tech, and AI</li>
+        </ul>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="https://www.mai4senate.com/academy" style="display: inline-block; background: #f97316; color: #ffffff; text-decoration: none; padding: 14px 36px; border-radius: 10px; font-weight: bold; font-size: 14px; letter-spacing: 1px;">Go to My Dashboard →</a>
+        </div>
         <div style="border-top: 1px solid #e5e5e5; padding-top: 24px;">
-          <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
+          <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Keep learning, keep leading.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
-          <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mathew Aigbuhenze Iduoriyekemwen</p>
-          <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
-          <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
+          <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Academy</p>
+          <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">Learning Today. Leading Tomorrow.</p>
         </div>
       </div>
-
       <div style="background: #01381d; padding: 20px 32px; text-align: center;">
-        <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">
-          © 2027 MAI Edo South Campaign. All Rights Reserved.<br/>
-          55, Second East Circular Road, Benin City, Edo State, Nigeria.
-        </p>
+        <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© 2027 MAI Academy. All Rights Reserved.<br/>Powered by MAI Senatorial Campaign Organization, Edo South 2027.</p>
       </div>
     </div>
   `
 }
+
+
 
 export function diasporaWelcomeEmail(firstName: string, diasporaId: string, dateRegistered: string, country: string) {
   return `

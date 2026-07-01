@@ -100,7 +100,7 @@ export default function LessonPage() {
 
   async function handleComplete() {
     setCompleting(true)
-    const res = await fetch(`/api/academy/courses/${slug}/complete-lesson`, { method: 'POST' })
+    const res = await fetch(`/api/academy/courses/${slug}/learn`, { method: 'POST' })
     if (res.ok) {
       toast.success('Lesson completed! Time for the assessment.')
       router.push(`/academy/schools/${slug}/test`)

@@ -33,7 +33,7 @@ export default function EmailConfirmedPage() {
         </div>
 
         <Link
-          href="/sign-in"
+          href="/academic-auth"
           className="inline-block w-full bg-[#01381d] hover:bg-[#015b2d] text-white font-bold py-3 rounded-xl transition-colors text-sm uppercase tracking-wider"
         >
           Sign In to Your Account

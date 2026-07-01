@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     // ── Look up the course first (fail fast before creating a user) ──
     const { data: course } = await admin
       .from('academy_courses')
-      .select('id, school_slug, school_order_index')
+      .select('id, title, school_slug, school_order_index')
       .eq('slug', courseSlug)
       .single()
 
@@ -78,6 +78,16 @@ export async function POST(req: NextRequest) {
       await admin.auth.admin.deleteUser(userId)
       return NextResponse.json({ error: enrollError.message }, { status: 500 })
     }
+
+    // Send welcome email
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.mai4senate.com'}/api/auth/welcome`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, firstName, courseTitle: course?.title }),
+      })
+    } catch {}
+
 
     return NextResponse.json({ success: true })
   } catch {

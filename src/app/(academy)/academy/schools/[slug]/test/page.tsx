@@ -137,7 +137,7 @@ export default function TestPage() {
     <div className="max-w-2xl mx-auto">
       <div className="bg-white border border-[#E5E7EB] rounded-2xl p-7">
         <h1 className="font-[Syne] text-xl font-extrabold text-[#111827] mb-1">{courseTitle} — Assessment</h1>
-        <p className="text-[#6B7280] text-sm mb-6">Answer all {questions.length} questions. You need 70% to pass.</p>
+        <p className="text-[#6B7280] text-sm mb-6">Answer all {questions.length} questions. You need 75% to pass.</p>
 
         <div className="space-y-6">
           {questions.map((q, i) => (

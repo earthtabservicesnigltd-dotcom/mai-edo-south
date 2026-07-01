@@ -12,21 +12,29 @@ export default function CapstonePage() {
       <p className="text-[13px] text-[#6B7280] font-light leading-relaxed mb-5">
         Your capstone projects are submitted on Friday and presented on Saturday. All projects must be Edo South centered.
       </p>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-6">
         {capstones.map((c, i) => (
-          <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4 flex flex-col hover:border-[rgba(249,115,22,0.4)] hover:shadow-md transition-all" style={{ borderTop: `3px solid ${c.borderColor}` }}>
+          <div key={i}
+            className="bg-white border border-[#E5E7EB] rounded-xl p-4 flex flex-col hover:border-[rgba(249,115,22,0.4)] hover:shadow-[0_2px_16px_rgba(1,56,29,0.07)] transition-all"
+            style={{ borderTop: `3px solid ${c.borderColor}` }}>
+            
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ background: c.iconBg, color: c.iconColor }}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0"
+                style={{ background: c.iconBg, color: c.iconColor }}>
                 <i className={`ti ${c.icon}`} />
               </div>
               <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: c.schoolColor }}>{c.school}</div>
             </div>
+
             <div className="font-[Syne] text-[13px] font-bold text-[#111827] mb-2">{c.title}</div>
             <div className="text-[12px] text-[#6B7280] font-light leading-relaxed mb-3">{c.desc}</div>
+            
             <div className="text-[11px] text-[#6B7280] font-light leading-relaxed mb-4">
               <span className="font-medium text-[#111827]">Structure:</span> {c.structure}
             </div>
-            <div className="flex items-center justify-between mt-auto">
+
+            <div className="flex items-center justify-between mt-auto pt-2 border-t border-[#E5E7EB]">
               <Badge variant="warn">Due Friday</Badge>
               <span className="text-[11px] text-[#6B7280]">Group submission</span>
             </div>
@@ -44,7 +52,8 @@ export default function CapstonePage() {
             { icon: 'ti-users', bg: '#faeeda', color: '#854f0b', title: 'Team coordination', desc: 'Roles, accountability, and group cohesion' },
           ].map((e, i) => (
             <div key={i} className="text-center p-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg mx-auto mb-2" style={{ background: e.bg, color: e.color }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg mx-auto mb-2"
+                style={{ background: e.bg, color: e.color }}>
                 <i className={`ti ${e.icon}`} />
               </div>
               <div className="text-[12px] font-semibold text-[#111827] mb-1">{e.title}</div>

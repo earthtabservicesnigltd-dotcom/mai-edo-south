@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendMail } from '@/lib/mail'
-import { signupWelcomeEmail } from '@/lib/email-templates'
+import { academyWelcomeEmail } from '@/lib/email-templates'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, firstName } = await req.json()
+    const { email, firstName, courseTitle } = await req.json()
 
     await sendMail({
       to: email,
-      subject: 'Welcome to the MAI Movement — Registration Confirmed',
-      html: signupWelcomeEmail(firstName),
+      subject: 'Welcome to MAI Academy — Start Your Learning Journey!',
+      html: academyWelcomeEmail(firstName, courseTitle),
     })
 
     return NextResponse.json({ success: true })

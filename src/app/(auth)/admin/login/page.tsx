@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full">
 
       {/* ── LEFT PANEL ── */}
       <div className="hidden lg:flex w-[52%] bg-gradient-to-br from-[#01381d] via-[#015b2d] to-[#024d25] flex-col justify-between px-14 py-12 relative overflow-hidden">

@@ -7,7 +7,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-const PASS_THRESHOLD = 0.7 // 70% to pass
+const PASS_THRESHOLD = 0.75 // 75% to pass
 
 // GET — fetch questions (without correct answers exposed)
 export async function GET(
