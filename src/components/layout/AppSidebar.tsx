@@ -21,6 +21,7 @@ const NAV_ITEMS = [
   { icon: '🎙️', label: 'MAI Listens', href: '/admin/mai-listens' },
   { icon: '🏛️', label: 'Support Groups', href: '/admin/support' },
   { icon: '🎓', label: 'School Dashboard', href: '/admin/academy' },
+  { icon: '👤', label: 'Students', href: '/admin/academy/users' },
   { icon: '📅', label: 'Schedule', href: '/admin/academy/schedule' },
   { icon: '📚', label: 'Courses', href: '/admin/academy/courses' },
 ]
@@ -76,7 +77,7 @@ export function AppSidebar() {
             <div className="text-[9px] font-bold text-ink-muted uppercase tracking-wider px-2 py-1.5">
               Academy
             </div>
-            {NAV_ITEMS.slice(7,10).map((item) => {
+            {NAV_ITEMS.slice(7, ).map((item) => {
             const active = pathname === item.href
             return (
               <Link

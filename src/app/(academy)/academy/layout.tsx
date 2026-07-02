@@ -19,7 +19,7 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
   const router = useRouter()
   const title = getPageTitle(pathname)
 
-  const isPublicRoute = pathname === '/academy/start'
+  const isPublicRoute = pathname === '/start'
 
   useEffect(() => {
     if (isPublicRoute) {
@@ -33,19 +33,19 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
 
         if (error) {
           console.error('Auth check failed:', error.message)
-          router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
+          router.push(`/academic-auth`)
           return
         }
 
         if (!user) {
-          router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
+          router.push(`/academic-auth`)
           return
         }
 
         setChecking(false)
       } catch (err) {
         console.error('Supabase unreachable:', err)
-        router.push(`/academy/start?next=${encodeURIComponent(pathname)}`)
+        router.push(`/academic-auth`)
       }
     }
     checkAuth()
@@ -103,7 +103,7 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
                 onClick={async () => {
                   const supabase = supabaseBrowser()
                   await supabase.auth.signOut()
-                  router.push('/academy/start')
+                  router.push('/')
                 }}
                 className="text-[12px] font-medium px-3.5 py-2 rounded-lg border border-[#E5E7EB] bg-white text-red-500 hover:bg-red-50 transition-colors"
               >

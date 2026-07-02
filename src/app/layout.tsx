@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Outfit } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import AuthRedirectHandler from '@/components/AuthRedirectHandler';
 import { Dancing_Script } from 'next/font/google'
+
 
 const dancingScript = Dancing_Script({
   subsets: ['latin'],
@@ -66,6 +67,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">{children}
+        <AuthRedirectHandler/>
         <Toaster position="bottom-right" richColors/>
       </body>
     </html>

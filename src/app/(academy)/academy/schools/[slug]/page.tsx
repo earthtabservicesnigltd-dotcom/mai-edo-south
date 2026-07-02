@@ -62,7 +62,7 @@ export default function CourseDetailPage() {
     const data = await res.json()
     if (res.ok) {
       toast.success('Enrolled successfully!')
-      router.push(`/academy/schools/${slug}/lesson`)
+      router.push(`/academy/schools/${slug}/learn`)
     } else {
       toast.error(data.error || 'Failed to enroll')
     }
@@ -165,7 +165,7 @@ export default function CourseDetailPage() {
           ) : isEnrolled ? (
             <div className="flex flex-col gap-2">
               {!lessonDone ? (
-                <button onClick={() => router.push(`/academy/schools/${slug}/lesson`)}
+                <button onClick={() => router.push(`/academy/schools/${slug}/learn`)}
                   className="bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm">
                   Continue Lesson
                 </button>
