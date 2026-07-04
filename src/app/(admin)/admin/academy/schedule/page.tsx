@@ -1,5 +1,5 @@
 'use client'
-
+import { Badge, Panel, SectionHead } from '@/components/ui/shared'
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -15,6 +15,7 @@ interface ScheduleEvent {
   event_bg: string
   event_color: string
   is_today: boolean
+  is_upcoming: boolean
   sort_order: number
 }
 
@@ -37,8 +38,10 @@ export default function ScheduleAdminPage() {
   const [schedule, setSchedule] = useState<ScheduleEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState({ event_title: '', day_of_week: 0, day_label: 'Individual', school_slug: '', event_bg: '#e6f1fb', event_color: '#0c447c', is_today: false })
+  const [form, setForm] = useState({ event_title: '', day_of_week: 0, day_label: 'Individual', school_slug: '', event_bg: '#e6f1fb', event_color: '#0c447c', is_today: false, is_upcoming: false })
   const { toggleSidebar } = useSidebar()
+  const upcomingEvents = schedule.filter(e => e.is_upcoming)
+
 
   useEffect(() => { fetchSchedule() }, [])
 
@@ -57,7 +60,7 @@ export default function ScheduleAdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(editingId ? { ...form, id: editingId } : form),
     })
-    if (res.ok) { toast.success(editingId ? 'Event updated' : 'Event added'); fetchSchedule(); setEditingId(null); setForm({ event_title: '', day_of_week: 0, day_label: 'Individual', school_slug: '', event_bg: '#e6f1fb', event_color: '#0c447c', is_today: false }) }
+    if (res.ok) { toast.success(editingId ? 'Event updated' : 'Event added'); fetchSchedule(); setEditingId(null); setForm({ event_title: '', day_of_week: 0, day_label: 'Individual', school_slug: '', event_bg: '#e6f1fb', event_color: '#0c447c', is_today: false, is_upcoming: false }) }
     else toast.error('Failed to save')
   }
 
@@ -68,7 +71,7 @@ export default function ScheduleAdminPage() {
 
   function editEvent(event: ScheduleEvent) {
     setEditingId(event.id)
-    setForm({ event_title: event.event_title, day_of_week: event.day_of_week, day_label: event.day_label, school_slug: event.school_slug || '', event_bg: event.event_bg, event_color: event.event_color, is_today: event.is_today })
+    setForm({ event_title: event.event_title, day_of_week: event.day_of_week, day_label: event.day_label, school_slug: event.school_slug || '', event_bg: event.event_bg, event_color: event.event_color, is_today: event.is_today, is_upcoming: event.is_upcoming })
   }
 
   return (
@@ -119,11 +122,16 @@ export default function ScheduleAdminPage() {
               </select>
             </div>
             <div className="flex items-center gap-2 pb-1">
-              <input type="checkbox" checked={form.is_today} onChange={e => setForm(f => ({ ...f, is_today: e.target.checked }))} className="accent-[#f97316]" id="isToday" />
-              <label htmlFor="isToday" className="text-sm cursor-pointer">Today</label>
-            </div>
+            <input type="checkbox" checked={form.is_today} onChange={e => setForm(f => ({ ...f, is_today: e.target.checked }))} className="accent-[#f97316]" id="isToday" />
+            <label htmlFor="isToday" className="text-sm cursor-pointer">Today</label>
+          </div>
+          <div className="flex items-center gap-2 pb-1">
+            <input type="checkbox" checked={form.is_upcoming} onChange={e => setForm(f => ({ ...f, is_upcoming: e.target.checked }))} className="accent-[#f97316]" id="isUpcoming" />
+            <label htmlFor="isUpcoming" className="text-sm cursor-pointer">Show in Upcoming</label>
+          </div>
+
             <button type="submit" className="px-4 py-2 bg-[#01381d] text-white text-xs font-bold rounded-xl hover:bg-[#015b2d] transition-colors">{editingId ? 'Update' : 'Add'}</button>
-            {editingId && <button type="button" onClick={() => { setEditingId(null); setForm({ event_title: '', day_of_week: 0, day_label: 'Individual', school_slug: '', event_bg: '#e6f1fb', event_color: '#0c447c', is_today: false }) }} className="px-4 py-2 bg-gray-100 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-200">Cancel</button>}
+            {editingId && <button type="button" onClick={() => { setEditingId(null); setForm({ event_title: '', day_of_week: 0, day_label: 'Individual', school_slug: '', event_bg: '#e6f1fb', event_color: '#0c447c', is_today: false, is_upcoming: false }) }} className="px-4 py-2 bg-gray-100 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-200">Cancel</button>}
           </form>
         </CardContent>
       </Card>
@@ -154,6 +162,25 @@ export default function ScheduleAdminPage() {
           )
         })}
       </div>
+      {upcomingEvents.length > 0 && (
+      <>
+        <SectionHead title="Upcoming this week" />
+        <Panel>
+          {upcomingEvents.map((s, i) => (
+            <div key={s.id} className="flex gap-3">
+              <div className="flex flex-col items-center pt-1">
+                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: s.event_color }} />
+                {i < upcomingEvents.length - 1 && <div className="w-px flex-1 my-1 bg-[#E5E7EB]" />}
+              </div>
+              <div className={`${i < upcomingEvents.length - 1 ? 'pb-3' : ''} flex-1`}>
+                <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">{s.event_title}</div>
+                <div className="text-[11px] text-[#6B7280] font-light">{DAY_NAMES[s.day_of_week]} · {s.day_label}</div>
+              </div>
+            </div>
+          ))}
+        </Panel>
+      </>
+    )}
     </div>
   )
 }

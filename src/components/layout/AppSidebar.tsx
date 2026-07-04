@@ -24,6 +24,10 @@ const NAV_ITEMS = [
   { icon: '👤', label: 'Students', href: '/admin/academy/users' },
   { icon: '📅', label: 'Schedule', href: '/admin/academy/schedule' },
   { icon: '📚', label: 'Courses', href: '/admin/academy/courses' },
+  { icon:"📋", label:"Tasks", href:"/admin/academy/tasks",  },
+  { icon:"🏆", label:"Capstones", href:"/admin/academy/capstones" },
+  { icon:"👥", label:"My Group", href:"/admin/academy/groups" },
+  {icon:"🔔", label:"Notifications", href:"/admin/academy/notifications"},
 ]
 
 export function AppSidebar() {

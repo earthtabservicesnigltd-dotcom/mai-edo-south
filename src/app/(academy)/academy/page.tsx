@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Badge, Panel, SectionHead } from '@/components/ui/shared'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Course {
   id: string
@@ -130,11 +131,42 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-3 border-[#01381d] border-t-transparent rounded-full animate-spin" />
+      <div className="space-y-5">
+        {/* Hero skeleton */}
+        <div className="rounded-2xl overflow-hidden mb-5 p-7 bg-[#01381d]">
+          <div className="space-y-3">
+            <Skeleton className="h-4 w-32 bg-white/20" />
+            <Skeleton className="h-10 w-72 bg-white/20" />
+            <Skeleton className="h-4 w-96 bg-white/20" />
+          </div>
+        </div>
+        {/* Stat cards skeleton */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4">
+              <Skeleton className="h-4 w-24 mb-2" />
+              <Skeleton className="h-8 w-16 mb-2" />
+              <Skeleton className="h-3 w-20" />
+            </div>
+          ))}
+        </div>
+        {/* Schools + Schedule skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <Skeleton className="h-5 w-24" />
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full rounded-xl" />
+            ))}
+          </div>
+          <div className="space-y-3">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-64 w-full rounded-xl" />
+          </div>
+        </div>
       </div>
     )
   }
+
 
   return (
     <div>

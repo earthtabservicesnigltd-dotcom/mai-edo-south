@@ -18,12 +18,20 @@ const NAV_ITEMS = [
   { href: '/academy/settings', icon: 'ti-settings', label: 'Settings', section: 'account' },
 ] as const
 
-const NOTIF_COUNT = 2
 
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState({ first_name: '', last_name: '' })
+  const [notifCount, setNotifCount] = useState(0)
+
+  useEffect(() => {
+    fetch('/api/academy/notifications')
+      .then(r => r.json())
+      .then(d => setNotifCount(d.notifications?.length ?? 0))
+      .catch(() => {})
+  }, [])
+
 
   useEffect(() => {
     const supabase = supabaseBrowser()
@@ -75,8 +83,8 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               ${isActive(n.href) ? 'bg-[rgba(249,115,22,0.18)] text-[#f97316] font-medium' : 'text-white/55 hover:bg-white/[0.07] hover:text-white/85'}`}>
             {isActive(n.href) && <span className="absolute left-0 top-[20%] bottom-[20%] w-[3px] rounded-r-sm bg-[#f97316]" />}
             <i className={`ti ${n.icon} text-base`} /> {n.label}
-            {n.href === '/academy/notifications' && NOTIF_COUNT > 0 && (
-              <span className="ml-auto bg-[#f97316] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{NOTIF_COUNT}</span>
+            {n.href === '/academy/notifications' && notifCount > 0 && (
+              <span className="ml-auto bg-[#f97316] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{notifCount}</span>
             )}
           </Link>
         ))}

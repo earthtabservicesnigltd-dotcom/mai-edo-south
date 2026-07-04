@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-// import { Lock, Check, ArrowRight, BookOpen, Users, Briefcase, Landmark, Devices, Brain, Certificate } from 'lucide-react'
 
 interface Course {
   id: string
@@ -125,10 +124,8 @@ export default function SchoolsPage() {
                 </div>
               </div>
 
-              {/* Description */}
               <p className="text-[12px] text-[#6B7280] leading-relaxed font-light">{school.description}</p>
 
-              {/* Day pills */}
               <div className="flex flex-wrap gap-1">
                 {meta.days.map((day, i) => (
                   <span key={i}
@@ -141,7 +138,6 @@ export default function SchoolsPage() {
                 ))}
               </div>
 
-              {/* Certificate */}
               <div className="text-[11px] text-[#6B7280] flex items-center gap-1.5 font-light">
                 <i className="ti ti-certificate text-[#f97316]" />
                 {meta.cert}
@@ -151,13 +147,9 @@ export default function SchoolsPage() {
               {isEnrolled ? (
                 <div className="flex items-center justify-between mt-1">
                   <span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full ${
-                    progress === 100
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-blue-50 text-blue-700'
+                    progress === 100 ? 'bg-green-100 text-green-700' : 'bg-blue-50 text-blue-700'
                   }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${
-                      progress === 100 ? 'bg-green-500' : 'bg-blue-500'
-                    }`} />
+                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${progress === 100 ? 'bg-green-500' : 'bg-blue-500'}`} />
                     {progress === 100 ? 'Completed' : `${passedCourses.length}/${school.courses.length} courses · ${progress}%`}
                   </span>
                   {firstIncomplete && !progressMap[firstIncomplete.id]?.locked && (
@@ -166,6 +158,10 @@ export default function SchoolsPage() {
                       Continue <ArrowRight size={14} />
                     </Link>
                   )}
+                </div>
+              ) : isLocked ? (
+                <div className="flex items-center gap-2 mt-1 text-[12px] text-amber-600 font-medium">
+                  <i className="ti ti-lock" /> Locked — finish your current school first
                 </div>
               ) : (
                 <button onClick={() => window.location.href = `/academy/schools/${school.courses[0]?.slug}`}

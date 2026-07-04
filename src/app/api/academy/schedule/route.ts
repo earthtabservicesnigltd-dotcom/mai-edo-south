@@ -8,7 +8,6 @@ export async function GET() {
       .select('*')
       .order('day_of_week')
       .order('sort_order')
-
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ schedule: data ?? [] })
   } catch {

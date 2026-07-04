@@ -12,12 +12,12 @@ return (
    <SidebarProvider defaultOpen={!isMobile}>
      {/* ── SIDEBAR ── */}
     <AppSidebar/>
-    <SidebarInset/>
+    <SidebarInset />
     
-    {/* ── MAIN CONTENT ── */}
-    <main className="p-8 min-h-screen bg-gray-50 w-full overflow-hidden">
-      {children}
-    </main>
+      {/* ── MAIN CONTENT ── */}
+      <main className="p-8 min-h-screen bg-gray-50 w-full overflow-hidden">
+        {children}
+      </main>
    </SidebarProvider>
 )
   

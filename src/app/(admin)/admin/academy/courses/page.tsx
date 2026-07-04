@@ -111,6 +111,7 @@ export default function CoursesAdminPage() {
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Certificate</th>
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Status</th>
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Questions</th>
+                          <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Edit</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -129,6 +130,11 @@ export default function CoursesAdminPage() {
                             <td className="py-3 px-2">
                               <Link href={`/admin/academy/courses/${c.slug}/questions`} className="text-[#f97316] text-xs font-semibold hover:underline">
                                 Manage
+                              </Link>
+                            </td>
+                            <td className="py-3 px-2">
+                              <Link href={`/admin/academy/courses/${c.slug}/edit`} className="text-[#f97316] text-xs font-semibold hover:underline">
+                                Edit Content
                               </Link>
                             </td>
                           </tr>
