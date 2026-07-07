@@ -97,7 +97,13 @@ export default function SchoolsPage() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-        {schools.map((school, idx) => {
+        {schools
+          .sort((a, b) => {
+            const aIdx = schoolData.findIndex(s => s.slug === a.slug)
+            const bIdx = schoolData.findIndex(s => s.slug === b.slug)
+            return aIdx - bIdx
+          })
+          .map((school, idx) => {
           const meta = schoolData.find(s => s.slug === school.slug)!
           const enrolledCourses = school.courses.filter(c => progressMap[c.id]?.enrolled)
           const passedCourses = school.courses.filter(c => progressMap[c.id]?.passed)

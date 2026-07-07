@@ -73,7 +73,7 @@ export default function AccountPage() {
       const { data: { user } } = await supabase.auth.getUser()
 
       if (!user) {
-        router.push('/login')
+        router.push('/academic-auth')
         return
       }
 
@@ -140,7 +140,7 @@ export default function AccountPage() {
   async function handleSignOut() {
     const supabase = supabaseBrowser()
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push('/academic-auth')
   }
 
   const initials = `${profile.first_name?.[0] ?? ''}${profile.last_name?.[0] ?? ''}`.toUpperCase() || '?'
