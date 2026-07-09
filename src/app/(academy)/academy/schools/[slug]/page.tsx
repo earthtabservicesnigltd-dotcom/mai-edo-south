@@ -155,7 +155,7 @@ export default function CourseDetailPage() {
             <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-center">
               <p className="text-green-700 font-bold text-sm mb-1">✅ Course Passed</p>
               <p className="text-green-600 text-xs">
-                Score: {progress?.best_score}/{progress?.totalQuestions}
+                Score: {progress?.best_score}/{progress?.total_questions}
               </p>
               <p className="text-[#6B7280] text-xs mt-2">
                 Complete all courses in this school to earn your certificate.

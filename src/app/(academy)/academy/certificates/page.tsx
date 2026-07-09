@@ -86,7 +86,7 @@ export default function CertificatesPage() {
       const earnedCerts = certsData.certificates ?? []
       const earnedMap = new Map(earnedCerts.map((c: any) => [c.school_slug, c]))
 
-      const allCourses = allSchools.flatMap((s: any) => s.courses.map((c: any) => ({ ...c, schoolSlug: s.slug })))
+     const allCourses: Array<{ slug: string; schoolSlug: string; [key: string]: any }> = allSchools.flatMap((s: any) => s.courses.map((c: any) => ({ ...c, schoolSlug: s.slug })))
 
       const progressResults = await Promise.all(
         allCourses.map(async (c: any) => {
