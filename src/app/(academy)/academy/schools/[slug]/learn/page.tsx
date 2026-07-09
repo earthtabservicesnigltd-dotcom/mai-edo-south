@@ -1,5 +1,13 @@
 'use client'
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog"
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -174,13 +182,28 @@ export default function LessonPage() {
         )}
 
         <div className="mt-8 pt-6 border-t border-[#E5E7EB]">
-          <button
-            onClick={handleComplete}
-            disabled={completing}
-            className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm disabled:opacity-60"
-          >
-            {completing ? 'Saving...' : "I've Finished — Take the Assessment"}
-          </button>
+          <Dialog>
+            <DialogTrigger  className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm disabled:opacity-60">I&apos;ve Finished — Take the Assessment</DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  Please move on to the assessment only after you have completed the lesson. You will not be able to return to the lesson once you start the assessment.
+                </DialogDescription>
+                <div className="flex items-center gap-4 justify-end mt-6">
+                  <DialogClose className="border broder-2 bg-transparent px-4 py-3 rounded-lg hover:bg-[#F7F4EE]">Close</DialogClose>
+                  <button
+                    onClick={handleComplete}
+                    disabled={completing}
+                    className="bg-[#f97316] text-white font-bold py-3 px-4 rounded-lg hover:bg-[#ea6a05] transition-colors text-sm disabled:opacity-60"
+                  >
+                    {completing ? 'Saving...' : "Continue to Assessment"}
+                  </button>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+          
         </div>
       </div>
     </div>

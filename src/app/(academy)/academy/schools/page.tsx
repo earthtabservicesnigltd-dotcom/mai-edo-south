@@ -37,7 +37,7 @@ const SCHOOL_ICONS: Record<string, any> = {
   'school-of-politics-policy-governance': 'ti ti-building-community',
   'school-of-leadership-management': 'ti ti-users',
   'school-of-business-entrepreneurship': 'ti ti-briefcase',
-  'school-of-public-service': 'ti ti-landmark',
+  'school-of-public-service': 'ti ti-government',
   'school-of-technology-digital-skills': 'ti ti-devices',
   'school-of-ai-machine-learning': 'ti ti-brain',
 }

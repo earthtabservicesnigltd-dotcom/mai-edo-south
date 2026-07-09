@@ -42,68 +42,72 @@ export async function GET(
         .single()
       progress = progressData
 
-      // ── LOCK CHECK 1: Previous course in same school ──
-      if (course.school_slug && course.school_order_index > 1) {
-        const { data: prevCourse } = await admin
-          .from('academy_courses')
-          .select('id')
-          .eq('school_slug', course.school_slug)
-          .eq('school_order_index', course.school_order_index - 1)
-          .single()
-
-        if (prevCourse) {
-          const { data: prevProgress } = await admin
-            .from('academy_progress')
-            .select('passed')
-            .eq('user_id', user.id)
-            .eq('course_id', prevCourse.id)
-            .single()
-
-          if (!prevProgress?.passed) {
-            locked = { locked: true, reason: 'Complete the previous course in this school first.' }
-          }
-        }
-      }
-
-      // ── LOCK CHECK 2: Cross-school lock ──
-      if (course.school_slug && !locked.locked) {
-        // Check if user has enrollments in a DIFFERENT school
+      // ── LOCK LOGIC ──
+      if (course.school_slug) {
+        // Get ALL schools the user is enrolled in
         const { data: userEnrollments } = await admin
           .from('academy_enrollments')
           .select('course_id')
           .eq('user_id', user.id)
 
-        if (userEnrollments && userEnrollments.length > 0) {
-          const enrolledCourseIds = userEnrollments.map(e => e.course_id)
+        const enrolledCourseIds = userEnrollments?.map(e => e.course_id) ?? []
 
-          const { data: enrolledCourses } = await admin
+        const { data: enrolledCourseData } = await admin
+          .from('academy_courses')
+          .select('id, school_slug, school_order_index')
+          .in('id', enrolledCourseIds)
+          .eq('is_active', true)
+          .order('school_order_index')
+
+        const enrolledSchoolSlugs = [...new Set(enrolledCourseData?.map(c => c.school_slug) ?? [])]
+
+        // Check 1: Prerequisite within same school (only if enrolled in THIS school)
+        if (enrolledSchoolSlugs.includes(course.school_slug) && course.school_order_index > 1) {
+          const { data: prevCourse } = await admin
             .from('academy_courses')
-            .select('id, school_slug')
-            .in('id', enrolledCourseIds)
+            .select('id')
+            .eq('school_slug', course.school_slug)
+            .eq('school_order_index', course.school_order_index - 1)
+            .eq('is_active', true)
+            .single()
 
-          const otherSchoolSlugs = [...new Set(
-            (enrolledCourses ?? [])
-              .filter(c => c.school_slug !== course.school_slug)
-              .map(c => c.school_slug)
-          )]
+          if (prevCourse) {
+            const { data: prevProgress } = await admin
+              .from('academy_progress')
+              .select('passed')
+              .eq('user_id', user.id)
+              .eq('course_id', prevCourse.id)
+              .single()
 
-          // If they're enrolled in another school, check if it's complete
-          for (const otherSlug of otherSchoolSlugs) {
+            if (!prevProgress?.passed) {
+              locked = { locked: true, reason: 'Complete the previous course in this school first.' }
+            }
+          }
+        }
+
+        // Check 2: Cross-school lock
+        if (!locked.locked) {
+          const otherSchools = enrolledSchoolSlugs.filter(s => s !== course.school_slug)
+
+          for (const schoolSlug of otherSchools) {
             const { data: schoolCourses } = await admin
               .from('academy_courses')
               .select('id')
-              .eq('school_slug', otherSlug)
+              .eq('school_slug', schoolSlug)
+              .eq('is_active', true)
 
-            const schoolCourseIds = schoolCourses?.map(c => c.id) ?? []
-            
-            const { data: passedCourses } = await admin
+            const ids = schoolCourses?.map(c => c.id) ?? []
+
+            const { data: passedRecs } = await admin
               .from('academy_progress')
               .select('course_id')
               .eq('user_id', user.id)
-              .in('course_id', schoolCourseIds)
+              .in('course_id', ids)
               .eq('passed', true)
 
-            if ((passedCourses?.length ?? 0) < schoolCourseIds.length) {
+            const passedCount = passedRecs?.length ?? 0
+
+            if (passedCount < ids.length) {
               locked = { locked: true, reason: 'Finish all courses in your currently enrolled school first.' }
               break
             }
@@ -152,6 +156,7 @@ export async function POST(
         .select('id')
         .eq('school_slug', course.school_slug)
         .eq('school_order_index', course.school_order_index - 1)
+        .eq('is_active', true)
         .single()
 
       if (prevCourse) {
@@ -174,40 +179,39 @@ export async function POST(
       .select('course_id')
       .eq('user_id', user.id)
 
-    if (userEnrollments && userEnrollments.length > 0) {
-      const enrolledCourseIds = userEnrollments.map(e => e.course_id)
+    const enrolledCourseIds = userEnrollments?.map(e => e.course_id) ?? []
 
-      const { data: enrolledCourses } = await admin
+    const { data: enrolledCourseData } = await admin
+      .from('academy_courses')
+      .select('id, school_slug')
+      .in('id', enrolledCourseIds)
+      .eq('is_active', true)
+
+    const enrolledSchoolSlugs = [...new Set(enrolledCourseData?.map(c => c.school_slug) ?? [])]
+    const otherSchools = enrolledSchoolSlugs.filter(s => s !== course.school_slug)
+
+    for (const schoolSlug of otherSchools) {
+      const { data: schoolCourses } = await admin
         .from('academy_courses')
-        .select('id, school_slug')
-        .in('id', enrolledCourseIds)
+        .select('id')
+        .eq('school_slug', schoolSlug)
+        .eq('is_active', true)
 
-      const otherSchoolSlugs = [...new Set(
-        (enrolledCourses ?? [])
-          .filter(c => c.school_slug !== course.school_slug)
-          .map(c => c.school_slug)
-      )]
+      const ids = schoolCourses?.map(c => c.id) ?? []
 
-      for (const otherSlug of otherSchoolSlugs) {
-        const { data: schoolCourses } = await admin
-          .from('academy_courses')
-          .select('id')
-          .eq('school_slug', otherSlug)
+      const { data: passedRecs } = await admin
+        .from('academy_progress')
+        .select('course_id')
+        .eq('user_id', user.id)
+        .in('course_id', ids)
+        .eq('passed', true)
 
-        const schoolCourseIds = schoolCourses?.map(c => c.id) ?? []
+      const passedCount = passedRecs?.length ?? 0
 
-        const { data: passedCourses } = await admin
-          .from('academy_progress')
-          .select('course_id')
-          .eq('user_id', user.id)
-          .in('course_id', schoolCourseIds)
-          .eq('passed', true)
-
-        if ((passedCourses?.length ?? 0) < schoolCourseIds.length) {
-          return NextResponse.json({
-            error: 'You are already enrolled in another school. Finish all courses there first.'
-          }, { status: 403 })
-        }
+      if (passedCount < ids.length) {
+        return NextResponse.json({
+          error: 'Finish all courses in your currently enrolled school first.'
+        }, { status: 403 })
       }
     }
 
@@ -225,4 +229,3 @@ export async function POST(
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }
 }
-

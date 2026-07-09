@@ -19,7 +19,14 @@ interface Result {
   totalQuestions: number
   percentage: number
   passed: boolean
+  certificate_id: string | null      // ← add
+  schoolComplete: boolean            // ← add
+  schoolProgress: {                  // ← add
+    completed: number
+    total: number
+  }
 }
+
 
 export default function TestPage() {
   const { slug } = useParams()
@@ -95,7 +102,7 @@ export default function TestPage() {
     )
   }
 
-  if (result) {
+ if (result) {
     return (
       <div className="max-w-md mx-auto">
         <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8 text-center">
@@ -110,19 +117,53 @@ export default function TestPage() {
           </p>
           {result.passed ? (
             <>
-              <p className="text-green-600 text-sm mb-6">You&apos;ve passed and earned your certificate for {courseTitle}.</p>
-              <button onClick={() => router.push('/academy/certificates')} className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm">
-                View Certificate
-              </button>
+              {result.schoolComplete ? (
+                <>
+                  <p className="text-green-600 text-sm mb-2">
+                    🎓 You&apos;ve completed <strong>all courses</strong> in this school!
+                  </p>
+                  <p className="text-green-600 text-sm mb-6">
+                    Your school certificate is ready.
+                  </p>
+                  <button
+                    onClick={() => router.push('/academy/certificates')}
+                    className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm"
+                  >
+                    View School Certificate
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-green-600 text-sm mb-1">
+                    ✅ You passed <strong>{courseTitle}</strong>!
+                  </p>
+                  <p className="text-[#6B7280] text-sm mb-6">
+                    School progress: <strong>{result.schoolProgress.completed}/{result.schoolProgress.total}</strong> courses completed.
+                    Complete all {result.schoolProgress.total} to earn your school certificate.
+                  </p>
+                  <button
+                    onClick={() => router.push(`/academy/schools`)}
+                    className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm"
+                  >
+                    Continue to Next Course
+                  </button>
+                </>
+              )}
             </>
           ) : (
             <>
-              <p className="text-[#6B7280] text-sm mb-6">You need at least 70% to pass. Review the lesson and try again.</p>
+              <p className="text-[#6B7280] text-sm mb-6">You need at least 75% to pass. Review the lesson and try again.</p>
               <div className="flex flex-col gap-2">
-                <button onClick={() => router.push(`/academy/schools/${slug}/lesson`)} className="w-full bg-white border border-[#E5E7EB] text-[#111827] font-bold py-3 rounded-xl hover:bg-[#F7F4EE] transition-colors text-sm">
+                <button
+                  onClick={() => router.push(`/academy/schools/${slug}/learn`)}
+                  className="w-full bg-white border border-[#E5E7EB] text-[#111827] font-bold py-3 rounded-xl hover:bg-[#F7F4EE] transition-colors text-sm"
+                >
                   Review Lesson
                 </button>
-                <button onClick={() => { setResult(null); setAnswers({}) }} className="w-full bg-[#01381d] text-white font-bold py-3 rounded-xl hover:bg-[#015b2d] transition-colors text-sm">
+                <button
+                  onClick={() => { setResult(null); setAnswers({}) }}
+                  className="w-full bg-[#01381d] text-white font-bold py-3 rounded-xl hover:bg-[#015b2d] transition-colors text-sm"
+                >
                   Retake Assessment
                 </button>
               </div>
@@ -132,6 +173,7 @@ export default function TestPage() {
       </div>
     )
   }
+
 
   return (
     <div className="max-w-2xl mx-auto">

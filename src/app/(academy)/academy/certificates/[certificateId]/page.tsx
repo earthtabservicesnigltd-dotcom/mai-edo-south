@@ -19,14 +19,14 @@ export default function CertificateViewPage() {
       })
   }, [certificateId])
 
-   if (loading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="w-8 h-8 border-3 border-[#01381d] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
-  if (!cert) return <div>Certificate not found</div>
+  if (!cert) return <div className="text-center py-20 text-[#6B7280]">Certificate not found</div>
 
   return (
     <div className="py-10 px-4">

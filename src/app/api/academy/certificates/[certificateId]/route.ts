@@ -12,16 +12,12 @@ export async function GET(
     const admin = supabaseAdmin()
 
     const { data: cert, error } = await admin
-      .from('academy_certificates')
+      .from('academy_school_certificates')
       .select(`
         certificate_id,
         issued_at,
         user_id,
-        academy_courses (
-          title,
-          certificate_title,
-          short_label
-        )
+        school_slug
       `)
       .eq('certificate_id', dbId)
       .maybeSingle()
@@ -30,36 +26,28 @@ export async function GET(
       return NextResponse.json({ valid: false }, { status: 404 })
     }
 
+    const { data: school } = await admin
+      .from('academy_schools')
+      .select('title, certificate_title')
+      .eq('slug', cert.school_slug)
+      .single()
+
     const { data: profile } = await admin
       .from('profiles')
       .select('first_name, last_name')
       .eq('id', cert.user_id)
       .single()
 
-    type CourseJoin = {
-        title: string
-        certificate_title: string
-        short_label: string
-        }
-
-        const courseRaw = cert.academy_courses as CourseJoin | CourseJoin[] | null
-        const course = Array.isArray(courseRaw) ? courseRaw[0] : courseRaw
-
-        if (!course) {
-        return NextResponse.json({ valid: false }, { status: 404 })
-        }
-
-        return NextResponse.json({
-        valid: true,
-        certificate: {
-            certificate_id: cert.certificate_id,
-            recipient_name: `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim(),
-            certificate_title: course.certificate_title,
-            course_title: course.title,
-            issued_at: cert.issued_at,
-            duration: '1 Day',
-        },
-
+    return NextResponse.json({
+      valid: true,
+      certificate: {
+        certificate_id: cert.certificate_id,
+        recipient_name: `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim(),
+        certificate_title: school?.certificate_title ?? '',
+        course_title: school?.title ?? cert.school_slug,
+        issued_at: cert.issued_at,
+        duration: 'One Week',
+      },
     })
   } catch {
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })

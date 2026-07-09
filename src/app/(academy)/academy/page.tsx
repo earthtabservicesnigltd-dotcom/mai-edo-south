@@ -77,13 +77,13 @@ export default function DashboardPage() {
           })
 
           totalCompleted += completed
-          // Count certificates (courses where all passed = school completed)
-          // For now, count individual passed courses as certificates
-            const certsForSchool = schoolCourses.filter(c => {
-            const prog = progressResults.find(p => p.course?.slug === c.slug)
-            return prog?.progress?.passed
-          }).length
-          totalCerts += certsForSchool
+         // Count school-level certificates (only when ALL courses in school are passed)
+        const allSchoolPassed = schoolCourses.length > 0 && schoolCourses.every(c => {
+          const prog = progressResults.find(p => p.course?.slug === c.slug)
+          return prog?.progress?.passed
+        })
+        if (allSchoolPassed) totalCerts += 1
+
         })
 
         // Find which schools the user is enrolled in
@@ -262,7 +262,7 @@ export default function DashboardPage() {
                 </div>
               </Link>
             ))}
-            <Link href="/academy/enroll" className="bg-[#F7F4EE] border border-dashed border-[#E5E7EB] rounded-xl p-3.5 hover:border-[#f97316] transition-colors">
+            <Link href="/academy/schools" className="bg-[#F7F4EE] border border-dashed border-[#E5E7EB] rounded-xl p-3.5 hover:border-[#f97316] transition-colors">
               <div className="flex items-center gap-2.5 mb-2">
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center text-base bg-[rgba(249,115,22,0.1)] text-[#f97316]">
                   <i className="ti ti-circle-plus" />

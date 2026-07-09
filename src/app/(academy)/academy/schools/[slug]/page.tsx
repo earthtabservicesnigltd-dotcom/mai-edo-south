@@ -153,13 +153,16 @@ export default function CourseDetailPage() {
           {/* Completed state */}
           {testPassed ? (
             <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-center">
-              <p className="text-green-700 font-bold text-sm mb-1">✅ Course Completed</p>
+              <p className="text-green-700 font-bold text-sm mb-1">✅ Course Passed</p>
               <p className="text-green-600 text-xs">
-                Score: {progress?.best_score}/{progress?.total_questions} — Certificate earned
+                Score: {progress?.best_score}/{progress?.totalQuestions}
               </p>
-              <button onClick={() => router.push('/academy/certificates')}
+              <p className="text-[#6B7280] text-xs mt-2">
+                Complete all courses in this school to earn your certificate.
+              </p>
+              <button onClick={() => router.push('/academy/schools')}
                 className="mt-3 text-xs font-semibold text-[#f97316] hover:underline">
-                View Certificate →
+                View School Progress →
               </button>
             </div>
           ) : isEnrolled ? (

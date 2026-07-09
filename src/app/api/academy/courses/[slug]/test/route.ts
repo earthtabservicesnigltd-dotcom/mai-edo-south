@@ -39,14 +39,14 @@ export async function GET(
   }
 }
 
-// POST — submit answers, auto-grade
+// POST — submit answers, auto-grade, issue SCHOOL certificate if all courses done
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const { slug } = await params
-    const { answers } = await req.json() // { questionId: 'A', ... }
+    const { answers } = await req.json()
 
     const sb = await supabaseServer()
     const { data: { user }, error: authError } = await sb.auth.getUser()
@@ -55,14 +55,16 @@ export async function POST(
       return NextResponse.json({ error: 'You must be logged in.' }, { status: 401 })
     }
 
+    // Fetch course + its school info
     const { data: course } = await supabase
       .from('academy_courses')
-      .select('id, certificate_title')
+      .select('id, certificate_title, school_slug')
       .eq('slug', slug)
       .single()
 
     if (!course) return NextResponse.json({ error: 'Course not found' }, { status: 404 })
 
+    // Grade the test
     const { data: questions, error: qError } = await supabase
       .from('academy_questions')
       .select('id, correct_answer')
@@ -80,7 +82,7 @@ export async function POST(
     const totalQuestions = questions.length
     const passed = score / totalQuestions >= PASS_THRESHOLD
 
-    // Get current progress to track attempts + best score
+    // Track progress (same as before)
     const { data: existing } = await supabase
       .from('academy_progress')
       .select('test_attempts, best_score, passed')
@@ -92,7 +94,7 @@ export async function POST(
     const bestScore = Math.max(existing?.best_score ?? 0, score)
     const alreadyPassed = existing?.passed ?? false
 
-    const { error: updateError } = await supabase
+    await supabase
       .from('academy_progress')
       .upsert({
         user_id: user.id,
@@ -106,30 +108,69 @@ export async function POST(
         updated_at: new Date().toISOString(),
       }, { onConflict: 'user_id,course_id' })
 
-    if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
+    // ── NEW: Only issue certificate if ALL courses in school are passed ──
+    let certificate_id = null
+    const justPassed = passed && !alreadyPassed
 
-   const certificate_id =
-    passed && !alreadyPassed
-      ? (
-          await supabase
-            .from('academy_certificates')
-            .upsert(
-              { user_id: user.id, course_id: course.id },
-              { onConflict: 'user_id,course_id' }
-            )
-            .select('certificate_id')
-            .single()
-        ).data?.certificate_id ?? null
-      : null
+    if (justPassed && course.school_slug) {
+      // Count total courses in this school
+      const { data: schoolCourses, count: totalInSchool } = await supabase
+        .from('academy_courses')
+        .select('id', { count: 'exact', head: true })
+        .eq('school_slug', course.school_slug)
+        .eq('is_active', true)
 
-  return NextResponse.json({
-    success: true,
-    score,
-    totalQuestions,
-    percentage: Math.round((score / totalQuestions) * 100),
-    passed,
-    certificate_id,
-  })
+      // Count how many the user has passed
+      const { data: passedCourses } = await supabase
+        .from('academy_progress')
+        .select('course_id')
+        .eq('user_id', user.id)
+        .in('course_id', schoolCourses?.map(c => c.id) ?? [])
+        .eq('passed', true)
+
+      // If user has passed ALL courses in this school → issue school certificate
+      if ((passedCourses?.length ?? 0) >= (totalInSchool ?? 0)) {
+        const certResult = await supabase
+          .from('academy_school_certificates')
+          .upsert(
+            { user_id: user.id, school_slug: course.school_slug },
+            { onConflict: 'user_id,school_slug' }
+          )
+          .select('certificate_id')
+          .single()
+
+        certificate_id = certResult.data?.certificate_id ?? null
+      }
+    }
+
+    // Return info about next steps
+    const { data: allSchoolCourses } = await supabase
+      .from('academy_courses')
+      .select('id')
+      .eq('school_slug', course.school_slug)
+      .eq('is_active', true)
+
+    const { data: pCourses } = await supabase
+      .from('academy_progress')
+      .select('course_id')
+      .eq('user_id', user.id)
+      .in('course_id', allSchoolCourses?.map(c => c.id) ?? [])
+      .eq('passed', true)
+
+    const totalInSchoolCompleted = pCourses?.length ?? 0
+    const totalInSchool = allSchoolCourses?.length ?? 0
+    const schoolComplete = totalInSchoolCompleted >= totalInSchool
+
+    return NextResponse.json({
+      success: true,
+      score,
+      totalQuestions,
+      percentage: Math.round((score / totalQuestions) * 100),
+      passed,
+      certificate_id,
+      schoolComplete,
+      schoolProgress: { completed: totalInSchoolCompleted, total: totalInSchool },
+    })
 
   } catch {
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
