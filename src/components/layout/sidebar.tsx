@@ -9,7 +9,7 @@ import { supabaseBrowser } from '@/lib/supabase'
 const NAV_ITEMS = [
   { href: '/academy', icon: 'ti-layout-dashboard', label: 'Dashboard', section: 'main' },
   { href: '/academy/schools', icon: 'ti-book-2', label: 'My Schools', section: 'main' },
-  { href: '/academy/schedule', icon: 'ti-calendar-week', label: 'Weekly Schedule', section: 'main' },
+  { href: '/academy/schedule', icon: 'ti-calendar-week', label: 'Daily Schedule', section: 'main' },
   { href: '/academy/assignments', icon: 'ti-clipboard-list', label: 'Assignments', section: 'main' },
   { href: '/academy/capstone', icon: 'ti-trophy', label: 'Capstone Projects', section: 'main' },
   { href: '/academy/certificates', icon: 'ti-certificate', label: 'Certificates', section: 'account' },

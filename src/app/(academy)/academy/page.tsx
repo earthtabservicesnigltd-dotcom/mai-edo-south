@@ -33,6 +33,7 @@ interface SchoolProgress {
   total: number
   percent: number
   currentCourse?: string
+  currentCourseSlug?: string
 }
 
 export default function DashboardPage() {
@@ -44,7 +45,6 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchDashboard() {
       try {
-        // Fetch student ID
         const supabase = supabaseBrowser()
         const { data: { user } } = await supabase.auth.getUser()
         if (user) {
@@ -56,12 +56,10 @@ export default function DashboardPage() {
           if (profile?.student_id) setStudentId(profile.student_id)
         }
 
-        // Fetch schools
         const schoolsRes = await fetch('/api/academy/schools')
         const schoolsData = await schoolsRes.json()
         const schools: School[] = schoolsData.schools ?? []
 
-        // Fetch progress for every course across all schools
         const allCourses = schools.flatMap(s => s.courses.map(c => ({ ...c, school: s })))
         
         const progressResults = await Promise.all(
@@ -71,7 +69,6 @@ export default function DashboardPage() {
           })
         )
 
-        // Build school-level progress
         const schoolMap = new Map<string, { completed: number; total: number }>()
         let totalCompleted = 0
         let totalCerts = 0
@@ -96,7 +93,6 @@ export default function DashboardPage() {
           if (allSchoolPassed) totalCerts += 1
         })
 
-        // Find which schools the user is enrolled in
         const enrolled: SchoolProgress[] = []
         schools.forEach(school => {
           const schoolCourses = allCourses.filter(c => c.school.slug === school.slug)
@@ -122,6 +118,7 @@ export default function DashboardPage() {
               total: data.total,
               percent: Math.round((data.completed / data.total) * 100),
               currentCourse: firstIncomplete?.short_label,
+              currentCourseSlug: firstIncomplete?.slug,
             })
           }
         })
@@ -175,7 +172,6 @@ export default function DashboardPage() {
 
   return (
     <div>
-      {/* Hero Banner */}
       <div className="relative rounded-2xl overflow-hidden mb-5 p-7" style={{ background: 'linear-gradient(135deg, #01381d 0%, #024d26 100%)' }}>
         <div className="absolute top-0 left-1/3 w-72 h-72 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)' }} />
         <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)' }} />
@@ -200,7 +196,6 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex gap-3 lg:shrink-0">
-            {/* Student ID */}
             {studentId && (
               <div className="bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-center min-w-[160px]">
                 <div className="text-white/50 text-[9px] font-light uppercase tracking-wider mb-1">Student ID</div>
@@ -225,7 +220,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
         {[
           { label: 'Schools enrolled', val: String(stats.schools), sub: `of 6 available`, iconBg: '#e1f5ee', iconColor: '#0f6e56', icon: 'ti-book-2' },
@@ -248,13 +242,12 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Schools + Schedule */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
         <div>
           <SectionHead title="My Schools" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {enrolledSchools.map(s => (
-              <Link key={s.slug} href="/academy/schools"
+              <Link key={s.slug} href={`/academy/schools/${s.currentCourseSlug || s.slug}`}
                 className="bg-white border border-[#E5E7EB] rounded-xl p-3.5 hover:border-[#f97316] transition-colors">
                 <div className="flex items-center gap-2.5 mb-3">
                   <div className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
@@ -323,7 +316,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Activity */}
       <SectionHead title="Recent activity" />
       <Panel>
         {[

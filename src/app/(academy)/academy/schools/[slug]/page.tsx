@@ -172,12 +172,19 @@ export default function CourseDetailPage() {
                   className="bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm">
                   Continue Lesson
                 </button>
-              ) : assessmentLocked ? (
-                <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
-                  <i className="ti ti-lock text-red-400 text-lg block mb-1" />
-                  <p className="text-red-600 font-semibold text-sm">Assessment Locked</p>
-                  <p className="text-red-500 text-xs mt-1">Waiting for admin to open the assessment.</p>
+             ) : assessmentLocked ? (
+                <div className="flex flex-col gap-2">
+                  <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
+                    <i className="ti ti-lock text-red-400 text-lg block mb-1" />
+                    <p className="text-red-600 font-semibold text-sm">Assessment Locked</p>
+                    <p className="text-red-500 text-xs mt-1">Waiting for admin to open the assessment.</p>
+                  </div>
+                  <button onClick={() => router.push(`/academy/schools/${slug}/learn`)}
+                    className="bg-white border border-[#E5E7EB] text-[#111827] font-bold py-3 rounded-xl hover:bg-[#F7F4EE] transition-colors text-sm">
+                    Review Lesson
+                  </button>
                 </div>
+
               ) : (
                 <button onClick={() => router.push(`/academy/schools/${slug}/test`)}
                   className="bg-[#01381d] text-white font-bold py-3 rounded-xl hover:bg-[#015b2d] transition-colors text-sm">
