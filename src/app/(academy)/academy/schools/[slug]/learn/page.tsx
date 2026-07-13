@@ -29,12 +29,10 @@ export default function LessonPage() {
   const [activeId, setActiveId] = useState('')
 
   useEffect(() => {
-    // In LessonPage, replace the existing fetchCourse function:
     async function fetchCourse() {
       const res = await fetch(`/api/academy/courses/${slug}`)
       const data = await res.json()
       if (res.ok) {
-        // Check lock first
         if (data.locked?.locked) {
           toast.error(data.locked.reason)
           router.push(`/academy/schools`)
@@ -61,7 +59,6 @@ export default function LessonPage() {
     fetchCourse()
   }, [slug, router])
 
-  // Scroll spy — watches headings inside layout scroll container
   useEffect(() => {
     if (!headings.length) return
 
@@ -107,9 +104,18 @@ export default function LessonPage() {
   }
 
   async function handleComplete() {
+    // Check if assessment is locked
+    const res = await fetch(`/api/academy/courses/${slug}`)
+    const data = await res.json()
+    
+    if (data.course?.assessments_locked === true) {
+      toast.error('Assessment is locked by admin. Please wait for it to be opened.')
+      return
+    }
+
     setCompleting(true)
-    const res = await fetch(`/api/academy/courses/${slug}/learn`, { method: 'POST' })
-    if (res.ok) {
+    const learnRes = await fetch(`/api/academy/courses/${slug}/learn`, { method: 'POST' })
+    if (learnRes.ok) {
       toast.success('Lesson completed! Time for the assessment.')
       router.push(`/academy/schools/${slug}/test`)
     } else {
@@ -163,7 +169,6 @@ export default function LessonPage() {
         </aside>
       )}
 
-
       <div className="flex-1 min-w-0 bg-white border border-[#E5E7EB] rounded-2xl p-7">
         <h1 className="font-[Syne] text-2xl font-extrabold text-[#111827] mb-6">{course.title}</h1>
 
@@ -183,7 +188,9 @@ export default function LessonPage() {
 
         <div className="mt-8 pt-6 border-t border-[#E5E7EB]">
           <Dialog>
-            <DialogTrigger  className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm disabled:opacity-60">I&apos;ve Finished — Take the Assessment</DialogTrigger>
+            <DialogTrigger className="w-full bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm disabled:opacity-60">
+              I&apos;ve Finished — Take the Assessment
+            </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -191,7 +198,7 @@ export default function LessonPage() {
                   Please move on to the assessment only after you have completed the lesson. You will not be able to return to the lesson once you start the assessment.
                 </DialogDescription>
                 <div className="flex items-center gap-4 justify-end mt-6">
-                  <DialogClose className="border broder-2 bg-transparent px-4 py-3 rounded-lg hover:bg-[#F7F4EE]">Close</DialogClose>
+                  <DialogClose className="border border-2 bg-transparent px-4 py-3 rounded-lg hover:bg-[#F7F4EE]">Close</DialogClose>
                   <button
                     onClick={handleComplete}
                     disabled={completing}
@@ -203,7 +210,6 @@ export default function LessonPage() {
               </DialogHeader>
             </DialogContent>
           </Dialog>
-          
         </div>
       </div>
     </div>

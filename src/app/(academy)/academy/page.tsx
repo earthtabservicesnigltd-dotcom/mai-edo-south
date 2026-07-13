@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Badge, Panel, SectionHead } from '@/components/ui/shared'
 import { Skeleton } from '@/components/ui/skeleton'
+import { supabaseBrowser } from '@/lib/supabase'
 
 interface Course {
   id: string
   slug: string
   title: string
   short_label: string
-  // no school_certificate field
 }
-
 
 interface School {
   slug: string
@@ -39,11 +38,24 @@ interface SchoolProgress {
 export default function DashboardPage() {
   const [enrolledSchools, setEnrolledSchools] = useState<SchoolProgress[]>([])
   const [stats, setStats] = useState({ schools: 0, coursesCompleted: 0, certificates: 0 })
+  const [studentId, setStudentId] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchDashboard() {
       try {
+        // Fetch student ID
+        const supabase = supabaseBrowser()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('student_id')
+            .eq('id', user.id)
+            .single()
+          if (profile?.student_id) setStudentId(profile.student_id)
+        }
+
         // Fetch schools
         const schoolsRes = await fetch('/api/academy/schools')
         const schoolsData = await schoolsRes.json()
@@ -77,13 +89,11 @@ export default function DashboardPage() {
           })
 
           totalCompleted += completed
-         // Count school-level certificates (only when ALL courses in school are passed)
-        const allSchoolPassed = schoolCourses.length > 0 && schoolCourses.every(c => {
-          const prog = progressResults.find(p => p.course?.slug === c.slug)
-          return prog?.progress?.passed
-        })
-        if (allSchoolPassed) totalCerts += 1
-
+          const allSchoolPassed = schoolCourses.length > 0 && schoolCourses.every(c => {
+            const prog = progressResults.find(p => p.course?.slug === c.slug)
+            return prog?.progress?.passed
+          })
+          if (allSchoolPassed) totalCerts += 1
         })
 
         // Find which schools the user is enrolled in
@@ -97,7 +107,6 @@ export default function DashboardPage() {
 
           if (isEnrolled) {
             const data = schoolMap.get(school.slug)!
-            // Find first incomplete course
             const firstIncomplete = schoolCourses.find(c => {
               const prog = progressResults.find(p => p.course?.slug === c.slug)
               return !prog?.progress?.passed
@@ -132,7 +141,6 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="space-y-5">
-        {/* Hero skeleton */}
         <div className="rounded-2xl overflow-hidden mb-5 p-7 bg-[#01381d]">
           <div className="space-y-3">
             <Skeleton className="h-4 w-32 bg-white/20" />
@@ -140,7 +148,6 @@ export default function DashboardPage() {
             <Skeleton className="h-4 w-96 bg-white/20" />
           </div>
         </div>
-        {/* Stat cards skeleton */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4">
@@ -150,7 +157,6 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
-        {/* Schools + Schedule skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-3">
             <Skeleton className="h-5 w-24" />
@@ -166,7 +172,6 @@ export default function DashboardPage() {
       </div>
     )
   }
-
 
   return (
     <div>
@@ -195,6 +200,15 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex gap-3 lg:shrink-0">
+            {/* Student ID */}
+            {studentId && (
+              <div className="bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-center min-w-[160px]">
+                <div className="text-white/50 text-[9px] font-light uppercase tracking-wider mb-1">Student ID</div>
+                <div className="font-mono text-sm font-bold text-[#f97316] tracking-wider truncate">
+                  {studentId}
+                </div>
+              </div>
+            )}
             {[
               { val: String(stats.schools), sup: '', label: 'Schools enrolled' },
               { val: String(stats.coursesCompleted), sup: '', label: 'Courses done' },

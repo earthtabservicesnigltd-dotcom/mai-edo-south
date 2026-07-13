@@ -7,63 +7,59 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
-interface Course {
-  id: string
-  slug: string
-  title: string
-  short_label: string
-  description: string
-  icon: string
-  icon_bg: string
-  icon_color: string
-  certificate_title: string
-  instructor_name: string | null
-  school_slug: string
-  school_order_index: number
-  is_active: boolean
-  academy_schools: { title: string }
-}
-
 export default function CoursesAdminPage() {
-  const [courses, setCourses] = useState<Course[]>([])
+  const [courses, setCourses] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [schoolFilter, setSchoolFilter] = useState('all')
+  const [lockState, setLockState] = useState<Record<string, boolean>>({})
   const { toggleSidebar } = useSidebar()
 
   useEffect(() => { fetchCourses() }, [])
 
   async function fetchCourses() {
-    const res = await fetch('/api/admin/academy/courses')
-    const data = await res.json()
-    // Actually fetch from the schools API to get grouped data
     const schoolsRes = await fetch('/api/academy/schools')
     const schoolsData = await schoolsRes.json()
-    setCourses(schoolsData.schools ?? [])
+    const schools = schoolsData.schools ?? []
+    setCourses(schools)
+
+    // Build initial lock state: default all to locked (true)
+    const initial: Record<string, boolean> = {}
+    schools.forEach((s: any) =>
+      (s.courses || []).forEach((c: any) => {
+        initial[c.id] = c.assessments_locked ?? true
+      })
+    )
+    setLockState(initial)
     setLoading(false)
+  }
+
+  async function toggleAssessment(courseId: string) {
+    const newLocked = !lockState[courseId]
+
+    // Update local state immediately (instant feedback)
+    setLockState(prev => ({ ...prev, [courseId]: newLocked }))
+
+    // Fire API in background
+    const res = await fetch(`/api/admin/academy/courses/toggle-assessment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ courseId, locked: newLocked }),
+    })
+    if (res.ok) {
+      toast.success(`Assessment ${newLocked ? 'locked' : 'opened'}`)
+    } else {
+      toast.error('Failed to toggle')
+    }
   }
 
   const allCourses = courses.flatMap((s: any) => s.courses || [])
   const filtered = allCourses.filter((c: any) => {
-    if (schoolFilter !== 'all' && c.school_slug !== schoolFilter) return false
     if (search) {
       const q = search.toLowerCase()
       return c.title?.toLowerCase().includes(q) || c.short_label?.toLowerCase().includes(q)
     }
     return true
   })
-
-  async function toggleActive(courseId: string, current: boolean) {
-    const admin = await import('@/lib/supabase').then(m => m.supabaseAdmin())
-    // Direct API call
-    await fetch('/api/admin/academy/courses/toggle', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: courseId, is_active: !current }),
-    })
-    toast.success(`Course ${current ? 'deactivated' : 'activated'}`)
-    fetchCourses()
-  }
 
   return (
     <div className="space-y-6">
@@ -91,7 +87,7 @@ export default function CoursesAdminPage() {
             <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-16 bg-gray-100 rounded animate-pulse" />)}</div>
           ) : (
             <div className="space-y-8">
-              {(courses as any[]).map((school: any) => (
+              {courses.map((school: any) => (
                 <div key={school.slug}>
                   <h3 className="font-heading text-lg text-[#01381d] mb-3 flex items-center gap-2">
                     <div className="w-6 h-6 rounded flex items-center justify-center text-xs" style={{ background: school.icon_bg, color: school.icon_color }}>
@@ -110,6 +106,7 @@ export default function CoursesAdminPage() {
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Instructor</th>
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Certificate</th>
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Status</th>
+                          <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Assessment</th>
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Questions</th>
                           <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Edit</th>
                         </tr>
@@ -126,6 +123,18 @@ export default function CoursesAdminPage() {
                               <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${c.is_active !== false ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                                 {c.is_active !== false ? 'Active' : 'Inactive'}
                               </span>
+                            </td>
+                            <td className="py-3 px-2">
+                              <button
+                                onClick={() => toggleAssessment(c.id)}
+                                className={`px-2 py-0.5 rounded-full text-xs font-bold transition-colors ${
+                                  lockState[c.id] === false
+                                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                    : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                }`}
+                              >
+                                {lockState[c.id] === false ? 'Lock' : 'Open'}
+                              </button>
                             </td>
                             <td className="py-3 px-2">
                               <Link href={`/admin/academy/courses/${c.slug}/questions`} className="text-[#f97316] text-xs font-semibold hover:underline">

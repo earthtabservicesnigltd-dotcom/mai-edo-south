@@ -47,6 +47,8 @@ export default function AcademicAuthPage() {
   const [showSignupPass, setShowSignupPass] = useState(false)
   const [signupLoading, setSignupLoading] = useState(false)
   const [signupError, setSignupError] = useState('')
+  const [phone, setPhone] = useState('')
+
 
   // Data
   const [schools, setSchools] = useState<School[]>([])
@@ -80,7 +82,7 @@ export default function AcademicAuthPage() {
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
     setSignupError('')
-    if (!firstName || !lastName || !signupEmail || !signupPassword || !schoolSlug || !courseSlug) {
+    if (!firstName || !lastName || !signupEmail || !signupPassword|| !phone || !schoolSlug || !courseSlug) {
       setSignupError('Please fill in all fields.'); return
     }
     if (signupPassword.length < 6) { setSignupError('Password must be at least 6 characters.'); return }
@@ -89,7 +91,7 @@ export default function AcademicAuthPage() {
     const res = await fetch('/api/academy/enroll', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, email: signupEmail, password: signupPassword, courseSlug }),
+      body: JSON.stringify({ firstName, lastName, email: signupEmail, phone, password: signupPassword, courseSlug }),
     })
     const data = await res.json()
     setSignupLoading(false)
@@ -272,27 +274,34 @@ export default function AcademicAuthPage() {
                   </div>
                 </div>
                 <div>
+                  <label className="text-[0.82rem] font-bold text-[#374151] tracking-[0.05em] uppercase block mb-2">Phone Number</label>
+                  <div className="relative">
+                    <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white focus:shadow-[0_0_0_3px_rgba(1,91,45,0.08)]"
+                      placeholder="+234 800 0000 000" />
+                  </div>
+                </div>
+
+                <div>
                   <label className="text-[0.82rem] font-bold text-[#374151] tracking-[0.05em] uppercase block mb-2">School</label>
                   <div className="relative">
                     <GraduationCap size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af] z-10" />
-                    <select value={schoolSlug} onChange={e => { setSchoolSlug(e.target.value); setCourseSlug('') }}
+                    <select 
+                      value={schoolSlug} 
+                      onChange={e => { 
+                        setSchoolSlug(e.target.value); 
+                        const school = schools.find(s => s.slug === e.target.value);
+                        if (school?.courses?.[0]) setCourseSlug(school.courses[0].slug);
+                      }}
+
                       className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white appearance-none">
                       <option value="">Choose your school</option>
                       {schools.map(s => <option key={s.slug} value={s.slug}>{s.title}</option>)}
                     </select>
                   </div>
                 </div>
-                <div>
-                  <label className="text-[0.82rem] font-bold text-[#374151] tracking-[0.05em] uppercase block mb-2">Course</label>
-                  <div className="relative">
-                    <BookOpen size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af] z-10" />
-                    <select value={courseSlug} onChange={e => setCourseSlug(e.target.value)} disabled={!schoolSlug}
-                      className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white appearance-none disabled:opacity-50">
-                      <option value="">{schoolSlug ? 'Choose a course...' : 'Select a school first'}</option>
-                      {(selectedSchool?.courses ?? []).map(c => <option key={c.slug} value={c.slug}>{c.short_label} — {c.title}</option>)}
-                    </select>
-                  </div>
-                </div>
+                
                 <div>
                   <label className="text-[0.82rem] font-bold text-[#374151] tracking-[0.05em] uppercase block mb-2">Password</label>
                   <div className="relative">

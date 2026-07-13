@@ -16,6 +16,7 @@ interface Course {
   certificate_title: string
   intro_video_url?: string
   instructor_name?: string
+  assessments_locked?: boolean
 }
 
 interface Progress {
@@ -69,7 +70,6 @@ export default function CourseDetailPage() {
     setEnrolling(false)
   }
 
-  // YouTube embed helper
   function getEmbedUrl(url?: string) {
     if (!url) return null
     if (url.includes('youtube.com/watch')) {
@@ -97,13 +97,13 @@ export default function CourseDetailPage() {
   const lessonDone = progress?.lesson_completed
   const testPassed = progress?.passed
   const isLocked = lockInfo?.locked
+  const assessmentLocked = course.assessments_locked !== false
   const embedUrl = getEmbedUrl(course.intro_video_url)
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
         
-        {/* Intro Video */}
         {embedUrl && (
           <div className="aspect-video w-full">
             <iframe
@@ -172,6 +172,12 @@ export default function CourseDetailPage() {
                   className="bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm">
                   Continue Lesson
                 </button>
+              ) : assessmentLocked ? (
+                <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
+                  <i className="ti ti-lock text-red-400 text-lg block mb-1" />
+                  <p className="text-red-600 font-semibold text-sm">Assessment Locked</p>
+                  <p className="text-red-500 text-xs mt-1">Waiting for admin to open the assessment.</p>
+                </div>
               ) : (
                 <button onClick={() => router.push(`/academy/schools/${slug}/test`)}
                   className="bg-[#01381d] text-white font-bold py-3 rounded-xl hover:bg-[#015b2d] transition-colors text-sm">
