@@ -31,16 +31,6 @@ const FAQS = [
   { q: 'Can the courses help me find opportunities?', a: 'Yes. Top graduates get matched with leadership roles, grants, and mentorship.' },
 ]
 
-const SCHOOL_COLORS: Record<string, { bg: string; from: string; to: string }> = {
-  'school-of-politics-policy-governance': { bg: '#e6f1fb', from: '#0f172a', to: '#1e3a5f' },
-  'school-of-leadership-management': { bg: '#e1f5ee', from: '#0f2810', to: '#015b2d' },
-  'school-of-business-entrepreneurship': { bg: '#faeeda', from: '#1c0a00', to: '#6b2c00' },
-  'school-of-public-service': { bg: '#fcebeb', from: '#2e0a3d', to: '#6b218a' },
-  'school-of-technology-digital-skills': { bg: '#e8f0fe', from: '#0f172a', to: '#1a56db' },
-  'school-of-ai-machine-learning': { bg: '#f3e8ff', from: '#2e0a3d', to: '#7c3aed' },
-}
-
-// HTML tag colors: Leadership=blue, Business=green, Politics=orange, Public Service=amber, Tech=amber, AI=amber
 const TAG_COLORS: Record<string, string> = {
   'school-of-leadership-management': 'bg-blue-50 text-blue-700',
   'school-of-business-entrepreneurship': 'bg-green-50 text-green-700',
@@ -146,7 +136,9 @@ export default function AcademyStartPage() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayCourses.map((course, idx) => {
-                const colors = SCHOOL_COLORS[course.schoolSlug] || { from: '#333', to: '#555' }
+                const colors = idx % 2 === 0
+                  ? { from: '#f97316', to: '#ea6a05' }  // orange
+                  : { from: '#01381d', to: '#015b2d' }  // green
                 return (
                   <div key={course.id} className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden flex flex-col transition-all hover:-translate-y-[5px] hover:shadow-[0_16px_40px_rgba(0,0,0,.09)]">
                     <div className="h-[170px] relative overflow-hidden flex flex-col justify-between p-5" style={{ background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)` }}>
@@ -154,7 +146,6 @@ export default function AcademyStartPage() {
                       <div className="font-['Syne',sans-serif] text-[6rem] font-extrabold leading-none absolute -right-2 -bottom-4 text-white/[.06] select-none">{String(idx + 1).padStart(2, '0')}</div>
                     </div>
                     <div className="p-6 flex flex-col flex-1">
-                      {/* Tag matching HTML colors: Leadership=blue, Business=green, Politics=orange, others=amber */}
                       <span className={`inline-flex items-center gap-1.5 text-[.66rem] font-bold tracking-[.1em] uppercase px-3.5 py-[5px] rounded ${TAG_COLORS[course.schoolSlug] || 'bg-gray-50 text-gray-700'}`}>
                         {course.schoolTitle}
                       </span>

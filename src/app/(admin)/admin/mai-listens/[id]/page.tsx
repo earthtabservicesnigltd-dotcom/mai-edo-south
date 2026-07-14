@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Submission {
   id: string
@@ -31,6 +32,7 @@ interface Submission {
   admin_reply: string
   admin_reply_at: string
   created_at: string
+  image_url?: string
 }
 
 export default function MAIListensDetailPage() {
@@ -276,6 +278,13 @@ export default function MAIListensDetailPage() {
               {new Date(submission.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
             </p>
           </div>
+          {submission.image_url && (
+            <div>
+              <p className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-2">Uploaded Image</p>
+              <Image src={submission.image_url} alt="Submitted evidence" width={400} height={300} className="rounded-xl border border-border max-w-full h-auto" />
+            </div>
+          )}
+
         </CardContent>
       </Card>
 

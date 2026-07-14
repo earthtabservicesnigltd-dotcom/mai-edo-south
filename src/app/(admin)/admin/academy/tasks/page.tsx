@@ -21,6 +21,9 @@ const SCHOOLS = [
   { slug: 'school-of-politics-policy-governance', label: 'Politics & Governance', color: 'bg-blue-100 text-blue-700' },
   { slug: 'school-of-leadership-management', label: 'Leadership & Management', color: 'bg-teal-100 text-teal-700' },
   { slug: 'school-of-business-entrepreneurship', label: 'Business & Entrepreneurship', color: 'bg-amber-100 text-amber-700' },
+  { slug: 'school-of-public-service', label: 'Public Service & Civic Delivery', color: 'bg-purple-100 text-purple-700' },
+  { slug: 'school-of-technology-digital-skills', label: 'Technology & Digital Skills', color: 'bg-indigo-100 text-indigo-700' },
+  { slug: 'school-of-ai-machine-learning', label: 'AI & Machine Learning', color: 'bg-pink-100 text-pink-700' },
 ]
 
 const DAYS = ['Overdue', 'Today', 'Tomorrow', 'This week']
@@ -75,6 +78,13 @@ export default function TasksAdminPage() {
               <label className="block text-xs font-bold text-ink-muted uppercase mb-1">Title</label>
               <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
             </div>
+            <div className="w-full">
+              <label className="block text-xs font-bold text-ink-muted uppercase mb-1">Description / Questions</label>
+              <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm" rows={4}
+                placeholder="Write the assignment details, questions, or instructions here..." />
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-ink-muted uppercase mb-1">School</label>
               <select value={form.school_slug} onChange={e => setForm(f => ({ ...f, school_slug: e.target.value }))} className="field px-3 py-2 rounded-lg border border-border text-sm">

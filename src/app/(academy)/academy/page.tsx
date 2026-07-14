@@ -199,9 +199,7 @@ export default function DashboardPage() {
             {studentId && (
               <div className="bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-center min-w-[160px]">
                 <div className="text-white/50 text-[9px] font-light uppercase tracking-wider mb-1">Student ID</div>
-                <div className="font-mono text-sm font-bold text-[#f97316] tracking-wider truncate">
-                  {studentId}
-                </div>
+                <div className="font-mono text-sm font-bold text-[#f97316] tracking-wider truncate">{studentId}</div>
               </div>
             )}
             {[
@@ -222,7 +220,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
         {[
-          { label: 'Schools enrolled', val: String(stats.schools), sub: `of 6 available`, iconBg: '#e1f5ee', iconColor: '#0f6e56', icon: 'ti-book-2' },
+          { label: 'Schools enrolled', val: String(stats.schools), sub: 'of 6 available', iconBg: '#e1f5ee', iconColor: '#0f6e56', icon: 'ti-book-2' },
           { label: 'Courses completed', val: String(stats.coursesCompleted), sub: 'across all schools', iconBg: '#e6f1fb', iconColor: '#185fa5', icon: 'ti-calendar-check' },
           { label: 'In progress', val: String(enrolledSchools.reduce((a, s) => a + (s.completed < s.total ? 1 : 0), 0)), sub: 'schools active', iconBg: '#faeeda', iconColor: '#854f0b', icon: 'ti-clipboard-check' },
           { label: 'Certificates', val: String(stats.certificates), sub: 'earned', iconBg: 'rgba(249,115,22,.1)', iconColor: '#f97316', icon: 'ti-certificate' },
@@ -250,8 +248,7 @@ export default function DashboardPage() {
               <Link key={s.slug} href={`/academy/schools/${s.currentCourseSlug || s.slug}`}
                 className="bg-white border border-[#E5E7EB] rounded-xl p-3.5 hover:border-[#f97316] transition-colors">
                 <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
-                    style={{ background: s.icon_bg, color: s.icon_color }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0" style={{ background: s.icon_bg, color: s.icon_color }}>
                     <i className={`ti ${s.icon}`} />
                   </div>
                   <div>
@@ -260,8 +257,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="h-1.5 bg-[#f0ede6] rounded-full overflow-hidden mb-1.5">
-                  <div className="h-full rounded-full transition-all"
-                    style={{ width: `${s.percent}%`, background: s.icon_color }} />
+                  <div className="h-full rounded-full transition-all" style={{ width: `${s.percent}%`, background: s.icon_color }} />
                 </div>
                 <div className="flex justify-between text-[10.5px] text-[#6B7280]">
                   <span>{s.currentCourse || 'All done!'}</span>
@@ -289,51 +285,109 @@ export default function DashboardPage() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2 text-[13px] font-semibold text-[#111827]">
-              <span className="w-2 h-2 rounded-full bg-[#f97316] inline-block" /> This week
+              <span className="w-2 h-2 rounded-full bg-[#f97316] inline-block" /> 
+              {enrolledSchools[0]?.title || 'Course'} Progression
             </div>
-            <Badge variant="orange">Week 1</Badge>
+            <Badge variant="orange">{enrolledSchools[0]?.slug ? 'Active' : '—'}</Badge>
           </div>
           <Panel>
-            {[
-              { dot: '#0f6e56', name: 'Complete Course 1', time: 'Complete the lesson and assessment', badgeBg: '#e1f5ee', badgeColor: '#085041', badgeLabel: 'Current', last: false },
-              { dot: '#185fa5', name: 'Progress to Course 2', time: 'Unlocks after passing Course 1', badgeBg: '#e6f1fb', badgeColor: '#185fa5', badgeLabel: 'Next', last: false },
-              { dot: '#ba7517', name: 'Course 3', time: 'Unlocks after passing Course 2', badgeBg: '#faeeda', badgeColor: '#633806', badgeLabel: 'Locked', last: false },
-              { dot: '#9CA3AF', name: 'School Certificate', time: 'Earned after all courses passed', badgeBg: 'rgba(249,115,22,0.1)', badgeColor: '#f97316', badgeLabel: 'Goal', last: true },
-            ].map((s, i) => (
-              <div key={i} className="flex gap-3">
-                <div className="flex flex-col items-center pt-1">
-                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: s.dot }} />
-                  {!s.last && <div className="w-px flex-1 my-1 bg-[#E5E7EB]" />}
+            {enrolledSchools.length > 0 ? (
+              <>
+                <div className="flex gap-3">
+                  <div className="flex flex-col items-center pt-1">
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: '#f97316' }} />
+                    <div className="w-px flex-1 my-1 bg-[#E5E7EB]" />
+                  </div>
+                  <div className="pb-3 flex-1">
+                    <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">
+                      {enrolledSchools[0].currentCourse || 'First Course'}
+                    </div>
+                    <div className="text-[11px] text-[#6B7280] mb-1.5">Complete the lesson and assessment</div>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">
+                      {enrolledSchools[0].completed === 0 ? 'Current' : 'In Progress'}
+                    </span>
+                  </div>
                 </div>
-                <div className="pb-3 flex-1">
-                  <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">{s.name}</div>
-                  <div className="text-[11px] text-[#6B7280] mb-1.5">{s.time}</div>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: s.badgeBg, color: s.badgeColor }}>{s.badgeLabel}</span>
+                <div className="flex gap-3">
+                  <div className="flex flex-col items-center pt-1">
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: '#9CA3AF' }} />
+                    <div className="w-px flex-1 my-1 bg-[#E5E7EB]" />
+                  </div>
+                  <div className="pb-3 flex-1">
+                    <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">Remaining Courses</div>
+                    <div className="text-[11px] text-[#6B7280] mb-1.5">
+                      {enrolledSchools[0].total - enrolledSchools[0].completed} more to complete
+                    </div>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Locked</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+                <div className="flex gap-3">
+                  <div className="flex flex-col items-center pt-1">
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: '#f97316' }} />
+                  </div>
+                  <div className="pb-0 flex-1">
+                    <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">School Certificate</div>
+                    <div className="text-[11px] text-[#6B7280] mb-1.5">Earned after all courses passed</div>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[rgba(249,115,22,0.1)] text-[#f97316]">Goal</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className="text-center text-[#6B7280] text-sm py-4">Enroll in a school to see your progress.</p>
+            )}
           </Panel>
         </div>
       </div>
 
       <SectionHead title="Recent activity" />
       <Panel>
-        {[
-          { iconBg: '#e1f5ee', iconColor: '#0f6e56', icon: 'ti-check', text: 'Course lesson completed', time: 'Today' },
-          { iconBg: '#faeeda', iconColor: '#854f0b', icon: 'ti-users', text: 'Enrolled in a new school', time: 'Yesterday' },
-          { iconBg: '#e6f1fb', iconColor: '#185fa5', icon: 'ti-file-text', text: 'Assessment submitted', time: '2 days ago' },
-          { iconBg: 'rgba(249,115,22,.1)', iconColor: '#f97316', icon: 'ti-certificate', text: 'Certificate earned', time: '3 days ago' },
-        ].map((a, i) => (
-          <div key={i} className={`flex items-start gap-3 py-2.5 ${i < 3 ? 'border-b border-[#E5E7EB]' : ''}`}>
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ background: a.iconBg, color: a.iconColor }}>
-              <i className={`ti ${a.icon}`} />
+        {(() => {
+          const activities: { icon: string; bg: string; color: string; text: string; time: string }[] = []
+          
+          enrolledSchools.forEach(s => {
+            activities.push({
+              icon: 'ti-users', bg: '#faeeda', color: '#854f0b',
+              text: `Enrolled in ${s.title}`,
+              time: `${s.completed}/${s.total} courses done`,
+            })
+          })
+
+          if (stats.coursesCompleted > 0) {
+            activities.push({
+              icon: 'ti-check', bg: '#e1f5ee', color: '#0f6e56',
+              text: `${stats.coursesCompleted} course${stats.coursesCompleted > 1 ? 's' : ''} completed`,
+              time: 'Across all schools',
+            })
+          }
+
+          if (stats.certificates > 0) {
+            activities.push({
+              icon: 'ti-certificate', bg: 'rgba(249,115,22,.1)', color: '#f97316',
+              text: `${stats.certificates} school certificate${stats.certificates > 1 ? 's' : ''} earned`,
+              time: 'Congratulations!',
+            })
+          }
+
+          if (activities.length === 0) {
+            activities.push({
+              icon: 'ti-info-circle', bg: '#e6f1fb', color: '#185fa5',
+              text: 'Enroll in a school to get started',
+              time: 'Your journey begins here',
+            })
+          }
+
+          return activities.map((a, i) => (
+            <div key={i} className={`flex items-start gap-3 py-2.5 ${i < activities.length - 1 ? 'border-b border-[#E5E7EB]' : ''}`}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ background: a.bg, color: a.color }}>
+                <i className={`ti ${a.icon}`} />
+              </div>
+              <div>
+                <div className="text-[12.5px] font-medium text-[#111827]">{a.text}</div>
+                <div className="text-[11px] text-[#9CA3AF]">{a.time}</div>
+              </div>
             </div>
-            <div>
-              <div className="text-[12.5px] font-medium text-[#111827]">{a.text}</div>
-              <div className="text-[11px] text-[#9CA3AF]">{a.time}</div>
-            </div>
-          </div>
-        ))}
+          ))
+        })()}
       </Panel>
     </div>
   )

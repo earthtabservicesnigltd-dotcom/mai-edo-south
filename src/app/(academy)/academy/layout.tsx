@@ -19,7 +19,7 @@ export default function AcademyLayout({ children }: { children: React.ReactNode 
   const router = useRouter()
   const title = getPageTitle(pathname)
 
-  const isPublicRoute = pathname === '/start'
+  const isPublicRoute = pathname === '/start' || pathname.startsWith('/academy/verify')
 
   useEffect(() => {
     if (isPublicRoute) {

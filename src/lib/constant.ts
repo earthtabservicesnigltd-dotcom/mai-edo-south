@@ -13,7 +13,7 @@ export type PageKey =
 export const PAGE_TITLES: Record<PageKey, string> = {
   dashboard: 'Overview',
   schools: 'My Schools',
-  schedule: 'Weekly Schedule',
+  schedule: 'Daily Schedule',
   assignments: 'Assignments',
   capstone: 'Capstone Projects',
   certificates: 'Certificates',
