@@ -36,11 +36,15 @@ interface SchoolProgress {
   currentCourseSlug?: string
 }
 
+const DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
 export default function DashboardPage() {
   const [enrolledSchools, setEnrolledSchools] = useState<SchoolProgress[]>([])
   const [stats, setStats] = useState({ schools: 0, coursesCompleted: 0, certificates: 0 })
   const [studentId, setStudentId] = useState('')
   const [loading, setLoading] = useState(true)
+  const [schoolCourses, setSchoolCourses] = useState<any[]>([])
+  const [progressResults, setProgressResults] = useState<any[]>([])
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -62,12 +66,13 @@ export default function DashboardPage() {
 
         const allCourses = schools.flatMap(s => s.courses.map(c => ({ ...c, school: s })))
         
-        const progressResults = await Promise.all(
+        const results = await Promise.all(
           allCourses.map(async (c) => {
             const r = await fetch(`/api/academy/courses/${c.slug}`)
             return r.json()
           })
         )
+        setProgressResults(results)
 
         const schoolMap = new Map<string, { completed: number; total: number }>()
         let totalCompleted = 0
@@ -76,18 +81,14 @@ export default function DashboardPage() {
         schools.forEach(school => {
           const schoolCourses = allCourses.filter(c => c.school.slug === school.slug)
           const completed = schoolCourses.filter(c => {
-            const prog = progressResults.find(p => p.course?.slug === c.slug)
+            const prog = results.find((p: any) => p.course?.slug === c.slug)
             return prog?.progress?.passed
           }).length
           
-          schoolMap.set(school.slug, {
-            completed,
-            total: schoolCourses.length,
-          })
-
+          schoolMap.set(school.slug, { completed, total: schoolCourses.length })
           totalCompleted += completed
           const allSchoolPassed = schoolCourses.length > 0 && schoolCourses.every(c => {
-            const prog = progressResults.find(p => p.course?.slug === c.slug)
+            const prog = results.find((p: any) => p.course?.slug === c.slug)
             return prog?.progress?.passed
           })
           if (allSchoolPassed) totalCerts += 1
@@ -97,14 +98,14 @@ export default function DashboardPage() {
         schools.forEach(school => {
           const schoolCourses = allCourses.filter(c => c.school.slug === school.slug)
           const isEnrolled = schoolCourses.some(c => {
-            const prog = progressResults.find(p => p.course?.slug === c.slug)
+            const prog = results.find((p: any) => p.course?.slug === c.slug)
             return prog?.enrollment
           })
 
           if (isEnrolled) {
             const data = schoolMap.get(school.slug)!
             const firstIncomplete = schoolCourses.find(c => {
-              const prog = progressResults.find(p => p.course?.slug === c.slug)
+              const prog = results.find((p: any) => p.course?.slug === c.slug)
               return !prog?.progress?.passed
             })
             
@@ -120,15 +121,15 @@ export default function DashboardPage() {
               currentCourse: firstIncomplete?.short_label,
               currentCourseSlug: firstIncomplete?.slug,
             })
+
+            // Store courses for the stepper
+            const schoolData = schoolsData.schools?.find((s: any) => s.slug === school.slug)
+            if (schoolData) setSchoolCourses(schoolData.courses || [])
           }
         })
 
         setEnrolledSchools(enrolled)
-        setStats({
-          schools: enrolled.length,
-          coursesCompleted: totalCompleted,
-          certificates: totalCerts,
-        })
+        setStats({ schools: enrolled.length, coursesCompleted: totalCompleted, certificates: totalCerts })
       } catch {}
       setLoading(false)
     }
@@ -286,52 +287,52 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2 text-[13px] font-semibold text-[#111827]">
               <span className="w-2 h-2 rounded-full bg-[#f97316] inline-block" /> 
-              {enrolledSchools[0]?.title || 'Course'} Progression
+              {enrolledSchools[0]?.title || 'Course'} Progress
             </div>
-            <Badge variant="orange">{enrolledSchools[0]?.slug ? 'Active' : '—'}</Badge>
+            <Badge variant="orange">{enrolledSchools[0]?.slug ? 'Daily' : '—'}</Badge>
           </div>
           <Panel>
-            {enrolledSchools.length > 0 ? (
-              <>
-                <div className="flex gap-3">
-                  <div className="flex flex-col items-center pt-1">
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: '#f97316' }} />
-                    <div className="w-px flex-1 my-1 bg-[#E5E7EB]" />
-                  </div>
-                  <div className="pb-3 flex-1">
-                    <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">
-                      {enrolledSchools[0].currentCourse || 'First Course'}
+            {schoolCourses.length > 0 ? (
+              <div className="divide-y divide-[#E5E7EB]">
+                {schoolCourses.map((course: any, idx: number) => {
+                  const prog = progressResults.find((p: any) => p.course?.slug === course.slug)
+                  const passed = prog?.progress?.passed
+                  const enrolled = prog?.enrollment
+                  const status = passed ? 'done' : enrolled ? 'current' : 'locked'
+                  return (
+                    <div key={course.id} className="flex items-center gap-3 py-3 px-1">
+                      <div className={`w-[26px] h-[26px] rounded-full flex items-center justify-center shrink-0 text-xs border-2 ${
+                        status === 'done' ? 'bg-green-600 border-green-600 text-white' :
+                        status === 'current' ? 'border-orange-500 text-orange-500' :
+                        'border-gray-300'
+                      }`}>
+                        {status === 'done' && <i className="ti ti-check text-white text-[10px]" />}
+                        {status === 'current' && <i className="ti ti-record text-[10px]" />}
+                      </div>
+                      <span className="font-mono text-[11px] text-[#6B7280] w-[36px] shrink-0 font-semibold">{DAYS[idx] || ''}</span>
+                      <span className={`text-[14px] flex-1 min-w-0 ${status === 'current' ? 'font-semibold text-[#111827]' : 'text-[#374151]'}`}>
+                        {course.short_label || course.title}
+                      </span>
+                      <span className={`text-[10px] font-semibold px-2.5 py-[3px] rounded ml-auto ${
+                        status === 'done' ? 'bg-green-100 text-green-700' :
+                        status === 'current' ? 'bg-orange-100 text-orange-700' :
+                        'bg-gray-100 text-gray-500'
+                      }`}>
+                        {status === 'done' ? 'Done' : status === 'current' ? 'Current' : 'Locked'}
+                      </span>
                     </div>
-                    <div className="text-[11px] text-[#6B7280] mb-1.5">Complete the lesson and assessment</div>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">
-                      {enrolledSchools[0].completed === 0 ? 'Current' : 'In Progress'}
-                    </span>
+                  )
+                })}
+                {/* Goal */}
+                <div className="flex items-center gap-3 py-3 px-1">
+                  <div className="w-[26px] h-[26px] rounded-full border-2 border-[#f97316] flex items-center justify-center shrink-0">
+                    <i className="ti ti-star text-[#f97316] text-[10px]" />
                   </div>
+                  <span className="font-mono text-[11px] text-[#6B7280] w-[36px] shrink-0">🎯</span>
+                  <span className="text-[14px] flex-1 min-w-0 font-semibold text-[#111827]">School Certificate</span>
+                  <span className="text-[10px] font-semibold px-2.5 py-[3px] rounded ml-auto bg-orange-50 text-orange-600">Goal</span>
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex flex-col items-center pt-1">
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: '#9CA3AF' }} />
-                    <div className="w-px flex-1 my-1 bg-[#E5E7EB]" />
-                  </div>
-                  <div className="pb-3 flex-1">
-                    <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">Remaining Courses</div>
-                    <div className="text-[11px] text-[#6B7280] mb-1.5">
-                      {enrolledSchools[0].total - enrolledSchools[0].completed} more to complete
-                    </div>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Locked</span>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex flex-col items-center pt-1">
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: '#f97316' }} />
-                  </div>
-                  <div className="pb-0 flex-1">
-                    <div className="text-[12.5px] font-semibold text-[#111827] mb-0.5">School Certificate</div>
-                    <div className="text-[11px] text-[#6B7280] mb-1.5">Earned after all courses passed</div>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[rgba(249,115,22,0.1)] text-[#f97316]">Goal</span>
-                  </div>
-                </div>
-              </>
+              </div>
             ) : (
               <p className="text-center text-[#6B7280] text-sm py-4">Enroll in a school to see your progress.</p>
             )}
@@ -343,7 +344,6 @@ export default function DashboardPage() {
       <Panel>
         {(() => {
           const activities: { icon: string; bg: string; color: string; text: string; time: string }[] = []
-          
           enrolledSchools.forEach(s => {
             activities.push({
               icon: 'ti-users', bg: '#faeeda', color: '#854f0b',
@@ -351,7 +351,6 @@ export default function DashboardPage() {
               time: `${s.completed}/${s.total} courses done`,
             })
           })
-
           if (stats.coursesCompleted > 0) {
             activities.push({
               icon: 'ti-check', bg: '#e1f5ee', color: '#0f6e56',
@@ -359,7 +358,6 @@ export default function DashboardPage() {
               time: 'Across all schools',
             })
           }
-
           if (stats.certificates > 0) {
             activities.push({
               icon: 'ti-certificate', bg: 'rgba(249,115,22,.1)', color: '#f97316',
@@ -367,7 +365,6 @@ export default function DashboardPage() {
               time: 'Congratulations!',
             })
           }
-
           if (activities.length === 0) {
             activities.push({
               icon: 'ti-info-circle', bg: '#e6f1fb', color: '#185fa5',
@@ -375,7 +372,6 @@ export default function DashboardPage() {
               time: 'Your journey begins here',
             })
           }
-
           return activities.map((a, i) => (
             <div key={i} className={`flex items-start gap-3 py-2.5 ${i < activities.length - 1 ? 'border-b border-[#E5E7EB]' : ''}`}>
               <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ background: a.bg, color: a.color }}>

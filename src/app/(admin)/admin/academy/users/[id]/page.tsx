@@ -58,6 +58,24 @@ export default function StudentDetailPage() {
           </div>
         </CardContent></Card>
       </div>
+            {/* Enrolled School */}
+      {enrollments.length > 0 && (() => {
+        const schoolSlugs = [...new Set(enrollments.map((e: any) => e.academy_courses?.school_slug).filter(Boolean))]
+        return (
+          <Card>
+            <CardContent className="pt-6 flex items-center gap-3">
+              <i className="ti ti-school text-[#f97316] text-xl" />
+              <div>
+                <div className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-0.5">Enrolled School</div>
+                <div className="font-heading text-lg text-[#01381d]">
+                  {schoolSlugs.map(s => s.replace('school-of-', '').replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())).join(', ')}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )
+      })()}
+
 
       {/* Progress per course */}
       <Card>
