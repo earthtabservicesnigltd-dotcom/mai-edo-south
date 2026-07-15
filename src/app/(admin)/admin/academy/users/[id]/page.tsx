@@ -23,10 +23,9 @@ export default function StudentDetailPage() {
   if (!data) return <p className="text-ink-muted text-sm text-center py-12">User not found.</p>
 
   const { profile, enrollments, progress, certificates } = data
-  const schoolSlugs: string[] = [...new Set(
+  const schoolSlugs = [...new Set(
     enrollments.map((e: any) => e.academy_courses?.school_slug).filter(Boolean)
   )] as string[]
-
 
   return (
     <div className="space-y-6">
@@ -106,15 +105,13 @@ export default function StudentDetailPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    
                     <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">
-                      SCHOOL OF{schoolSlugs.map(s => s
-                      .replace('school-of-', '')
-                      .replace(/-/g, ' ')
-                      .replace(/\b\w/g, (c) => c.toUpperCase())
-                    ).join(', ')}
+                      SCHOOL OF {schoolSlugs.map(s => s
+                        .replace('school-of-', '')
+                        .replace(/-/g, ' ')
+                        .replace(/\b\w/g, (c) => c.toUpperCase())
+                      ).join(', ')}
                     </th>
-
                     <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Code</th>
                     <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Enrolled Date</th>
                   </tr>
