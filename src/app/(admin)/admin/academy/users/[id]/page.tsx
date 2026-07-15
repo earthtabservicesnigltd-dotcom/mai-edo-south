@@ -23,6 +23,7 @@ export default function StudentDetailPage() {
   if (!data) return <p className="text-ink-muted text-sm text-center py-12">User not found.</p>
 
   const { profile, enrollments, progress, certificates } = data
+   const schoolSlugs = [...new Set(enrollments.map((e: any) => e.academy_courses?.school_slug).filter(Boolean))]
 
   return (
     <div className="space-y-6">
@@ -58,24 +59,6 @@ export default function StudentDetailPage() {
           </div>
         </CardContent></Card>
       </div>
-            {/* Enrolled School */}
-      {enrollments.length > 0 && (() => {
-        const schoolSlugs = [...new Set(enrollments.map((e: any) => e.academy_courses?.school_slug).filter(Boolean))]
-        return (
-          <Card>
-            <CardContent className="pt-6 flex items-center gap-3">
-              <i className="ti ti-school text-[#f97316] text-xl" />
-              <div>
-                <div className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-0.5">Enrolled School</div>
-                <div className="font-heading text-lg text-[#01381d]">
-                  {schoolSlugs.map(s => s.replace('school-of-', '').replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())).join(', ')}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )
-      })()}
-
 
       {/* Progress per course */}
       <Card>
@@ -120,9 +103,10 @@ export default function StudentDetailPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    {['Course', 'Code', 'Enrolled Date'].map(h => (
-                      <th key={h} className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">{h}</th>
-                    ))}
+                    
+                    <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">SCHOOL OF {schoolSlugs.map(s => s.replace('school-of-', '').replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())).join(', ')}</th>
+                    <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Code</th>
+                    <th className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">Enrolled Date</th>
                   </tr>
                 </thead>
                 <tbody>

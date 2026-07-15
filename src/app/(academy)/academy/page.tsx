@@ -205,7 +205,6 @@ export default function DashboardPage() {
             )}
             {[
               { val: String(stats.schools), sup: '', label: 'Schools enrolled' },
-              { val: String(stats.coursesCompleted), sup: '', label: 'Courses done' },
               { val: String(stats.certificates), sup: '', label: 'Certificates' },
             ].map((s, i) => (
               <div key={i} className="bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-center min-w-[80px]">
@@ -222,7 +221,6 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
         {[
           { label: 'Schools enrolled', val: String(stats.schools), sub: 'of 6 available', iconBg: '#e1f5ee', iconColor: '#0f6e56', icon: 'ti-book-2' },
-          { label: 'Courses completed', val: String(stats.coursesCompleted), sub: 'across all schools', iconBg: '#e6f1fb', iconColor: '#185fa5', icon: 'ti-calendar-check' },
           { label: 'In progress', val: String(enrolledSchools.reduce((a, s) => a + (s.completed < s.total ? 1 : 0), 0)), sub: 'schools active', iconBg: '#faeeda', iconColor: '#854f0b', icon: 'ti-clipboard-check' },
           { label: 'Certificates', val: String(stats.certificates), sub: 'earned', iconBg: 'rgba(249,115,22,.1)', iconColor: '#f97316', icon: 'ti-certificate' },
         ].map((s, i) => (
