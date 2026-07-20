@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Badge, Panel, SectionHead } from '@/components/ui/shared'
 import { Skeleton } from '@/components/ui/skeleton'
 import { supabaseBrowser } from '@/lib/supabase'
+import { useParams } from 'next/navigation'
 
 interface Course {
   id: string
@@ -39,12 +40,14 @@ interface SchoolProgress {
 const DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
 export default function DashboardPage() {
+  const { slug } = useParams()
   const [enrolledSchools, setEnrolledSchools] = useState<SchoolProgress[]>([])
   const [stats, setStats] = useState({ schools: 0, coursesCompleted: 0, certificates: 0 })
   const [studentId, setStudentId] = useState('')
   const [loading, setLoading] = useState(true)
   const [schoolCourses, setSchoolCourses] = useState<any[]>([])
   const [progressResults, setProgressResults] = useState<any[]>([])
+  const [courseProgress, setCourseProgress] = useState<Record<string, any>>({})
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -290,50 +293,57 @@ export default function DashboardPage() {
             <Badge variant="orange">{enrolledSchools[0]?.slug ? 'Daily' : '—'}</Badge>
           </div>
           <Panel>
-            {schoolCourses.length > 0 ? (
-              <div className="divide-y divide-[#E5E7EB]">
-                {schoolCourses.map((course: any, idx: number) => {
-                  const prog = progressResults.find((p: any) => p.course?.slug === course.slug)
-                  const passed = prog?.progress?.passed
-                  const enrolled = prog?.enrollment
-                  const status = passed ? 'done' : enrolled ? 'current' : 'locked'
+              {/* School Roadmap */}
+          {schoolCourses.length > 0 && (
+            <div className="bg-[#F7F4EE] rounded-xl p-4 mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#6B7280] mb-3 flex items-center gap-2">
+                <i className="ti ti-map-2 text-[#f97316]" /> Your School Roadmap
+              </h3>
+              <div className="divide-y divide-[#E5E7EB]/60">
+                {schoolCourses.map((c: any, idx: number) => {
+                  const cp = courseProgress[c.id]
+                  const status = cp?.passed ? 'done' : cp?.enrolled ? 'current' : 'locked'
+                  const isActive = c.slug === slug
                   return (
-                    <div key={course.id} className="flex items-center gap-3 py-3 px-1">
-                      <div className={`w-[26px] h-[26px] rounded-full flex items-center justify-center shrink-0 text-xs border-2 ${
+                    <div key={c.id} className={`flex items-center gap-3 py-2 ${isActive ? 'bg-white rounded-lg -mx-2 px-2' : ''}`}>
+                      <div className={`w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0 text-[9px] border-2 ${
                         status === 'done' ? 'bg-green-600 border-green-600 text-white' :
                         status === 'current' ? 'border-orange-500 text-orange-500' :
                         'border-gray-300'
                       }`}>
-                        {status === 'done' && <i className="ti ti-check text-white text-[10px]" />}
-                        {status === 'current' && <i className="ti ti-record text-[10px]" />}
+                        {status === 'done' && <i className="ti ti-check text-white text-[8px]" />}
+                        {status === 'current' && <i className="ti ti-record text-[8px]" />}
                       </div>
-                      <span className="font-mono text-[11px] text-[#6B7280] w-[36px] shrink-0 font-semibold">{DAYS[idx] || ''}</span>
-                      <span className={`text-[14px] flex-1 min-w-0 ${status === 'current' ? 'font-semibold text-[#111827]' : 'text-[#374151]'}`}>
-                        {course.short_label || course.title}
-                      </span>
-                      <span className={`text-[10px] font-semibold px-2.5 py-[3px] rounded ml-auto ${
+                      <span className="font-mono text-[10px] text-[#6B7280] w-[30px] shrink-0 font-semibold">{DAYS[idx] || ''}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-[12px] leading-tight ${isActive ? 'font-bold text-[#111827]' : status === 'done' ? 'text-green-700' : 'text-[#374151]'}`}>
+                          {c.title}
+                        </div>
+                      </div>
+                      <span className={`text-[9px] font-semibold px-2 py-[2px] rounded ml-auto shrink-0 ${
                         status === 'done' ? 'bg-green-100 text-green-700' :
                         status === 'current' ? 'bg-orange-100 text-orange-700' :
                         'bg-gray-100 text-gray-500'
                       }`}>
-                        {status === 'done' ? 'Done' : status === 'current' ? 'Current' : 'Locked'}
+                        {status === 'done' ? 'Done' : isActive ? 'Here' : status === 'current' ? 'Active' : 'Locked'}
                       </span>
                     </div>
                   )
                 })}
-                {/* Goal */}
-                <div className="flex items-center gap-3 py-3 px-1">
-                  <div className="w-[26px] h-[26px] rounded-full border-2 border-[#f97316] flex items-center justify-center shrink-0">
-                    <i className="ti ti-star text-[#f97316] text-[10px]" />
+                <div className="flex items-center gap-3 py-2">
+                  <div className="w-[22px] h-[22px] rounded-full border-2 border-[#f97316] flex items-center justify-center shrink-0">
+                    <i className="ti ti-star text-[#f97316] text-[8px]" />
                   </div>
-                  <span className="font-mono text-[11px] text-[#6B7280] w-[36px] shrink-0">🎯</span>
-                  <span className="text-[14px] flex-1 min-w-0 font-semibold text-[#111827]">School Certificate</span>
-                  <span className="text-[10px] font-semibold px-2.5 py-[3px] rounded ml-auto bg-orange-50 text-orange-600">Goal</span>
+                  <span className="font-mono text-[10px] text-[#6B7280] w-[30px] shrink-0">🎯</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[12px] font-semibold text-[#111827]">School Certificate</div>
+                  </div>
+                  <span className="text-[9px] font-semibold px-2 py-[2px] rounded ml-auto bg-orange-50 text-orange-600">Goal</span>
                 </div>
               </div>
-            ) : (
-              <p className="text-center text-[#6B7280] text-sm py-4">Enroll in a school to see your progress.</p>
-            )}
+            </div>
+          )}
+
           </Panel>
         </div>
       </div>

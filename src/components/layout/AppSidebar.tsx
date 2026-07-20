@@ -27,6 +27,7 @@ const NAV_ITEMS = [
   { icon:"📋", label:"Tasks", href:"/admin/academy/tasks",  },
   { icon:"🏆", label:"Capstones", href:"/admin/academy/capstones" },
   { icon:"👥", label:"My Group", href:"/admin/academy/groups" },
+  { icon:"📢", label:"Broadcast", href:"/admin/academy/broadcast" },
   {icon:"🔔", label:"Notifications", href:"/admin/academy/notifications"},
 ]
 

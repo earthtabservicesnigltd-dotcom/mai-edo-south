@@ -38,7 +38,7 @@ const SCHOOL_ICONS: Record<string, any> = {
   'school-of-leadership-management': 'ti ti-users',
   'school-of-business-entrepreneurship': 'ti ti-briefcase',
   'school-of-public-service': 'ti ti-government',
-  'school-of-technology-digital-skills': 'ti ti-devices',
+  'school-of-technology-and-digital-services': 'ti ti-devices',
   'school-of-ai-machine-learning': 'ti ti-brain',
 }
 
@@ -78,7 +78,7 @@ export default function SchoolsPage() {
     { slug: 'school-of-leadership-management', num: '02', iconBg: '#e1f5ee', iconColor: '#0f6e56', cert: 'MAI Professional Certificate in Leadership & Management', days: ['Mon: Foundations', 'Tue: Team Dynamics', 'Wed: Personal Mgmt', 'Thu: Execution', 'Fri: Capstone Build', 'Sat: Graduation'], activeDays: [0,1,2] },
     { slug: 'school-of-business-entrepreneurship', num: '03', iconBg: '#faeeda', iconColor: '#854f0b', cert: 'MAI Professional Certificate in Business & Entrepreneurship', days: ['Mon: Foundations', 'Tue: Market Research', 'Wed: Business Plan', 'Thu: Marketing', 'Fri: Capstone Build', 'Sat: Graduation'], activeDays: [0,1] },
     { slug: 'school-of-public-service', num: '04', iconBg: '#f0eaff', iconColor: '#6d28d9', cert: 'MAI Professional Certificate in Public Service & Civic Delivery', days: ['Mon: Foundations', 'Tue: Service Mapping', 'Wed: Service Design', 'Thu: Team Delivery', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
-    { slug: 'school-of-technology-digital-skills', num: '05', iconBg: '#e0e7ff', iconColor: '#3730a3', cert: 'MAI Professional Certificate in Technology & Digital Skills', days: ['Mon: Cybersecurity', 'Tue: Digital Marketing', 'Wed: Social Media', 'Thu: Graphics', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
+    { slug: 'school-of-technology-and-digital-services', num: '05', iconBg: '#e0e7ff', iconColor: '#3730a3', cert: 'MAI Professional Certificate in Technology & Digital Skills', days: ['Mon: Cybersecurity', 'Tue: Digital Marketing', 'Wed: Social Media', 'Thu: Graphics', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
     { slug: 'school-of-ai-machine-learning', num: '06', iconBg: '#fce7f3', iconColor: '#831843', cert: 'MAI Professional Certificate in AI & Machine Learning', days: ['Mon: AI Foundations', 'Tue: Data & AI', 'Wed: Prompt Eng', 'Thu: ML Project', 'Fri: Capstone', 'Sat: Graduation'], activeDays: [] },
   ]
 

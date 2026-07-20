@@ -17,6 +17,8 @@ interface Course {
   intro_video_url?: string
   instructor_name?: string
   assessments_locked?: boolean
+  school_slug: string
+  school_order_index: number
 }
 
 interface Progress {
@@ -32,6 +34,8 @@ interface LockInfo {
   reason: string
 }
 
+const DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
 export default function CourseDetailPage() {
   const { slug } = useParams()
   const router = useRouter()
@@ -41,6 +45,8 @@ export default function CourseDetailPage() {
   const [lockInfo, setLockInfo] = useState<LockInfo | null>(null)
   const [loading, setLoading] = useState(true)
   const [enrolling, setEnrolling] = useState(false)
+  const [schoolCourses, setSchoolCourses] = useState<any[]>([])
+  const [courseProgress, setCourseProgress] = useState<Record<string, any>>({})
 
   useEffect(() => {
     async function fetchCourse() {
@@ -51,6 +57,28 @@ export default function CourseDetailPage() {
         setEnrollment(data.enrollment)
         setProgress(data.progress)
         setLockInfo(data.locked)
+
+        if (data.course?.school_slug) {
+          const schoolsRes = await fetch('/api/academy/schools')
+          const schoolsData = await schoolsRes.json()
+          const school = schoolsData.schools?.find((s: any) => s.slug === data.course.school_slug)
+          const courses = school?.courses || []
+          setSchoolCourses(courses)
+
+          const progressMap: Record<string, any> = {}
+          await Promise.all(
+            courses.map(async (c: any) => {
+              const r = await fetch(`/api/academy/courses/${c.slug}`)
+              const d = await r.json()
+              progressMap[c.id] = {
+                passed: d.progress?.passed || false,
+                enrolled: !!d.enrollment,
+                lesson_completed: d.progress?.lesson_completed || false,
+              }
+            })
+          )
+          setCourseProgress(progressMap)
+        }
       }
       setLoading(false)
     }
@@ -72,12 +100,8 @@ export default function CourseDetailPage() {
 
   function getEmbedUrl(url?: string) {
     if (!url) return null
-    if (url.includes('youtube.com/watch')) {
-      return url.replace('watch?v=', 'embed/')
-    }
-    if (url.includes('youtu.be/')) {
-      return url.replace('youtu.be/', 'youtube.com/embed/')
-    }
+    if (url.includes('youtube.com/watch')) return url.replace('watch?v=', 'embed/')
+    if (url.includes('youtu.be/')) return url.replace('youtu.be/', 'youtube.com/embed/')
     return url
   }
 
@@ -106,12 +130,7 @@ export default function CourseDetailPage() {
         
         {embedUrl && (
           <div className="aspect-video w-full">
-            <iframe
-              src={embedUrl}
-              className="w-full h-full"
-              allowFullScreen
-              title={`${course.title} intro`}
-            />
+            <iframe src={embedUrl} className="w-full h-full" allowFullScreen title={`${course.title} intro`} />
           </div>
         )}
 
@@ -141,7 +160,57 @@ export default function CourseDetailPage() {
             <span className="font-medium">{course.certificate_title}</span>
           </div>
 
-          {/* Locked state */}
+          {/* School Roadmap */}
+          {schoolCourses.length > 0 && (
+            <div className="bg-[#F7F4EE] rounded-xl p-4 mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#6B7280] mb-3 flex items-center gap-2">
+                <i className="ti ti-map-2 text-[#f97316]" /> Your School Roadmap
+              </h3>
+              <div className="divide-y divide-[#E5E7EB]/60">
+                {schoolCourses.map((c: any, idx: number) => {
+                  const cp = courseProgress[c.id]
+                  const status = cp?.passed ? 'done' : cp?.enrolled ? 'current' : 'locked'
+                  const isActive = c.slug === slug
+                  return (
+                    <div key={c.id} className={`flex items-center gap-3 py-2 ${isActive ? 'bg-white rounded-lg -mx-2 px-2' : ''}`}>
+                      <div className={`w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0 text-[9px] border-2 ${
+                        status === 'done' ? 'bg-green-600 border-green-600 text-white' :
+                        status === 'current' ? 'border-orange-500 text-orange-500' :
+                        'border-gray-300'
+                      }`}>
+                        {status === 'done' && <i className="ti ti-check text-white text-[8px]" />}
+                        {status === 'current' && <i className="ti ti-record text-[8px]" />}
+                      </div>
+                      <span className="font-mono text-[10px] text-[#6B7280] w-[30px] shrink-0 font-semibold">{DAYS[idx] || ''}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-[12px] leading-tight ${isActive ? 'font-bold text-[#111827]' : status === 'done' ? 'text-green-700' : 'text-[#374151]'}`}>
+                          {c.title}
+                        </div>
+                      </div>
+                      <span className={`text-[9px] font-semibold px-2 py-[2px] rounded ml-auto shrink-0 ${
+                        status === 'done' ? 'bg-green-100 text-green-700' :
+                        status === 'current' ? 'bg-orange-100 text-orange-700' :
+                        'bg-gray-100 text-gray-500'
+                      }`}>
+                        {status === 'done' ? 'Done' : isActive ? 'Here' : status === 'current' ? 'Active' : 'Locked'}
+                      </span>
+                    </div>
+                  )
+                })}
+                <div className="flex items-center gap-3 py-2">
+                  <div className="w-[22px] h-[22px] rounded-full border-2 border-[#f97316] flex items-center justify-center shrink-0">
+                    <i className="ti ti-star text-[#f97316] text-[8px]" />
+                  </div>
+                  <span className="font-mono text-[10px] text-[#6B7280] w-[30px] shrink-0">🎯</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[12px] font-semibold text-[#111827]">School Certificate</div>
+                  </div>
+                  <span className="text-[9px] font-semibold px-2 py-[2px] rounded ml-auto bg-orange-50 text-orange-600">Goal</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {isLocked && !isEnrolled && (
             <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-center">
               <i className="ti ti-lock text-amber-500 text-xl mb-1 block" />
@@ -150,20 +219,13 @@ export default function CourseDetailPage() {
             </div>
           )}
 
-          {/* Completed state */}
           {testPassed ? (
             <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-center">
               <p className="text-green-700 font-bold text-sm mb-1">✅ Course Passed</p>
-              <p className="text-green-600 text-xs">
-                Score: {progress?.best_score}/{progress?.total_questions}
-              </p>
-              <p className="text-[#6B7280] text-xs mt-2">
-                Complete all courses in this school to earn your certificate.
-              </p>
+              <p className="text-green-600 text-xs">Score: {progress?.best_score}/{progress?.total_questions}</p>
+              <p className="text-[#6B7280] text-xs mt-2">Complete all courses in this school to earn your certificate.</p>
               <button onClick={() => router.push('/academy/schools')}
-                className="mt-3 text-xs font-semibold text-[#f97316] hover:underline">
-                View School Progress →
-              </button>
+                className="mt-3 text-xs font-semibold text-[#f97316] hover:underline">View School Progress →</button>
             </div>
           ) : isEnrolled ? (
             <div className="flex flex-col gap-2">
@@ -172,7 +234,7 @@ export default function CourseDetailPage() {
                   className="bg-[#f97316] text-white font-bold py-3 rounded-xl hover:bg-[#ea6a05] transition-colors text-sm">
                   Continue Lesson
                 </button>
-             ) : assessmentLocked ? (
+              ) : assessmentLocked ? (
                 <div className="flex flex-col gap-2">
                   <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
                     <i className="ti ti-lock text-red-400 text-lg block mb-1" />
@@ -184,7 +246,6 @@ export default function CourseDetailPage() {
                     Review Lesson
                   </button>
                 </div>
-
               ) : (
                 <button onClick={() => router.push(`/academy/schools/${slug}/test`)}
                   className="bg-[#01381d] text-white font-bold py-3 rounded-xl hover:bg-[#015b2d] transition-colors text-sm">
