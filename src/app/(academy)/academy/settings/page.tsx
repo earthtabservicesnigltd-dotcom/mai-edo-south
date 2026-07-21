@@ -15,25 +15,6 @@ export default function SettingsPage() {
         Manage your account details and preferences.
       </p>
 
-      {/* Profile */}
-      <div className="bg-white border border-[#E5E7EB] rounded-xl p-5 mb-3.5">
-        <div className="flex items-center gap-2.5 text-[13px] font-bold text-[#111827] mb-4">
-          <i className="ti ti-user text-[#f97316] text-base" /> Profile
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
-          <div>
-            <label className="block text-[11px] font-semibold text-[#6B7280] uppercase tracking-widest mb-1.5">Full name</label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border border-[#E5E7EB] text-[13px] text-[#111827] outline-none focus:border-[#f97316] focus:shadow-[0_0_0_3px_rgba(249,115,22,0.1)] transition-all" />
-          </div>
-          <div>
-            <label className="block text-[11px] font-semibold text-[#6B7280] uppercase tracking-widest mb-1.5">Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border border-[#E5E7EB] text-[13px] text-[#111827] outline-none focus:border-[#f97316] focus:shadow-[0_0_0_3px_rgba(249,115,22,0.1)] transition-all" />
-          </div>
-        </div>
-      </div>
-
       {/* Notification preferences */}
       <div className="bg-white border border-[#E5E7EB] rounded-xl p-5 mb-5">
         <div className="flex items-center gap-2.5 text-[13px] font-bold text-[#111827] mb-4">
