@@ -16,7 +16,7 @@ export async function GET() {
     // Get active courses grouped by school
     const { data: courses } = await admin
       .from('academy_courses')
-      .select('id, slug, title, short_label, description, icon, icon_bg, icon_color, certificate_title, school_slug, school_order_index')
+      .select('id, slug, title, short_label, description, icon, icon_bg, icon_color, certificate_title, school_slug, school_order_index, assessments_locked')
       .eq('is_active', true)
       .order('school_order_index')
 
