@@ -11,6 +11,7 @@ interface User {
   first_name: string
   last_name: string
   email: string
+  phone: string
   created_at: string
   academy_enrollments: any[]
   academy_progress: any[]
