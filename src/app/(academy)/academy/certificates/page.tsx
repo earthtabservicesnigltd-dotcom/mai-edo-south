@@ -113,16 +113,25 @@ export default function CertificatesPage() {
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#eaf3de] text-[#27500a]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#3b6d11] inline-block" /> Earned
                   </span>
-                  <Link
-                    href={s.certificate_id
-                      ? `/academy/certificates/${s.certificate_id.replace(/\//g, '-')}`
-                      : `/academy/certificates/view?school=${s.slug}`}
-                    className="text-[11px] font-semibold text-[#f97316] hover:underline flex items-center gap-1"
+                  <button
+                    onClick={async () => {
+                      const res = await fetch('/api/academy/certificates/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ schoolSlug: s.slug }),
+                      })
+                      const data = await res.json()
+                      if (data.certificate_id) {
+                        window.location.href = `/academy/certificates/${data.certificate_id}`
+                      }
+                    }}
+                    className="text-[11px] font-semibold text-[#f97316] hover:underline flex items-center gap-1 bg-transparent border-none p-0 cursor-pointer"
                   >
                     Continue →
-                  </Link>
+                  </button>
                 </div>
               )}
+
 
               {s.status === 'progress' && (
                 <div className="mb-2">
