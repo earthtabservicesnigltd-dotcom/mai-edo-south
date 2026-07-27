@@ -42,7 +42,9 @@ export default function CertificateCard({ cert, showDownload = true }: Certifica
     day: '2-digit', month: 'long', year: 'numeric',
   })
 
-  const verifyUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/academy/verify/${cert.certificate_id.replace(/\//g, '-')}`
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || '').replace(/\/$/, '')
+  const verifyUrl = `${siteUrl}/academy/verify/${cert.certificate_id}`
+
 
   async function downloadPDF() {
     if (!certRef.current) return

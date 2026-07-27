@@ -78,7 +78,7 @@ export default function UsersAdminPage() {
                 <table className="w-full text-sm">
                     <thead>
                     <tr className="border-b border-border">
-                        {['Name', 'Email', 'Enrolled', 'Progress', 'Certificates', 'Joined'].map(h => (
+                        {['Name', 'Email', 'Phone', 'Enrolled', 'Progress', 'Certificates', 'Joined'].map(h => (
                         <th key={h} className="text-left py-3 px-2 text-ink-muted font-semibold text-xs uppercase tracking-wider">{h}</th>
                         ))}
                     </tr>
@@ -92,6 +92,7 @@ export default function UsersAdminPage() {
                             </Link>
                         </td>
                         <td className="py-3 px-2 text-ink-muted">{u.email}</td>
+                        <td className="py-3 px-2 text-ink-muted">{u.phone || '—'}</td>
                         <td className="py-3 px-2">{u.academy_enrollments?.length || 0}</td>
                         <td className="py-3 px-2">
                             {u.academy_progress?.filter((p: any) => p.passed).length || 0}/{u.academy_progress?.length || 0} passed

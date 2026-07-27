@@ -252,7 +252,7 @@ export default function AcademicAuthPage() {
                     <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af]" />
                     <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}
                       className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white focus:shadow-[0_0_0_3px_rgba(1,91,45,0.08)]"
-                      placeholder="Enter your first name" />
+                      placeholder="Enter your first name" required />
                   </div>
                 </div>
                 <div>
@@ -261,7 +261,7 @@ export default function AcademicAuthPage() {
                     <UserCheck size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af]" />
                     <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}
                       className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white focus:shadow-[0_0_0_3px_rgba(1,91,45,0.08)]"
-                      placeholder="Enter your last name" />
+                      placeholder="Enter your last name" required />
                   </div>
                 </div>
                 <div>
@@ -270,7 +270,7 @@ export default function AcademicAuthPage() {
                     <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af]" />
                     <input type="email" value={signupEmail} onChange={e => setSignupEmail(e.target.value)}
                       className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white focus:shadow-[0_0_0_3px_rgba(1,91,45,0.08)]"
-                      placeholder="e.g. email@example.com" />
+                      placeholder="e.g. email@example.com" required />
                   </div>
                 </div>
                 <div>
@@ -279,7 +279,7 @@ export default function AcademicAuthPage() {
                     <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
                       className="w-full pl-11 pr-4 py-3.5 border border-[#e5e7eb] rounded-xl bg-[#fafafa] text-[0.95rem] outline-none focus:border-[#015b2d] focus:bg-white focus:shadow-[0_0_0_3px_rgba(1,91,45,0.08)]"
-                      placeholder="+234 800 0000 000" />
+                      placeholder="+234 800 0000 000" required />
                   </div>
                 </div>
 
