@@ -155,36 +155,37 @@ export default function CertificateCard({ cert, showDownload = true }: Certifica
                   <div className="flex items-center justify-center gap-1 text-[#01381d] text-[8px] font-bold mb-0.5">
                     <i className={`ti ${item.icon}`} /> {item.label}
                   </div>
-                  <p className="text-[11px] font-semibold text-gray-800 truncate px-1">{item.value}</p>
+                  <p className="text-[8px] font-semibold text-gray-800 truncate px-1">{item.value}</p>
                 </div>
               ))}
             </div>
 
             {/* Signatures + QR */}
-            <div className="flex items-end justify-between">
-              <div className="text-center w-[180px]">
-                <p className="text-[#01381d] text-base mb-0" style={{ fontFamily: 'var(--font-dancing), cursive' }}>
-                  Alhimfocerafo
-                </p>
-                <div className="border-t border-gray-400 pt-0.5">
-                  <p className="text-[9px] font-bold text-gray-800">Hon. Mathew Aigbuhenze Iduoriyekemwen</p>
-                  <p className="text-[8px] text-[#f97316] font-semibold">Founder, MAI Academy</p>
+            <div className="flex items-center justify-around mt-8">
+              <div className="flex gap-4">
+                <div className="text-center w-[180px]">
+                  <p className="text-[#01381d] text-base mb-0" style={{ fontFamily: 'var(--font-dancing), cursive' }}>
+                    Alhimfocerafo
+                  </p>
+                  <div className="border-t border-gray-400 pt-0.5">
+                    <p className="text-[9px] font-bold text-gray-800">Hon. Mathew Aigbuhenze Iduoriyekemwen</p>
+                    <p className="text-[8px] text-[#f97316] font-semibold">Founder, MAI Academy</p>
+                  </div>
+                </div>
+                <div className="w-14 h-14 rounded-full border-[3px] border-[#c9a227] flex items-center justify-center bg-gradient-to-br from-[#f5e6a3] to-[#c9a227] shadow-md">
+                  <div className="text-center">
+                    <p className="text-[6px] font-black text-[#01381d] leading-tight">MAI<br />ACADEMY<br />CERTIFIED</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="w-14 h-14 rounded-full border-[3px] border-[#c9a227] flex items-center justify-center bg-gradient-to-br from-[#f5e6a3] to-[#c9a227] shadow-md">
-                <div className="text-center">
-                  <p className="text-[6px] font-black text-[#01381d] leading-tight">MAI<br />ACADEMY<br />CERTIFIED</p>
-                </div>
-              </div>
-
-              <div className="text-center w-[160px]">
+              {/* <div className="text-center w-[160px]">
                 <p className="text-[#01381d] text-base mb-0 h-5" style={{ fontFamily: 'var(--font-dancing), cursive' }}>&nbsp;</p>
                 <div className="border-t border-gray-400 pt-0.5">
                   <p className="text-[9px] font-bold text-gray-800">Academy Director</p>
                   <p className="text-[8px] text-[#f97316] font-semibold">MAI Academy</p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex flex-col items-center">
                 <div className="bg-[#01381d] text-white text-[7px] font-bold px-1.5 py-0.5 rounded-t tracking-wider">SCAN TO VERIFY</div>
@@ -195,9 +196,7 @@ export default function CertificateCard({ cert, showDownload = true }: Certifica
               </div>
             </div>
 
-            <p className="text-center text-[7px] text-[#f97316] mt-1.5">
-              • All MAI Academy certificates can be verified online at www.mai4senate.com/academy/verify •
-            </p>
+           
           </div>
         </div>
       </div>
