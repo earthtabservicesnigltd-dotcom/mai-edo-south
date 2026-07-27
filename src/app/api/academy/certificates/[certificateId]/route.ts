@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { certificateId } = await params
-    const dbId = decodeURIComponent(certificateId).replace(/-/g, '/')
+    const dbId = decodeURIComponent(certificateId)
 
     const admin = supabaseAdmin()
 
