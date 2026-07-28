@@ -19,9 +19,14 @@ export default function VerifyCertificatePage() {
         setCert(d.certificate ?? null)
         setLoading(false)
       })
+      .catch(err => {
+        console.error('Verify fetch error:', err)
+        setValid(false)
+        setLoading(false)
+      })
   }, [certificateId])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div className="flex items-center justify-center min-h-[400px]"><div className="w-8 h-8 border-3 border-[#01381d] border-t-transparent rounded-full animate-spin" /></div>
 
   if (!valid || !cert) {
     return (
@@ -36,7 +41,7 @@ export default function VerifyCertificatePage() {
     <div className="min-h-screen bg-[#F7F4EE] py-10 px-4">
       <div className="text-center mb-8">
         <span className="inline-flex items-center gap-2 bg-[#eaf3de] text-[#27500a] text-sm font-semibold px-4 py-2 rounded-full">
-          Verified — This certificate is authentic
+          ✅ Verified — This certificate is authentic
         </span>
       </div>
       <CertificateCard cert={cert} showDownload={false} />
