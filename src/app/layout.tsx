@@ -66,7 +66,9 @@ export default function RootLayout({
       className={`${outfit.variable} ${bebasNeue.variable} ${dancingScript.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}
+      {/* Add suppressHydrationWarning here to the body tag */}
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
         <AuthRedirectHandler/>
         <Toaster position="bottom-right" richColors/>
       </body>

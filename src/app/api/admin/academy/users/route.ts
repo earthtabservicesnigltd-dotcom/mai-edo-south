@@ -14,7 +14,7 @@ export async function GET() {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 } as any)
 
-    // Get enrollments, progress, certificates separately
+    // Get enrollments, progress separately
     const { data: enrollments } = await admin
       .from('academy_enrollments')
       .select('*, academy_courses(title, short_label)')
@@ -23,9 +23,10 @@ export async function GET() {
       .from('academy_progress')
       .select('*, academy_courses(title, short_label)')
 
+    // FIX: Query the correct certificates table name
     const { data: certificates } = await admin
-      .from('academy_certificates')
-      .select('*, academy_courses(title, short_label)')
+      .from('academy_school_certificates')
+      .select('*')
 
     // Attach data to each profile
     const users = (profiles ?? []).map(profile => ({

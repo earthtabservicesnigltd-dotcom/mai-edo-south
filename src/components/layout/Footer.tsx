@@ -40,12 +40,16 @@ const NAV_LINK_GROUPS = [
     label: 'MAI Connect',
     items: [
       { label: 'MAI Listens', href: '/mai-listens' },
+      { label: 'Ask MAI',     href: '/ask-mai' },
+      { label: 'MAI Impact',  href: '/mai-impact' },
     ],
   },
   {
     label: 'MAI Networks',
     items: [
       { label: 'MAI Diaspora Network', href: '/diaspora' },
+      { label: 'MAI Women Network',    href: '/women-network', },
+      { label: 'MAI Youth Council',    href: '/youth-council',},
     ],
   },
     {

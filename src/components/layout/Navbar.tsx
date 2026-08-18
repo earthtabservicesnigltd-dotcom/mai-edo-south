@@ -90,16 +90,16 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'MAI CONNECT',
     items: [
       { label: 'MAI Listens', href: '/mai-listens', icon: Headphones },
-      { label: 'Ask MAI',     href: '/ask-mai',     icon: MessageCircle, soon: true },
-      { label: 'MAI Impact',  href: '/mai-impact',  icon: BarChart2,     soon: true },
+      { label: 'Ask MAI',     href: '/ask-mai',     icon: MessageCircle },
+      { label: 'MAI Impact',  href: '/mai-impact',  icon: BarChart2 },
     ],
   },
   {
     label: 'MAI NETWORKS',
     items: [
       { label: 'MAI Diaspora Network', href: '/diaspora',      icon: Globe },
-      { label: 'MAI Women Network',    href: '/women-network', icon: Users2,        soon: true },
-      { label: 'MAI Youth Council',    href: '/youth-council', icon: GraduationCap, soon: true },
+      { label: 'MAI Women Network',    href: '/women-network', icon: Users2 },
+      { label: 'MAI Youth Council',    href: '/youth-council', icon: GraduationCap },
     ],
   },
   {

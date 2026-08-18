@@ -27,9 +27,10 @@ export async function GET(
       .select('*, academy_courses(title, short_label)')
       .eq('user_id', id)
 
+    // FIX: Query the correct certificates table name
     const { data: certificates } = await admin
-      .from('academy_certificates')
-      .select('*, academy_courses(title, short_label)')
+      .from('academy_school_certificates')
+      .select('*')
       .eq('user_id', id)
 
     return NextResponse.json({
