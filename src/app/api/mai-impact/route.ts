@@ -20,7 +20,8 @@ export async function POST(req: Request) {
         impact_category: body.impact_category,
         is_true: body.is_true,
         can_publish: body.can_publish,
-        anonymous: body.anonymous
+        anonymous: body.anonymous,
+        file_urls: body.file_urls || [] // Save the array of URLs
       })
 
     if (error) throw error

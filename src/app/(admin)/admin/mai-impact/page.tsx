@@ -61,6 +61,22 @@ export default function AdminMAIImpactPage() {
     setStories(prev => prev.map(s => s.id === id ? { ...s, status } : s))
     toast.success(`Story marked as ${status}.`)
   }
+  async function deleteStory(id: string) {
+    if (!confirm('Are you sure you want to delete this story and all its attached files?')) return
+    
+    const res = await fetch('/api/admin/mai-impact', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    
+    if (res.ok) {
+      setStories(prev => prev.filter(s => s.id !== id))
+      toast.success('Story deleted.')
+    } else {
+      toast.error('Failed to delete story.')
+    }
+  }
 
   const STATUS_TABS = ['all', 'received', 'under_review', 'featured']
 
@@ -103,7 +119,10 @@ export default function AdminMAIImpactPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-sm">{s.anonymous ? 'Anonymous' : s.full_name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-sm">{s.full_name}</span>
+                          {s.anonymous && <span className="text-[10px] bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full font-bold">Anon</span>}
+                        </div>
                         <span className="text-ink-muted text-xs">({s.lga})</span>
                         <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-600">{s.impact_category}</span>
                       </div>
@@ -125,6 +144,13 @@ export default function AdminMAIImpactPage() {
                         <option value="under_review">Under Review</option>
                         <option value="featured">Featured</option>
                       </select>
+                       <button 
+                        onClick={() => deleteStory(s.id)}
+                        className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors"
+                        title="Delete Story"
+                      >
+                        🗑️
+                      </button>
                     </div>
                   </div>
                 </div>

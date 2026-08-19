@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Story {
   id: string
@@ -21,10 +22,12 @@ interface Story {
   anonymous: boolean
   status: string
   created_at: string
+  file_urls: string[]
 }
 
 export default function MAIImpactDetailPage() {
   const { id } = useParams()
+  const router = useRouter()
   const [story, setStory] = useState<Story | null>(null)
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
@@ -51,6 +54,19 @@ export default function MAIImpactDetailPage() {
     setUpdating(false)
   }
 
+  async function handleDelete() {
+    if (!confirm('Are you sure you want to delete this story?')) return
+    
+    await fetch('/api/admin/mai-impact', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    
+    toast.success('Story deleted.')
+    router.push('/admin/mai-impact')
+  }
+
   if (loading) return <div className="flex items-center justify-center min-h-[400px]"><div className="loader" /></div>
   if (!story) return <div className="text-center py-20"><p className="text-ink-muted">Story not found.</p><Link href="/admin/mai-impact" className="text-[#f97316] font-semibold hover:underline mt-4 block">Back to MAI Impact</Link></div>
 
@@ -69,6 +85,9 @@ export default function MAIImpactDetailPage() {
             <option value="under_review">Under Review</option>
             <option value="featured">Featured</option>
           </select>
+          <button onClick={handleDelete} className="px-4 py-2 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors flex-shrink-0">
+            Delete
+          </button>
         </div>
       </div>
 
@@ -78,7 +97,12 @@ export default function MAIImpactDetailPage() {
             <div>
               <h1 className="font-heading text-2xl text-[#01381d]">{story.title}</h1>
               <div className="flex flex-wrap gap-2 mt-2 text-sm text-ink-muted">
-                <span>{story.anonymous ? 'Anonymous' : story.full_name}</span>
+                <span>{story.full_name}</span>
+                  {story.anonymous && (
+                    <span className="ml-2 inline-block bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                      Requested Anonymity
+                    </span>
+                  )}
                 <span>•</span>
                 <span>{story.phone}</span>
                 {story.email && <span>•</span>}
@@ -124,6 +148,25 @@ export default function MAIImpactDetailPage() {
               </div>
             </div>
           </div>
+          {story.file_urls && story.file_urls.length > 0 && (
+            <div className="pt-4 border-t border-gray-100">
+              <p className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-3">Uploaded Evidence</p>
+              <div className="grid grid-cols-2 gap-4">
+                {story.file_urls.map((url: string, i: number) => {
+                  const isVideo = url.includes('.webm') || url.includes('.mp4') || url.includes('.mov')
+                  const isImage = url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || url.includes('.gif')
+                  
+                  if (isVideo) {
+                    return <video key={i} src={url} controls className="w-full rounded-xl border border-gray-200" />
+                  } else if (isImage) {
+                    return <Image key={i} src={url} width={400} height={300} alt="Evidence" className="w-full rounded-xl border border-gray-200" />
+                  } else {
+                    return <a key={i} href={url} target="_blank" className="px-3 py-2 bg-[#f97316]/10 text-[#f97316] text-xs font-bold rounded-lg hover:bg-[#f97316]/20 inline-block">📄 View Document</a>
+                  }
+                })}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

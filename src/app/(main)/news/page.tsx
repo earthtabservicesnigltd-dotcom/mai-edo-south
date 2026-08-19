@@ -1,63 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-
-const NEWS = [
-  {
-    id: 1,
-    tag: 'Campaign',
-    title: 'MAI Officially Declares Senatorial Bid for Edo South 2027',
-    excerpt: 'Hon. Matthew Aigbuhenze Iduoriyekemwen has officially declared his intention to contest the Edo South Senatorial seat under the ADC platform in the 2027 general elections.',
-    date: 'May 15, 2026',
-    image: '/IMG-20260529-WA0007.jpg',
-    featured: true,
-  },
-  {
-    id: 2,
-    tag: 'Community',
-    title: 'MAI Meets with Youth Leaders Across Edo South LGAs',
-    excerpt: 'In a series of town hall meetings, MAI engaged with youth leaders from all seven local government areas of Edo South, discussing employment, education and development.',
-    date: 'May 20, 2026',
-    image: '/Image-2.png',
-    featured: false,
-  },
-  {
-    id: 3,
-    tag: 'Politics',
-    title: 'ADC Endorses MAI as Preferred Senatorial Candidate',
-    excerpt: 'The Alliance for Democracy and Credibility has formally endorsed Hon. MAI as their senatorial candidate for Edo South in the upcoming 2027 elections.',
-    date: 'May 25, 2026',
-    image: '/image-3.jpg',
-    featured: false,
-  },
-  {
-    id: 4,
-    tag: 'Development',
-    title: 'MAI Unveils Comprehensive Development Agenda for Edo South',
-    excerpt: 'A detailed policy document outlining specific plans for infrastructure, education, healthcare and economic development across Edo South was released by the campaign.',
-    date: 'June 1, 2026',
-    image: '/IMG-20260529-WA0008.jpg',
-    featured: false,
-  },
-  {
-    id: 5,
-    tag: 'Campaign',
-    title: 'Campaign Kicks Off Grassroots Mobilization Drive',
-    excerpt: 'The MAI campaign has launched a massive grassroots mobilization exercise targeting over 500 polling units across Edo South Senatorial District.',
-    date: 'June 5, 2026',
-    image: null,
-    featured: false,
-  },
-  {
-    id: 6,
-    tag: 'Community',
-    title: 'MAI Foundation Donates to Schools in Orhionmwon LGA',
-    excerpt: 'As part of his commitment to education, Hon. MAI donated school supplies and equipment to five public primary schools in Orhionmwon local government area.',
-    date: 'June 10, 2026',
-    image: null,
-    featured: false,
-  },
-]
 
 const TAGS = ['All', 'Campaign', 'Community', 'Politics', 'Development']
 
@@ -80,12 +23,21 @@ function shareArticle(platform: string, title: string) {
 }
 
 export default function NewsPage() {
+  const [articles, setArticles] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [activeTag, setActiveTag] = useState('All')
 
-  const featured = NEWS.find(n => n.featured)
-  const rest = NEWS.filter(n => !n.featured).filter(
-    n => activeTag === 'All' || n.tag === activeTag
-  )
+  useEffect(() => {
+    fetch('/api/news').then(res => res.json()).then(data => {
+      setArticles(data.articles || [])
+      setLoading(false)
+    })
+  }, [])
+
+  const featured = articles.find(n => n.featured)
+  const rest = articles.filter(n => !n.featured).filter(n => activeTag === 'All' || n.tag === activeTag)
+
+  const formatDate = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
 
   return (
     <>
@@ -94,59 +46,35 @@ export default function NewsPage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#f97316]/10 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="max-w-6xl mx-auto relative z-10 text-center flex flex-col items-center">
-          <p className="text-[#f97316] font-bold text-sm uppercase tracking-widest mb-3">
-            Latest From The Campaign
-          </p>
-          <h1 className="font-heading text-6xl md:text-7xl mb-4">
-            MAI <span className="text-[#f97316]">NEWS</span>
-          </h1>
-          <p className="text-gray-200 text-lg max-w-xl">
-            Stay informed with the latest news, press releases and
-            updates from the MAI campaign.
-          </p>
+          <p className="text-[#f97316] font-bold text-sm uppercase tracking-widest mb-3">Latest From The Campaign</p>
+          <h1 className="font-heading text-6xl md:text-7xl mb-4">MAI <span className="text-[#f97316]">NEWS</span></h1>
+          <p className="text-gray-200 text-lg max-w-xl">Stay informed with the latest news, press releases and updates from the MAI campaign.</p>
         </div>
       </section>
 
       {/* Featured Article */}
-      {featured && (
+      {loading ? (
+        <div className="py-16 bg-white"><div className="max-w-6xl mx-auto px-4"><div className="h-96 bg-gray-100 rounded-2xl animate-pulse" /></div></div>
+      ) : featured && (
         <section className="py-16 bg-white">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-10">
-              <h2 className="font-heading text-4xl md:text-5xl">
-                FEATURED <span className="text-[#f97316]">STORY</span>
-              </h2>
+              <h2 className="font-heading text-4xl md:text-5xl">FEATURED <span className="text-[#f97316]">STORY</span></h2>
             </div>
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <div className="relative h-72 lg:h-auto bg-gradient-to-br from-[#01381d] to-[#015b2d]">
-                  {featured.image && (
-                    <Image
-                      src={featured.image}
-                      alt={featured.title}
-                      fill
-                      className="object-cover object-top"
-                    />
-                  )}
+                  {featured.image_url && <Image src={featured.image_url} alt={featured.title} fill className="object-cover object-top" />}
                 </div>
                 <div className="p-8 md:p-10 flex flex-col justify-center">
-                  <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-4 w-fit ${TAG_COLORS[featured.tag] ?? 'bg-gray-100 text-gray-700'}`}>
-                    {featured.tag}
-                  </span>
-                  <h3 className="font-bold text-2xl md:text-3xl leading-snug mb-4">
-                    {featured.title}
-                  </h3>
-                  <p className="text-gray-500 leading-relaxed mb-6">
-                    {featured.excerpt}
-                  </p>
+                  <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-4 w-fit ${TAG_COLORS[featured.tag] ?? 'bg-gray-100 text-gray-700'}`}>{featured.tag}</span>
+                  <h3 className="font-bold text-2xl md:text-3xl leading-snug mb-4">{featured.title}</h3>
+                  <p className="text-gray-500 leading-relaxed mb-6">{featured.excerpt}</p>
                   <div className="flex items-center justify-between flex-wrap gap-4">
-                    <span className="text-sm text-gray-400">{featured.date}</span>
+                    <span className="text-sm text-gray-400">{formatDate(featured.date)}</span>
                     <div className="flex items-center gap-2">
                       {['twitter', 'facebook', 'whatsapp', 'linkedin'].map(p => (
-                        <button
-                          key={p}
-                          onClick={() => shareArticle(p, featured.title)}
-                          className="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold"
-                        >
+                        <button key={p} onClick={() => shareArticle(p, featured.title)} className="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold">
                           {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : p === 'whatsapp' ? '💬' : 'in'}
                         </button>
                       ))}
@@ -162,66 +90,47 @@ export default function NewsPage() {
       {/* Filter + News Grid */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-
-          {/* Filter tabs */}
           <div className="flex flex-wrap gap-2 mb-10">
             {TAGS.map(tag => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(tag)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold border-2 transition-colors ${
-                  activeTag === tag
-                    ? 'bg-[#f97316] border-[#f97316] text-white'
-                    : 'border-gray-200 text-gray-600 hover:border-[#f97316] hover:text-[#f97316]'
-                }`}
-              >
-                {tag}
-              </button>
+              <button key={tag} onClick={() => setActiveTag(tag)} className={`px-5 py-2 rounded-full text-sm font-semibold border-2 transition-colors ${activeTag === tag ? 'bg-[#f97316] border-[#f97316] text-white' : 'border-gray-200 text-gray-600 hover:border-[#f97316] hover:text-[#f97316]'}`}>{tag}</button>
             ))}
           </div>
 
-          {/* News grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {rest.map(article => (
-              <div
-                key={article.id}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 transition-transform duration-300"
-              >
-                <div className="relative h-52 bg-gradient-to-br from-[#f97316] to-[#c2410c]">
-                  {article.image && (
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover object-top"
-                    />
-                  )}
-                </div>
-                <div className="p-6">
-                  <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 ${TAG_COLORS[article.tag] ?? 'bg-gray-100 text-gray-700'}`}>
-                    {article.tag}
-                  </span>
-                  <h5 className="font-bold text-[16px] leading-snug mb-2">{article.title}</h5>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">
-                    {article.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between flex-wrap gap-3">
-                    <span className="text-xs text-gray-400">{article.date}</span>
-                    <div className="flex items-center gap-1.5">
-                      {['twitter', 'facebook', 'whatsapp'].map(p => (
-                        <button
-                          key={p}
-                          onClick={() => shareArticle(p, article.title)}
-                          className="w-7 h-7 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold"
-                        >
-                          {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : '💬'}
-                        </button>
-                      ))}
+            {loading ? (
+              [...Array(3)].map((_, i) => <div key={i} className="h-96 bg-white rounded-2xl animate-pulse" />)
+            ) : rest.length === 0 ? (
+              <div className="col-span-full text-center py-16 bg-white rounded-2xl border border-dashed border-gray-200">
+                <div className="text-5xl mb-4">📰</div>
+                <h4 className="font-bold text-lg text-[#01381d] mb-2">No News Articles Yet</h4>
+                <p className="text-gray-500 text-sm max-w-md mx-auto">
+                  The campaign team is currently preparing the latest updates. Please check back soon for news, press releases, and announcements!
+                </p>
+              </div>
+            ) : (
+              rest.map(article => (
+                <div key={article.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 transition-transform duration-300">
+                  <div className="relative h-52 bg-gradient-to-br from-[#f97316] to-[#c2410c]">
+                    {article.image_url && <Image src={article.image_url} alt={article.title} fill className="object-cover object-top" />}
+                  </div>
+                  <div className="p-6">
+                    <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 ${TAG_COLORS[article.tag] ?? 'bg-gray-100 text-gray-700'}`}>{article.tag}</span>
+                    <h5 className="font-bold text-[16px] leading-snug mb-2">{article.title}</h5>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">{article.excerpt}</p>
+                    <div className="flex items-center justify-between flex-wrap gap-3">
+                      <span className="text-xs text-gray-400">{formatDate(article.date)}</span>
+                      <div className="flex items-center gap-1.5">
+                        {['twitter', 'facebook', 'whatsapp'].map(p => (
+                          <button key={p} onClick={() => shareArticle(p, article.title)} className="w-7 h-7 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold">
+                            {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : '💬'}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -230,9 +139,7 @@ export default function NewsPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="font-heading text-4xl md:text-5xl">
-              IN THE <span className="text-[#f97316]">PRESS</span>
-            </h2>
+            <h2 className="font-heading text-4xl md:text-5xl">IN THE <span className="text-[#f97316]">PRESS</span></h2>
           </div>
           <div className="space-y-4">
             {[
@@ -257,18 +164,10 @@ export default function NewsPage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="bg-gradient-to-br from-[#01381d] to-[#015b2d] rounded-3xl p-10 md:p-16 text-center text-white">
             <h2 className="font-heading text-5xl mb-3">STAY UPDATED</h2>
-            <p className="text-gray-200 mb-8">
-              Subscribe to get the latest news and updates from the campaign.
-            </p>
+            <p className="text-gray-200 mb-8">Subscribe to get the latest news and updates from the campaign.</p>
             <div className="flex flex-wrap justify-center gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 min-w-0 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 px-5 py-3 rounded-xl focus:outline-none focus:border-[#f97316] text-sm"
-              />
-              <button className="bg-[#f97316] text-white font-bold px-6 py-3 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors text-sm">
-                Subscribe
-              </button>
+              <input type="email" placeholder="Enter your email" className="flex-1 min-w-0 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 px-5 py-3 rounded-xl focus:outline-none focus:border-[#f97316] text-sm" />
+              <button className="bg-[#f97316] text-white font-bold px-6 py-3 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors text-sm">Subscribe</button>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { toast } from 'sonner'
+import { supabaseBrowser } from '@/lib/supabase'
 
 const LGAS = [
   'Akoko-Edo','Egor','Esan Central','Esan North-East','Esan South-East','Esan West',
@@ -9,31 +10,195 @@ const LGAS = [
 ]
 const CATEGORIES = ['Youth & Employment', 'Education', 'Healthcare', 'Infrastructure', 'Security', 'Economy & Business', 'Women Affairs', 'Agriculture', 'Environment', 'Diaspora Affairs', 'Politics & Governance', 'General Questions']
 
+// 1 Minute Max Recording, 15MB Max File Size
+const MAX_RECORDING_SEC = 60 
+const MAX_FILE_SIZE_MB = 15
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+
+// Official Supabase Browser Uploader
+async function uploadToSupabase(blob: Blob, type: 'video' | 'attachment', fileName: string) {
+  const supabase = supabaseBrowser()
+  const folder = type === 'video' ? 'videos' : 'attachments'
+  const safeName = fileName.replace(/[^a-zA-Z0-9.\-_]/g, '_')
+  const filePath = `${folder}/${Date.now()}-${safeName}`
+  
+  const { error } = await supabase.storage
+    .from('ask-mai-uploads')
+    .upload(filePath, blob, { 
+      contentType: blob.type || 'application/octet-stream',
+      cacheControl: '3600'
+    })
+    
+  if (error) throw new Error(error.message)
+  
+  const { data: publicUrlData } = supabase.storage
+    .from('ask-mai-uploads')
+    .getPublicUrl(filePath)
+    
+  return publicUrlData.publicUrl
+}
+
 export default function AskMAIPage() {
   const [form, setForm] = useState({
     full_name: '', email: '', phone: '', lga: '', community: '', category: '', title: '', question: ''
   })
   const [loading, setLoading] = useState(false)
+  
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null)
+  const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordTime, setRecordTime] = useState(0)
+  
+  const liveVideoRef = useRef<HTMLVideoElement>(null)
+  const recordedVideoRef = useRef<HTMLVideoElement>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const handleChange = (e: any) => setForm({ ...form, [e.target.name]: e.target.value })
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        toast.error(`Attachment is too large. Max size is ${MAX_FILE_SIZE_MB}MB.`)
+        return
+      }
+      setAttachmentFile(file)
+    }
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop()
+      setIsRecording(false)
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      if (liveVideoRef.current) {
+        liveVideoRef.current.srcObject = stream
+        liveVideoRef.current.style.display = 'block'
+        if (recordedVideoRef.current) recordedVideoRef.current.style.display = 'none'
+      }
+      
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      const chunks: Blob[] = []
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data)
+      }
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' })
+        
+        if (blob.size > MAX_FILE_SIZE_BYTES) {
+          toast.error(`Video is too large. Please record a shorter video (max ${MAX_FILE_SIZE_MB}MB).`)
+          setVideoBlob(null)
+        } else {
+          setVideoBlob(blob)
+          if (recordedVideoRef.current) {
+            recordedVideoRef.current.src = URL.createObjectURL(blob)
+            recordedVideoRef.current.style.display = 'block'
+            if (liveVideoRef.current) liveVideoRef.current.style.display = 'none'
+          }
+        }
+        stream.getTracks().forEach(track => track.stop()) // Stop camera
+      }
+
+      mediaRecorder.start()
+      setIsRecording(true)
+      setRecordTime(0)
+      
+      timerRef.current = setInterval(() => {
+        setRecordTime(prev => {
+          if (prev >= MAX_RECORDING_SEC) {
+            stopRecording()
+            return prev
+          }
+          return prev + 1
+        })
+      }, 1000)
+
+    } catch (err) {
+      toast.error('Could not access camera/microphone.')
+    }
+  }
+
+  const redoRecording = () => {
+    setVideoBlob(null)
+    startRecording()
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    
+    let video_url = null
+    let attachment_url = null
+
     try {
+      // 1. Upload Video if exists
+      if (videoBlob) {
+        toast.loading('Uploading video...', { id: 'video-upload' })
+        try {
+          video_url = await uploadToSupabase(videoBlob, 'video', 'question.webm')
+          toast.success('Video uploaded!', { id: 'video-upload' })
+        } catch (err: any) {
+          toast.error(err.message || 'Video upload failed', { id: 'video-upload' })
+          throw err // Stop the whole submission if upload fails
+        }
+      }
+
+      // 2. Upload Attachment if exists
+      if (attachmentFile) {
+        toast.loading('Uploading attachment...', { id: 'file-upload' })
+        try {
+          attachment_url = await uploadToSupabase(attachmentFile, 'attachment', attachmentFile.name)
+          toast.success('Attachment uploaded!', { id: 'file-upload' })
+        } catch (err: any) {
+          toast.error(err.message || 'Attachment upload failed', { id: 'file-upload' })
+          throw err
+        }
+      }
+
+      // 3. Submit Form Data + URLs to Database
       const res = await fetch('/api/ask-mai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify({
+          ...form,
+          video_url,
+          attachment_url
+        })
       })
-      if (!res.ok) throw new Error('Failed to submit')
+      if (!res.ok) throw new Error('Failed to submit form')
+      
       toast.success('Question Submitted!', { description: 'Your question has been received.' })
+      
+      // Reset form
       setForm({ full_name: '', email: '', phone: '', lga: '', community: '', category: '', title: '', question: '' })
-    } catch {
-      toast.error('Submission failed')
+      setAttachmentFile(null)
+      setVideoBlob(null)
+      if (recordedVideoRef.current) recordedVideoRef.current.style.display = 'none'
+      
+    } catch (err: any) {
+      if (!video_url && videoBlob) toast.dismiss('video-upload')
+      if (!attachment_url && attachmentFile) toast.dismiss('file-upload')
+      
+      toast.error(err.message || 'Submission failed')
     } finally {
       setLoading(false)
     }
+  }
+
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60).toString().padStart(1, '0')
+    const s = (sec % 60).toString().padStart(2, '0')
+    return `${m}:${s}`
   }
 
   const inputCls = "w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#015b2d] transition-colors"
@@ -81,14 +246,35 @@ export default function AskMAIPage() {
                     <div><label className={labelCls}>Question Title</label><input type="text" name="title" value={form.title} onChange={handleChange} required className={inputCls} placeholder="Type your Question Title here..." /></div>
                     <div><label className={labelCls}>Question</label><textarea name="question" value={form.question} onChange={handleChange} required rows={5} className={`${inputCls} resize-none`} placeholder="Type your question here..."></textarea></div>
                     
-                    {/* Video Recorder UI Placeholder */}
+                    {/* Video Recorder UI */}
                     <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center bg-gray-50">
-                      <p className="text-sm font-semibold text-gray-700 mb-2">Record a Video Question (Optional)</p>
-                      <button type="button" className="px-4 py-2 bg-[#015b2d] text-white text-xs font-bold rounded-xl hover:bg-[#01381d] transition-colors">Start Recording</button>
-                      <p className="text-xs text-gray-400 mt-2">Speak clearly and keep your face visible.</p>
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm font-semibold text-gray-700">Record a Video Question</p>
+                        {isRecording && <span className="text-xs font-bold text-red-500 animate-pulse">REC {formatTime(recordTime)}</span>}
+                      </div>
+                      
+                      <video ref={liveVideoRef} className="w-full mb-3 hidden rounded-xl border border-gray-200" autoPlay muted playsInline></video>
+                      <video ref={recordedVideoRef} className="w-full mb-3 hidden rounded-xl border border-gray-200" controls></video>
+
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {!isRecording && !videoBlob && (
+                          <button type="button" onClick={startRecording} className="px-4 py-2 bg-[#015b2d] text-white text-xs font-bold rounded-xl hover:bg-[#01381d] transition-colors">🎥 Start Recording</button>
+                        )}
+                        {isRecording && (
+                          <button type="button" onClick={stopRecording} className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-xl hover:bg-red-700 transition-colors">⏹ Stop Recording</button>
+                        )}
+                        {videoBlob && !isRecording && (
+                          <button type="button" onClick={redoRecording} className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-300 transition-colors">↻ Redo Recording</button>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-400 mt-2">Max 1 minute • Max {MAX_FILE_SIZE_MB}MB</p>
                     </div>
 
-                    <div><label className={labelCls}>Upload Attachment (Optional)</label><input type="file" className={`${inputCls} file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#015b2d] file:text-white hover:file:bg-[#01381d]`} /></div>
+                    <div>
+                      <label className={labelCls}>Upload Attachment (Optional)</label>
+                      <input type="file" onChange={handleFileChange} className={`${inputCls} file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#015b2d] file:text-white hover:file:bg-[#01381d]`} />
+                      {attachmentFile && <p className="text-xs text-green-600 mt-1">✓ {attachmentFile.name}</p>}
+                    </div>
                     
                     <button type="submit" disabled={loading} className="w-full bg-[#f97316] text-white font-bold px-6 py-3.5 rounded-xl hover:bg-[#01381d] transition-colors disabled:opacity-60">
                       {loading ? 'Submitting...' : 'Submit Question'}
@@ -104,7 +290,6 @@ export default function AskMAIPage() {
                   <p className="text-sm text-gray-300">Selected questions appear here after moderation.</p>
                 </div>
                 <div className="p-6 space-y-4">
-                  
                   <div className="border border-gray-100 rounded-2xl p-6 flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex-1">
                       <span className="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full mb-2">Selected for Response</span>
@@ -123,7 +308,6 @@ export default function AskMAIPage() {
                       <button className="px-3 py-1.5 border-2 border-[#015b2d] text-[#015b2d] text-xs font-bold rounded-full hover:bg-[#015b2d] hover:text-white transition-colors">Upvote</button>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -178,12 +362,14 @@ export default function AskMAIPage() {
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
               <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4">Top questions this week</p>
               <div className="space-y-3">
-                {['What is your plan for public school funding?', 'How will healthcare reach underserved communities?', 'What support exists for young entrepreneurs?', 'What is the road infrastructure timeline?'].map((q, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <span className="text-[#f97316] font-bold text-sm">Q{i + 1}</span>
-                    <span className="text-sm text-gray-200">{q}</span>
-                  </div>
-                ))}
+                {['What is your plan for public school funding?', 'How will healthcare reach underserved communities?', 'What support exists for young entrepreneurs?', 'What is the road infrastructure timeline?'].map((q, i) => {
+                  return (
+                    <div key={i} className="flex items-center gap-3">
+                      <span className="text-[#f97316] font-bold text-sm">Q{i + 1}</span>
+                      <span className="text-sm text-gray-200">{q}</span>
+                    </div>
+                  )
+                })}
               </div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
@@ -195,26 +381,6 @@ export default function AskMAIPage() {
               </div>
             </div>
           </div>
-
-          <div className="mt-12 bg-white/5 border border-white/10 rounded-2xl p-8">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-[#f97316]/20 text-[#f97316] flex items-center justify-center text-xl">🔍</div>
-              <div>
-                <h4 className="font-bold text-lg">Search past answers</h4>
-                <p className="text-sm text-gray-400">Check if MAI has already addressed your topic.</p>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input type="text" placeholder="Education, Healthcare, Youth, Roads…" className="flex-1 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 px-5 py-3 rounded-xl focus:outline-none focus:border-[#f97316]" />
-              <button className="bg-[#f97316] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-600 transition-colors">Search</button>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-4">
-              {['Education', 'Healthcare', 'Youth', 'Roads', 'Economy', 'Security'].map(tag => (
-                <span key={tag} className="px-3 py-1.5 bg-white/10 text-gray-300 text-xs font-semibold rounded-full cursor-pointer hover:bg-[#f97316] hover:text-white transition-colors">{tag}</span>
-              ))}
-            </div>
-          </div>
-
         </div>
       </section>
     </>

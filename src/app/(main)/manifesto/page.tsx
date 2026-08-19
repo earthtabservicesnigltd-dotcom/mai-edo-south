@@ -1,3 +1,5 @@
+'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const PILLARS = [
@@ -82,6 +84,21 @@ const PILLARS = [
 ]
 
 export default function ManifestoPage() {
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchPdf() {
+      try {
+        const res = await fetch('/api/admin/manifesto')
+        const data = await res.json()
+        if (res.ok) setPdfUrl(data.url)
+      } catch (err) {
+        console.error('Failed to fetch manifesto URL')
+      }
+    }
+    fetchPdf()
+  }, [])
+
   return (
     <>
       {/* Page Hero */}
@@ -169,12 +186,26 @@ export default function ManifestoPage() {
               detailed breakdown of all our policies and commitments.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button className="bg-[#f97316] text-white font-bold px-10 py-4 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors flex items-center gap-2">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                </svg>
-                Download PDF
-              </button>
+              {pdfUrl ? (
+                <a 
+                  href={pdfUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-[#f97316] text-white font-bold px-10 py-4 rounded-xl hover:bg-white hover:text-[#f97316] transition-colors flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                  </svg>
+                  Download PDF
+                </a>
+              ) : (
+                <button disabled className="bg-gray-400 text-white font-bold px-10 py-4 rounded-xl cursor-not-allowed flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                  </svg>
+                  Coming Soon
+                </button>
+              )}
               <Link
                 href="/agenda"
                 className="border-2 border-white text-white font-bold px-10 py-4 rounded-xl hover:bg-white hover:text-[#01381d] transition-colors"

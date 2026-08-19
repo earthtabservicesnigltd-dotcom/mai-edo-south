@@ -13,15 +13,23 @@ import { toast } from 'sonner'
 const MAIN_NAV_ITEMS = [
   { icon: '📊', label: 'Dashboard', href: '/admin' },
   { icon: '🙋', label: 'Volunteers', href: '/admin/volunteers' },
-  { icon: '🏛️', label: 'Support Groups', href: '/admin/support' },
+  { icon: '🏛️', label: 'Support Groups', href: '/admin/support-groups' },
   { icon: '💰', label: 'Donations', href: '/admin/donations' },
   { icon: '💬', label: 'Feedback', href: '/admin/feedback' },
   { icon: '🎙️', label: 'MAI Listens', href: '/admin/mai-listens' },
   { icon: '🌍', label: 'Diaspora', href: '/admin/diaspora' },
   { icon: '🧑‍🎓', label: 'Youth Council', href: '/admin/youth-council' },
   { icon: '👩‍💼', label: 'Women Network', href: '/admin/women-network' },
-  { icon: '❓', label: 'Ask MAI', href: '/admin/ask-mai' },         // <-- Added
+  { icon: '❓', label: 'Ask MAI', href: '/admin/ask-mai' },
   { icon: '✨', label: 'MAI Impact', href: '/admin/mai-impact' },
+  { icon: '📰', label: 'News', href: '/admin/news' },
+  { icon: '📅', label: 'Events', href: '/admin/events' },
+]
+
+const GENERAL_NAV_ITEMS = [
+  { icon: '📢', label: 'Broadcast', href: '/admin/broadcast' },
+  { icon: '🎥', label: 'Testimonials', href: '/admin/testimonials' },
+  { icon: '📄', label: 'Manifesto', href: '/admin/manifesto' },
 ]
 
 const ACADEMY_NAV_ITEMS = [
@@ -32,7 +40,6 @@ const ACADEMY_NAV_ITEMS = [
   { icon: '📋', label: 'Tasks', href: '/admin/academy/tasks' },
   { icon: '🏆', label: 'Capstones', href: '/admin/academy/capstones' },
   { icon: '👥', label: 'My Group', href: '/admin/academy/groups' },
-  { icon: '📢', label: 'Broadcast', href: '/admin/academy/broadcast' },
   { icon: '🔔', label: 'Notifications', href: '/admin/academy/notifications' },
 ]
 
@@ -84,6 +91,13 @@ export function AppSidebar() {
         <nav className="px-3 py-6 space-y-1">
           {MAIN_NAV_ITEMS.map(renderNavLink)}
           
+          <div className="px-3 py-2 mt-4">
+            <div className="text-[9px] font-bold text-ink-muted uppercase tracking-wider px-2 py-1.5">
+              General
+            </div>
+            {GENERAL_NAV_ITEMS.map(renderNavLink)}
+          </div>
+
           <div className="px-3 py-2 mt-4">
             <div className="text-[9px] font-bold text-ink-muted uppercase tracking-wider px-2 py-1.5">
               Academy

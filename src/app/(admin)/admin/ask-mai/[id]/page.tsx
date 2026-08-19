@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import Link from 'next/link'
@@ -25,6 +25,7 @@ export default function AskMAIDetailPage() {
   const { id } = useParams()
   const [question, setQuestion] = useState<Question | null>(null)
   const [loading, setLoading] = useState(true)
+  const router = useRouter();
   const [updating, setUpdating] = useState(false)
 
   useEffect(() => {
@@ -49,6 +50,19 @@ export default function AskMAIDetailPage() {
     setUpdating(false)
   }
 
+    async function handleDelete() {
+    if (!confirm('Are you sure you want to delete this question?')) return
+    
+    await fetch('/api/admin/ask-mai', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    
+    toast.success('Question deleted.')
+    router.push('/admin/ask-mai')
+  }
+
   if (loading) return <div className="flex items-center justify-center min-h-[400px]"><div className="loader" /></div>
   if (!question) return <div className="text-center py-20"><p className="text-ink-muted">Question not found.</p><Link href="/admin/ask-mai" className="text-[#f97316] font-semibold hover:underline mt-4 block">Back to Ask MAI</Link></div>
 
@@ -68,6 +82,12 @@ export default function AskMAIDetailPage() {
             <option value="selected">Selected for Response</option>
             <option value="answered">Answered</option>
           </select>
+          <button 
+            onClick={handleDelete}
+            className="px-4 py-2 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors flex-shrink-0"
+          >
+            Delete
+          </button>
         </div>
       </div>
 
@@ -107,11 +127,23 @@ export default function AskMAIDetailPage() {
           
           {(question.video_url || question.attachment_url) && (
             <div className="pt-4 border-t border-gray-100">
-              <p className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-2">Attachments</p>
-              <div className="flex flex-wrap gap-3">
-                {question.video_url && <a href={question.video_url} target="_blank" className="px-3 py-2 bg-[#01381d]/10 text-[#01381d] text-xs font-bold rounded-lg hover:bg-[#01381d]/20">🎥 Watch Video</a>}
-                {question.attachment_url && <a href={question.attachment_url} target="_blank" className="px-3 py-2 bg-[#f97316]/10 text-[#f97316] text-xs font-bold rounded-lg hover:bg-[#f97316]/20">📄 View Attachment</a>}
-              </div>
+              <p className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-3">Attachments</p>
+              
+              {question.video_url && (
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Recorded Video</p>
+                  <video src={question.video_url} controls className="w-full max-w-md rounded-xl border border-gray-200" />
+                </div>
+              )}
+              
+              {question.attachment_url && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Attachment File</p>
+                  <a href={question.attachment_url} target="_blank" className="inline-flex items-center gap-2 px-3 py-2 bg-[#f97316]/10 text-[#f97316] text-xs font-bold rounded-lg hover:bg-[#f97316]/20">
+                    📄 View Attachment
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

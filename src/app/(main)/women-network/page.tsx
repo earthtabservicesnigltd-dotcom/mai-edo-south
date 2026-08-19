@@ -2,7 +2,11 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-const LGAS = ['Egor', 'Ikpoba-Okha', 'Oredo', 'Orhionmwon', 'Ovia North-East', 'Ovia South-West', 'Uhunmwonde']
+const LGAS = [
+  'Akoko-Edo','Egor','Esan Central','Esan North-East','Esan South-East','Esan West',
+  'Etsako Central','Etsako East','Etsako West','Igueben','Ikpoba-Okha','Orhionmwon',
+  'Oredo','Ovia North-East','Ovia South-West','Owan East','Owan West','Uhunmwonde',
+]
 const BIZ_CATEGORIES = ['Fashion', 'Catering', 'Retail', 'Agriculture', 'Beauty', 'Technology', 'Consulting', 'Education', 'Manufacturing', 'Other']
 const IMPACT_CATEGORIES = ['Education', 'Business', 'Healthcare', 'Community Service', 'Youth Development']
 
@@ -50,7 +54,6 @@ export default function WomenNetworkPage() {
     setAreasOfInterest(prev => prev.includes(area) ? prev.filter(a => a !== area) : [...prev, area])
   }
 
-  // Submit Functions
   const submitRegistration = async (e: React.FormEvent) => {
     e.preventDefault(); setRegLoading(true)
     try {
@@ -59,11 +62,15 @@ export default function WomenNetworkPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...regForm, areas_of_interest: areasOfInterest })
       })
-      if (!res.ok) throw new Error('Failed')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to register')
+      
       toast.success('Registration Successful!', { description: 'Welcome to the MAI Women Network.' })
       setRegForm({ full_name: '', date_of_birth: '', phone: '', whatsapp_number: '', email: '', lga: '', ward: '', community: '', occupation: '' })
       setAreasOfInterest([])
-    } catch { toast.error('Submission failed') } finally { setRegLoading(false) }
+    } catch (err: any) {
+      toast.error(err.message || 'Submission failed')
+    } finally { setRegLoading(false) }
   }
 
   const submitVoice = async (e: React.FormEvent) => {
@@ -74,10 +81,14 @@ export default function WomenNetworkPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(voiceForm)
       })
-      if (!res.ok) throw new Error('Failed')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to submit')
+      
       toast.success('Issue Submitted!')
       setVoiceForm({ email: '', category: '', title: '', description: '', lga: '', community: '' })
-    } catch { toast.error('Submission failed') } finally { setVoiceLoading(false) }
+    } catch (err: any) {
+      toast.error(err.message || 'Submission failed')
+    } finally { setVoiceLoading(false) }
   }
 
   const submitBusiness = async (e: React.FormEvent) => {
@@ -88,10 +99,14 @@ export default function WomenNetworkPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bizForm)
       })
-      if (!res.ok) throw new Error('Failed')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to submit')
+      
       toast.success('Business Listed!')
       setBizForm({ email: '', business_name: '', owner_name: '', category: '', lga: '', phone: '', social_links: '', description: '' })
-    } catch { toast.error('Submission failed') } finally { setBizLoading(false) }
+    } catch (err: any) {
+      toast.error(err.message || 'Submission failed')
+    } finally { setBizLoading(false) }
   }
 
   const submitLeader = async (e: React.FormEvent) => {
@@ -102,10 +117,14 @@ export default function WomenNetworkPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...leaderForm, years_of_experience: Number(leaderForm.years_of_experience) })
       })
-      if (!res.ok) throw new Error('Failed')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to submit')
+      
       toast.success('Application Submitted!')
       setLeaderForm({ email: '', full_name: '', position_held: '', organization: '', years_of_experience: '', community_impact: '' })
-    } catch { toast.error('Submission failed') } finally { setLeaderLoading(false) }
+    } catch (err: any) {
+      toast.error(err.message || 'Submission failed')
+    } finally { setLeaderLoading(false) }
   }
 
   const submitNomination = async (e: React.FormEvent) => {
@@ -116,10 +135,14 @@ export default function WomenNetworkPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nomForm)
       })
-      if (!res.ok) throw new Error('Failed')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to submit')
+      
       toast.success('Nomination Submitted!')
       setNomForm({ email: '', nominee_name: '', category: 'Education', achievements: '' })
-    } catch { toast.error('Submission failed') } finally { setNomLoading(false) }
+    } catch (err: any) {
+      toast.error(err.message || 'Submission failed')
+    } finally { setNomLoading(false) }
   }
 
   // Styling Constants

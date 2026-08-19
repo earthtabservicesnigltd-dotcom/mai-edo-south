@@ -62,6 +62,23 @@ export default function AdminAskMAIPage() {
     toast.success(`Question marked as ${status}.`)
   }
 
+    async function deleteQuestion(id: string) {
+    if (!confirm('Are you sure you want to delete this question? This will also delete any attached video/file.')) return
+    
+    const res = await fetch('/api/admin/ask-mai', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    
+    if (res.ok) {
+      setQuestions(prev => prev.filter(q => q.id !== id))
+      toast.success('Question deleted.')
+    } else {
+      toast.error('Failed to delete question.')
+    }
+  }
+
   const STATUS_TABS = ['all', 'received', 'under_review', 'selected', 'answered']
 
   return (
@@ -126,6 +143,13 @@ export default function AdminAskMAIPage() {
                         <option value="selected">Selected</option>
                         <option value="answered">Answered</option>
                       </select>
+                      <button 
+                        onClick={() => deleteQuestion(q.id)}
+                        className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors"
+                        title="Delete Question"
+                      >
+                          🗑️
+                      </button>
                     </div>
                   </div>
                 </div>

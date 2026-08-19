@@ -7,31 +7,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-async function uploadFile(base64: string, fileName: string, folder: string): Promise<string> {
-  if (!base64) return ''
-
-  const base64Data = base64.split(',')[1]
-  const mimeType = base64.split(';')[0].split(':')[1]
-  const buffer = Buffer.from(base64Data, 'base64')
-  const ext = fileName?.split('.').pop() || 'bin'
-  const uniqueName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-
-  const { error } = await supabase.storage
-    .from('support-group-bucket')
-    .upload(uniqueName, buffer, { contentType: mimeType })
-
-  if (error) {
-    console.log(`${folder} upload error:`, error.message)
-    return ''
-  }
-
-  const { data: { publicUrl } } = supabase.storage
-    .from('support-group-bucket')
-    .getPublicUrl(uniqueName)
-
-  return publicUrl
-}
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -40,11 +15,7 @@ export async function POST(req: NextRequest) {
       coordinator_name, position, phone, whatsapp, email,
       total_members, active_members, estimated_supporters,
       facebook, twitter, instagram, website, agreed,
-      membershipDatabaseBase64, membershipDatabaseName,
-      groupLogoBase64, groupLogoName,
-      certOfRegBase64, certOfRegName,
-      constitutionBase64, constitutionName,
-      groupPhotoBase64, groupPhotoName,
+      membership_database_url, group_logo_url, cert_of_reg_url, constitution_url, group_photo_url,
     } = body
 
     if (!org_name || !org_type || !state || !lga || !coordinator_name || !position || !phone || !email || !agreed) {
@@ -64,21 +35,6 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       )
     }
-
-    // Upload all files in parallel
-    const [
-      membership_database_url,
-      group_logo_url,
-      cert_of_reg_url,
-      constitution_url,
-      group_photo_url,
-    ] = await Promise.all([
-      uploadFile(membershipDatabaseBase64, membershipDatabaseName, 'membership-db'),
-      uploadFile(groupLogoBase64, groupLogoName, 'logos'),
-      uploadFile(certOfRegBase64, certOfRegName, 'certs'),
-      uploadFile(constitutionBase64, constitutionName, 'constitutions'),
-      uploadFile(groupPhotoBase64, groupPhotoName, 'photos'),
-    ])
 
     const { data: group, error } = await supabase
       .from('support_groups')

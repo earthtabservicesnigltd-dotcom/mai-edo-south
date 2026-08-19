@@ -1,6 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
+import { supabaseBrowser } from '@/lib/supabase'
+
+function getYouTubeID(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
 
 const LGAS = [
   'Akoko-Edo','Egor','Esan Central','Esan North-East','Esan South-East','Esan West',
@@ -15,10 +22,28 @@ export default function MAIImpactPage() {
   })
   const [consents, setConsents] = useState({ is_true: false, can_publish: false, anonymous: false })
   const [loading, setLoading] = useState(false)
+  const [files, setFiles] = useState<File[]>([])
+  const [testimonials, setTestimonials] = useState<any[]>([])
+
+   // Add this effect to fetch testimonials
+  useEffect(() => {
+    async function fetchTestimonials() {
+      const res = await fetch('/api/testimonials')
+      const data = await res.json()
+      if (res.ok) setTestimonials(data.testimonials || [])
+    }
+    fetchTestimonials()
+  }, [])
 
   const handleChange = (e: any) => setForm({ ...form, [e.target.name]: e.target.value })
   const toggleConsent = (key: 'is_true' | 'can_publish' | 'anonymous') => {
     setConsents(prev => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFiles(Array.from(e.target.files))
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,18 +53,49 @@ export default function MAIImpactPage() {
       return
     }
     setLoading(true)
+
+    let file_urls: string[] = []
+
     try {
+      // 1. Upload files to Supabase if any exist
+      if (files.length > 0) {
+        toast.loading('Uploading files...', { id: 'file-upload' })
+        const supabase = supabaseBrowser()
+        
+        for (const file of files) {
+          const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_')
+          const filePath = `evidence/${Date.now()}-${safeName}`
+          
+          const { error } = await supabase.storage
+            .from('mai-impact-uploads')
+            .upload(filePath, file, { contentType: file.type })
+
+          if (error) throw error
+          
+          const { data: publicUrlData } = supabase.storage
+            .from('mai-impact-uploads')
+            .getPublicUrl(filePath)
+            
+          file_urls.push(publicUrlData.publicUrl)
+        }
+        toast.success('Files uploaded!', { id: 'file-upload' })
+      }
+
+      // 2. Submit Form Data + File URLs to Database
       const res = await fetch('/api/mai-impact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, ...consents })
+        body: JSON.stringify({ ...form, ...consents, file_urls })
       })
       if (!res.ok) throw new Error('Failed to submit')
+      
       toast.success('Story Submitted!', { description: 'Thank you for sharing your impact story.' })
       setForm({ full_name: '', phone: '', email: '', community: '', lga: '', state_country: '', title: '', story: '', impact_category: '' })
       setConsents({ is_true: false, can_publish: false, anonymous: false })
-    } catch {
-      toast.error('Submission failed')
+      setFiles([])
+    } catch (err: any) {
+      toast.dismiss('file-upload')
+      toast.error(err.message || 'Submission failed')
     } finally {
       setLoading(false)
     }
@@ -119,8 +175,15 @@ export default function MAIImpactPage() {
                         <div className="flex justify-center gap-4 text-xs text-gray-500 mb-4">
                           <span>📷 Photos</span><span>📄 Documents</span><span>✉️ Letters</span><span>🎥 Videos</span>
                         </div>
-                        <input type="file" className="hidden" />
-                        <button type="button" className="px-4 py-2 bg-[#f97316] text-white text-xs font-bold rounded-xl hover:bg-[#01381d] transition-colors">Upload Files</button>
+                        <input type="file" multiple onChange={handleFileChange} className="hidden" id="file-upload" />
+                        <label htmlFor="file-upload" className="px-4 py-2 bg-[#f97316] text-white text-xs font-bold rounded-xl hover:bg-[#01381d] transition-colors cursor-pointer">
+                          Select Files
+                        </label>
+                        {files.length > 0 && (
+                          <div className="mt-4 text-left text-sm text-gray-600 space-y-1">
+                            {files.map((f, i) => <p key={i}>✓ {f.name}</p>)}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -214,12 +277,34 @@ export default function MAIImpactPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="bg-[#01381d] rounded-2xl aspect-video flex items-center justify-center relative overflow-hidden">
-                <div className="w-14 h-14 rounded-full bg-white/90 text-[#015b2d] flex items-center justify-center text-xl cursor-pointer hover:scale-105 transition-transform z-10">▶</div>
-                <div className="absolute bottom-4 left-4 text-white font-semibold text-sm z-10">Testimonial {i}</div>
-              </div>
-            ))}
+            {!testimonials || testimonials.length === 0 ? (
+              // Fallback dummy data if database is empty
+              <>
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-[#01381d] rounded-2xl aspect-video flex items-center justify-center relative overflow-hidden">
+                    <div className="w-14 h-14 rounded-full bg-white/90 text-[#015b2d] flex items-center justify-center text-xl cursor-pointer hover:scale-105 transition-transform z-10">▶</div>
+                    <div className="absolute bottom-4 left-4 text-white font-semibold text-sm z-10">Testimonial {i}</div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              testimonials.map(t => {
+                const videoId = getYouTubeID(t.youtube_url)
+                if (!videoId) return null
+                return (
+                  <div key={t.id} className="bg-[#01381d] rounded-2xl aspect-video overflow-hidden relative">
+                    <iframe 
+                      src={`https://www.youtube.com/embed/${videoId}`} 
+                      title={t.title} 
+                      className="w-full h-full"
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen
+                    />
+                  </div>
+                )
+              })
+            )}
           </div>
 
           <div className="text-center mb-8">

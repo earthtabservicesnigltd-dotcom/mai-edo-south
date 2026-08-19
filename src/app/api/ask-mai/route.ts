@@ -5,7 +5,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
     const supabase = supabaseAdmin()
-    
+
+    // Insert the Question into Database
+    // The URLs are already uploaded by the frontend!
     const { data, error } = await supabase
       .from('ask_mai_questions')
       .insert({
@@ -24,6 +26,7 @@ export async function POST(req: Request) {
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error: any) {
+    console.error('Ask MAI Error:', error.message)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

@@ -1,34 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const { email, name } = await req.json()
-
+    const { email } = await req.json()
     if (!email) return NextResponse.json({ error: 'Email is required' }, { status: 400 })
 
-    const res = await fetch('https://api.brevo.com/v3/contacts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': process.env.BREVO_API_KEY!,
-      },
-      body: JSON.stringify({
-        email,
-        attributes: { FIRSTNAME: name ?? '' },
-        listIds: [5],
-        updateEnabled: true,
-      }),
-    })
+    const supabase = supabaseAdmin()
+    
+    // Upsert checks if the email exists. If it does, it updates it. If not, it inserts a new row.
+    const { error } = await supabase
+      .from('subscribers')
+      .upsert({ 
+        email, 
+        status: 'active' 
+      }, { 
+        onConflict: 'email' 
+      })
 
-    if (!res.ok) {
-      const err = await res.json()
-      // Brevo returns 204 on duplicate so this mostly catches real errors
-      return NextResponse.json({ error: err.message }, { status: 400 })
-    }
+    if (error) throw error
 
-    return NextResponse.json({ ok: true })
-  } catch (err: any) {
-    console.error('Subscribe error:', err.message)
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
+    return NextResponse.json({ success: true })
+  } catch (error: any) {
+    console.error('Subscribe Error:', error.message)
+    return NextResponse.json({ error: error.message || 'Failed to subscribe' }, { status: 500 })
   }
 }
