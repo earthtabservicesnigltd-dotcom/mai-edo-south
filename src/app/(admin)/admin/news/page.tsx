@@ -14,7 +14,7 @@ export default function AdminNewsPage() {
   const { toggleSidebar } = useSidebar()
   
   const [form, setForm] = useState({
-    title: '', excerpt: '', tag: 'Campaign', date: new Date().toISOString().split('T')[0], featured: false, image_url: ''
+    title: '', excerpt: '', content: '', tag: 'Campaign', date: new Date().toISOString().split('T')[0], featured: false, image_url: ''
   })
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function AdminNewsPage() {
     const data = await res.json()
     if (res.ok) {
       setArticles(prev => [data.article, ...prev])
-      setForm({ title: '', excerpt: '', tag: 'Campaign', date: new Date().toISOString().split('T')[0], featured: false, image_url: '' })
+      setForm({ title: '', excerpt: '', content: '', tag: 'Campaign', date: new Date().toISOString().split('T')[0], featured: false, image_url: '' })
       toast.success('Article published!')
     } else {
       toast.error('Failed to publish')
@@ -84,6 +84,10 @@ export default function AdminNewsPage() {
                   <label className="block text-xs font-bold text-ink-muted uppercase mb-1">Excerpt</label>
                   <textarea required value={form.excerpt} onChange={e => setForm({...form, excerpt: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-border text-sm" rows={3} placeholder="Short summary..." />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-ink-muted uppercase mb-1">Full Article Content</label>
+                  <textarea required value={form.content} onChange={e => setForm({...form, content: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-border text-sm" rows={6} placeholder="Write the full news article here..." />
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-ink-muted uppercase mb-1">Tag</label>
@@ -99,7 +103,7 @@ export default function AdminNewsPage() {
                 <div>
                   <label className="block text-xs font-bold text-ink-muted uppercase mb-2">Cover Image</label>
                   <input type="file" accept="image/*" onChange={handleImageUpload} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#015b2d] file:text-white hover:file:bg-[#01381d]" />
-                  {form.image_url && <img src={form.image_url} alt="Preview" className="mt-2 rounded-lg max-h-32 object-cover w-full" />}
+                  {form.image_url && <Image src={form.image_url} alt="Preview" width={300} height={200} className="mt-2 rounded-lg max-h-32 object-cover w-full" />}
                 </div>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={form.featured} onChange={e => setForm({...form, featured: e.target.checked})} className="w-4 h-4 accent-[#f97316]" />

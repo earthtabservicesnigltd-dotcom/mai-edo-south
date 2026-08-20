@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const TAGS = ['All', 'Campaign', 'Community', 'Politics', 'Development']
 
@@ -61,7 +62,7 @@ export default function NewsPage() {
             <div className="text-center mb-10">
               <h2 className="font-heading text-4xl md:text-5xl">FEATURED <span className="text-[#f97316]">STORY</span></h2>
             </div>
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+            <Link href={`/news/${featured.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <div className="relative h-72 lg:h-auto bg-gradient-to-br from-[#01381d] to-[#015b2d]">
                   {featured.image_url && <Image src={featured.image_url} alt={featured.title} fill className="object-cover object-top" />}
@@ -82,7 +83,7 @@ export default function NewsPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </section>
       )}
@@ -109,7 +110,7 @@ export default function NewsPage() {
               </div>
             ) : (
               rest.map(article => (
-                <div key={article.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 transition-transform duration-300">
+                <Link href={`/news/${article.id}`} key={article.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 transition-transform duration-300">
                   <div className="relative h-52 bg-gradient-to-br from-[#f97316] to-[#c2410c]">
                     {article.image_url && <Image src={article.image_url} alt={article.title} fill className="object-cover object-top" />}
                   </div>
@@ -128,7 +129,7 @@ export default function NewsPage() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </div>

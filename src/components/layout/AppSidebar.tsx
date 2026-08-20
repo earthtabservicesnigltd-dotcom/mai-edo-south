@@ -24,6 +24,7 @@ const MAIN_NAV_ITEMS = [
   { icon: '✨', label: 'MAI Impact', href: '/admin/mai-impact' },
   { icon: '📰', label: 'News', href: '/admin/news' },
   { icon: '📅', label: 'Events', href: '/admin/events' },
+  { icon: '📸', label: 'Media Gallery', href: '/admin/media' },
 ]
 
 const GENERAL_NAV_ITEMS = [
