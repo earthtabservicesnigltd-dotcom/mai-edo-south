@@ -81,12 +81,8 @@ export default function NewsDetailPage() {
       {/* ARTICLE CONTENT */}
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-4">
-          <p className="text-xl text-gray-700 font-medium leading-relaxed mb-8 pb-8 border-b border-gray-100">
-            {article.excerpt}
-          </p>
-          
           {/* Render full content. Using whitespace-pre-wrap preserves line breaks from the admin textarea */}
-          <div className="prose prose-lg max-w-none text-gray-600 leading-relaxed whitespace-pre-wrap">
+          <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
             {article.content}
           </div>
         </div>

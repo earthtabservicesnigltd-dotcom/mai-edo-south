@@ -12,11 +12,11 @@ export default function ResetPasswordPage() {
   const router = useRouter()
 
   useEffect(() => {
-    supabaseBrowser().auth.onAuthStateChange((event) => {
+    supabaseBrowser().auth.onAuthStateChange((event: any) => {
       if (event === 'PASSWORD_RECOVERY') setReady(true)
     })
     // Also check if we already have a session
-    supabaseBrowser().auth.getUser().then(({ data }) => {
+    supabaseBrowser().auth.getUser().then(({ data }: { data: { user: any } }) => {
       if (data?.user) setReady(true)
     })
   }, [])

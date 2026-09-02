@@ -388,7 +388,7 @@ export default function AdminNewsPage() {
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
                     className="field font-medium text-gray-900 placeholder:text-gray-400"
-                    placeholder="e.g. MAI Launches Historic Youth Empowerment Fund"
+                    placeholder="e.g. MAI Launches Historic Youth Empowerment Fund in Benin City"
                   />
                 </div>
 
@@ -425,15 +425,14 @@ export default function AdminNewsPage() {
 
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Short Excerpt / Summary <span className="text-red-500">*</span>
+                    Short Excerpt / Summary <span className="text-gray-400 font-normal lowercase">(optional preview)</span>
                   </label>
                   <textarea
-                    required
                     value={form.excerpt}
                     onChange={e => setForm({ ...form, excerpt: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#01381d] text-gray-800 placeholder:text-gray-400"
                     rows={2}
-                    placeholder="Brief 1-2 sentence preview shown on news cards..."
+                    placeholder="Optional short summary shown on news cards..."
                   />
                 </div>
 
@@ -483,7 +482,7 @@ export default function AdminNewsPage() {
                         <button
                           type="button"
                           onClick={() => setForm({ ...form, image_url: '' })}
-                          className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full text-xs shadow hover:bg-red-700"
+                          className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full text-xs shadow hover:bg-red-700 cursor-pointer"
                           title="Remove image"
                         >
                           <X className="w-3.5 h-3.5" />
@@ -565,7 +564,7 @@ export default function AdminNewsPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setFilterFeaturedOnly(!filterFeaturedOnly)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
                       filterFeaturedOnly
                         ? 'bg-amber-100 text-amber-900 border border-amber-300'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent'
@@ -832,15 +831,14 @@ export default function AdminNewsPage() {
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                  Excerpt / Summary
+                  Short Excerpt / Summary <span className="text-gray-400 font-normal lowercase">(optional preview)</span>
                 </label>
                 <textarea
-                  required
                   value={editForm.excerpt}
                   onChange={e => setEditForm({ ...editForm, excerpt: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#01381d] text-gray-800"
                   rows={2}
-                  placeholder="Short summary..."
+                  placeholder="Optional short summary..."
                 />
               </div>
 
@@ -890,7 +888,7 @@ export default function AdminNewsPage() {
                       <button
                         type="button"
                         onClick={() => setEditForm({ ...editForm, image_url: '' })}
-                        className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full text-xs shadow hover:bg-red-700"
+                        className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full text-xs shadow hover:bg-red-700 cursor-pointer"
                         title="Remove image"
                       >
                         <X className="w-3.5 h-3.5" />

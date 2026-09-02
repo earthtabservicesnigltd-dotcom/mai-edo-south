@@ -35,9 +35,9 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
   useEffect(() => {
     const supabase = supabaseBrowser()
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user)
-      if (data.user) {
+    supabase.auth.getUser().then(({ data }: { data: { user: any } }) => {
+      setUser(data?.user ?? null)
+      if (data?.user) {
         const firstName = data.user.user_metadata?.first_name || ''
         const lastName = data.user.user_metadata?.last_name || ''
         setProfile({ first_name: firstName, last_name: lastName })
