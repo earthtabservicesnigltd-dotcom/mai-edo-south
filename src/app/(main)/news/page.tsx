@@ -62,20 +62,76 @@ export default function NewsPage() {
             <div className="text-center mb-10">
               <h2 className="font-heading text-4xl md:text-5xl">FEATURED <span className="text-[#f97316]">STORY</span></h2>
             </div>
-            <Link href={`/news/${featured.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <div className="relative h-72 lg:h-auto bg-gradient-to-br from-[#01381d] to-[#015b2d]">
-                  {featured.image_url && <Image src={featured.image_url} alt={featured.title} fill className="object-cover object-top" />}
+            <Link href={`/news/${featured.id}`} className="group block bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+              <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+                {/* Image Container with Ambient Backdrop & Crisp Foreground Framing */}
+                <div className="lg:col-span-6 xl:col-span-7 relative min-h-[280px] sm:min-h-[360px] lg:min-h-[440px] bg-gradient-to-br from-[#012d17] via-[#01381d] to-[#015b2d] overflow-hidden">
+                  {featured.image_url ? (
+                    <>
+                      {/* Ambient blur background for portrait/odd ratio images */}
+                      <Image
+                        src={featured.image_url}
+                        alt=""
+                        fill
+                        className="object-cover blur-xl scale-125 opacity-40 select-none pointer-events-none"
+                        aria-hidden="true"
+                      />
+                      {/* Crisp focused foreground image */}
+                      <Image
+                        src={featured.image_url}
+                        alt={featured.title}
+                        fill
+                        priority
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                      />
+                      {/* Gradient overlay on edge */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 lg:bg-gradient-to-r lg:from-transparent lg:to-black/20" />
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-white/50 p-8 text-center">
+                      <span className="text-6xl mb-3">📰</span>
+                      <span className="font-heading text-xl text-white/80">MAI CAMPAIGN NEWS</span>
+                    </div>
+                  )}
+                  {/* Spotlight Tag */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="inline-flex items-center gap-1.5 bg-[#f97316] text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-wide uppercase">
+                      ⭐ FEATURED STORY
+                    </span>
+                  </div>
                 </div>
-                <div className="p-8 md:p-10 flex flex-col justify-center">
-                  <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-4 w-fit ${TAG_COLORS[featured.tag] ?? 'bg-gray-100 text-gray-700'}`}>{featured.tag}</span>
-                  <h3 className="font-bold text-2xl md:text-3xl leading-snug mb-4">{featured.title}</h3>
-                  <p className="text-gray-500 leading-relaxed mb-6">{featured.excerpt}</p>
-                  <div className="flex items-center justify-between flex-wrap gap-4">
-                    <span className="text-sm text-gray-400">{formatDate(featured.date)}</span>
-                    <div className="flex items-center gap-2">
+
+                {/* Content Container */}
+                <div className="lg:col-span-6 xl:col-span-5 p-8 sm:p-10 md:p-12 flex flex-col justify-between bg-white">
+                  <div>
+                    <span className={`inline-block text-xs font-bold px-3.5 py-1.5 rounded-full mb-4 ${TAG_COLORS[featured.tag] ?? 'bg-gray-100 text-gray-700'}`}>
+                      {featured.tag}
+                    </span>
+                    <h3 className="font-bold text-2xl md:text-3xl text-gray-900 leading-snug mb-4 group-hover:text-[#01381d] transition-colors">
+                      {featured.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed line-clamp-4 mb-6 text-sm md:text-base">
+                      {featured.excerpt}
+                    </p>
+                  </div>
+
+                  <div className="pt-6 border-t border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                    <span className="text-sm font-medium text-gray-400">
+                      📅 {formatDate(featured.date)}
+                    </span>
+                    <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
                       {['twitter', 'facebook', 'whatsapp', 'linkedin'].map(p => (
-                        <button key={p} onClick={() => shareArticle(p, featured.title)} className="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold">
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            shareArticle(p, featured.title);
+                          }}
+                          className="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold"
+                          title={`Share on ${p}`}
+                        >
                           {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : p === 'whatsapp' ? '💬' : 'in'}
                         </button>
                       ))}
@@ -110,23 +166,54 @@ export default function NewsPage() {
               </div>
             ) : (
               rest.map(article => (
-                <Link href={`/news/${article.id}`} key={article.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 transition-transform duration-300">
-                  <div className="relative h-52 bg-gradient-to-br from-[#f97316] to-[#c2410c]">
-                    {article.image_url && <Image src={article.image_url} alt={article.title} fill className="object-cover object-top" />}
+                <Link href={`/news/${article.id}`} key={article.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between">
+                  <div>
+                    <div className="relative aspect-[16/10] w-full bg-gradient-to-br from-[#01381d] to-[#015b2d] overflow-hidden">
+                      {article.image_url ? (
+                        <>
+                          <Image
+                            src={article.image_url}
+                            alt=""
+                            fill
+                            className="object-cover blur-md scale-110 opacity-30 select-none pointer-events-none"
+                            aria-hidden="true"
+                          />
+                          <Image
+                            src={article.image_url}
+                            alt={article.title}
+                            fill
+                            className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                          />
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-3xl text-white/40">
+                          📰
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 ${TAG_COLORS[article.tag] ?? 'bg-gray-100 text-gray-700'}`}>{article.tag}</span>
+                      <h5 className="font-bold text-[16px] text-gray-900 leading-snug mb-2 group-hover:text-[#01381d] transition-colors">{article.title}</h5>
+                      <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">{article.excerpt}</p>
+                    </div>
                   </div>
-                  <div className="p-6">
-                    <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 ${TAG_COLORS[article.tag] ?? 'bg-gray-100 text-gray-700'}`}>{article.tag}</span>
-                    <h5 className="font-bold text-[16px] leading-snug mb-2">{article.title}</h5>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">{article.excerpt}</p>
-                    <div className="flex items-center justify-between flex-wrap gap-3">
-                      <span className="text-xs text-gray-400">{formatDate(article.date)}</span>
-                      <div className="flex items-center gap-1.5">
-                        {['twitter', 'facebook', 'whatsapp'].map(p => (
-                          <button key={p} onClick={() => shareArticle(p, article.title)} className="w-7 h-7 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold">
-                            {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : '💬'}
-                          </button>
-                        ))}
-                      </div>
+                  <div className="px-6 pb-6 pt-0 flex items-center justify-between flex-wrap gap-3 border-t border-gray-50 mt-auto">
+                    <span className="text-xs text-gray-400">{formatDate(article.date)}</span>
+                    <div className="flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
+                      {['twitter', 'facebook', 'whatsapp'].map(p => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            shareArticle(p, article.title);
+                          }}
+                          className="w-7 h-7 rounded-full bg-gray-100 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold"
+                        >
+                          {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : '💬'}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </Link>

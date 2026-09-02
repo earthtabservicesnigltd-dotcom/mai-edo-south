@@ -12,12 +12,12 @@ export default function EmailConfirmedPage() {
   useEffect(() => {
     // Check if we just returned from Google auth
     const supabase = supabaseBrowser()
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+    supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      if (data?.session) {
         router.push('/academy')
       }
     })
-  }, [])
+  }, [router])
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">

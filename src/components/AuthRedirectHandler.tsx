@@ -10,12 +10,12 @@ export default function AuthRedirectHandler() {
 
   useEffect(() => {
     const supabase = supabaseBrowser()
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session && (pathname === '/confirm' || pathname === '/auth/callback' || pathname === '/')) {
+    supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      if (data?.session && (pathname === '/confirm' || pathname === '/auth/callback' || pathname === '/')) {
         router.push('/academy')
       }
     })
-  }, [pathname])
+  }, [pathname, router])
 
   return null
 }

@@ -17,12 +17,10 @@ import {
   Upload,
   ExternalLink,
   Calendar,
-  Tag,
-  CheckCircle2,
   Sparkles,
   RefreshCw,
   Eye,
-  AlertCircle
+  CheckCircle2
 } from 'lucide-react'
 
 interface NewsArticle {
@@ -163,7 +161,6 @@ export default function AdminNewsPage() {
       })
       const data = await res.json()
       if (res.ok && data.article) {
-        // If the newly created article is featured, unset featured on others locally
         setArticles(prev => {
           const updatedPrev = form.featured ? prev.map(a => ({ ...a, featured: false })) : prev
           return [data.article, ...updatedPrev]
@@ -231,7 +228,6 @@ export default function AdminNewsPage() {
             if (a.id === editingArticle.id) {
               return data.article
             }
-            // If the updated article was set as featured, ensure all others have featured = false
             if (editForm.featured) {
               return { ...a, featured: false }
             }
@@ -270,7 +266,6 @@ export default function AdminNewsPage() {
             if (a.id === article.id) {
               return { ...a, featured: willBeFeatured }
             }
-            // If we made this one featured, unfeature all others
             if (willBeFeatured) {
               return { ...a, featured: false }
             }
@@ -313,9 +308,6 @@ export default function AdminNewsPage() {
       toast.error('Error deleting article')
     }
   }
-
-  // Find currently featured article
-  const currentFeaturedArticle = useMemo(() => articles.find(a => a.featured), [articles])
 
   // Filtered articles list
   const filteredArticles = useMemo(() => {
@@ -374,7 +366,6 @@ export default function AdminNewsPage() {
         </div>
       </div>
 
-
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-12 gap-8 items-start">
         {/* Create Form Column (5 Cols) */}
@@ -397,7 +388,7 @@ export default function AdminNewsPage() {
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
                     className="field font-medium text-gray-900 placeholder:text-gray-400"
-                    placeholder="e.g. MAI Launches Historic Youth Empowerment Fund in Benin City"
+                    placeholder="e.g. MAI Launches Historic Youth Empowerment Fund"
                   />
                 </div>
 
@@ -487,7 +478,7 @@ export default function AdminNewsPage() {
                           alt="Cover Preview"
                           width={400}
                           height={160}
-                          className="w-full h-32 object-cover"
+                          className="w-full h-32 object-cover object-center"
                         />
                         <button
                           type="button"
@@ -499,7 +490,7 @@ export default function AdminNewsPage() {
                         </button>
                       </div>
                     ) : (
-                      <p className="text-[11px] text-gray-400 mt-2">Recommended: 1200x630 landscape JPG, PNG or WEBP</p>
+                      <p className="text-[11px] text-gray-400 mt-2">Landscape, portrait, or square - auto fits beautifully</p>
                     )}
                   </div>
                 </div>
@@ -530,8 +521,7 @@ export default function AdminNewsPage() {
                         )}
                       </div>
                       <p className="text-[11px] text-gray-500 mt-0.5 leading-snug">
-                        Will be displayed prominently at the top header of the MAI News page. Setting this replaces any
-                        previously featured story.
+                        Only 1 post is featured at a time. Setting this replaces any previously featured story.
                       </p>
                     </div>
                   </div>
@@ -668,7 +658,7 @@ export default function AdminNewsPage() {
                                 src={article.image_url}
                                 alt={article.title}
                                 fill
-                                className="object-cover"
+                                className="object-cover object-center"
                               />
                             ) : (
                               <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gradient-to-br from-gray-50 to-gray-200">
@@ -723,7 +713,7 @@ export default function AdminNewsPage() {
                           <button
                             onClick={() => handleToggleFeatured(article)}
                             disabled={isUpdatingThis}
-                            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 w-full sm:w-32 justify-center ${
+                            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 w-full sm:w-32 justify-center cursor-pointer ${
                               isFeatured
                                 ? 'bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200'
                                 : 'bg-gray-100 text-gray-700 hover:bg-amber-50 hover:text-amber-800 hover:border-amber-200 border border-gray-200'
@@ -742,7 +732,7 @@ export default function AdminNewsPage() {
                           <div className="flex items-center gap-1.5 w-full sm:w-32">
                             <button
                               onClick={() => handleOpenEdit(article)}
-                              className="flex-1 px-2.5 py-1.5 bg-[#01381d]/10 hover:bg-[#01381d] text-[#01381d] hover:text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1"
+                              className="flex-1 px-2.5 py-1.5 bg-[#01381d]/10 hover:bg-[#01381d] text-[#01381d] hover:text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
                               title="Edit post content and settings"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
@@ -751,7 +741,7 @@ export default function AdminNewsPage() {
 
                             <button
                               onClick={() => handleDelete(article.id, article.title)}
-                              className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs transition-colors"
+                              className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs transition-colors cursor-pointer"
                               title="Delete post"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -788,7 +778,7 @@ export default function AdminNewsPage() {
               </div>
               <button
                 onClick={handleCloseEdit}
-                className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -895,7 +885,7 @@ export default function AdminNewsPage() {
                         alt="Preview"
                         width={400}
                         height={160}
-                        className="w-full h-32 object-cover"
+                        className="w-full h-32 object-cover object-center"
                       />
                       <button
                         type="button"
@@ -949,7 +939,7 @@ export default function AdminNewsPage() {
                   type="button"
                   onClick={handleCloseEdit}
                   disabled={editSubmitting}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
