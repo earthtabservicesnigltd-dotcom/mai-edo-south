@@ -41,10 +41,10 @@ const TIMELINE = [
 ]
 
 const VALUES = [
-  { title: 'Integrity',        desc: 'Committed to honest, transparent governance and accountability to the people.' },
-  { title: 'Service',          desc: 'A lifelong dedication to putting the needs of Edo South people first.' },
-  { title: 'Experience',       desc: 'Decades of legislative and executive experience ready to serve the Senate.' },
-  { title: 'Vision',           desc: 'A clear roadmap for the development and transformation of Edo South.' },
+  { title: 'Integrity', desc: 'Committed to honest, transparent governance and accountability to the people.' },
+  { title: 'Service', desc: 'A lifelong dedication to putting the needs of Edo South people first.' },
+  { title: 'Experience', desc: 'Decades of legislative and executive experience ready to serve the Senate.' },
+  { title: 'Vision', desc: 'A clear roadmap for the development and transformation of Edo South.' },
 ]
 
 export default function AboutPage() {
@@ -76,7 +76,7 @@ export default function AboutPage() {
               <div className="bg-gradient-to-b from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="/img-2.jpeg"
-                  alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
+                  alt="Hon. Matthew Aigbuhuenze Iduoriyekemwen"
                   width={500}
                   height={750}
                   className="w-full object-cover object-top h-full"
@@ -95,12 +95,12 @@ export default function AboutPage() {
               </p>
               <h2 className="font-heading text-4xl md:text-5xl mb-6 leading-tight">
                 HON. MATTHEW
-                AIGBUHENZE<br />
+                AIGBUHUENZE<br />
                 <span className="text-[#f97316]">IDUORIYEKEMWEN</span>
               </h2>
               <div className="space-y-4 text-gray-600 leading-relaxed">
                 <p>
-                  Hon. Matthew Aigbuhenze Iduoriyekemwen, popularly known as MAI,
+                  Hon. Matthew Aigbuhuenze Iduoriyekemwen, popularly known as MAI,
                   is a distinguished Nigerian politician, legislator, and statesman
                   from Edo South Senatorial District in Edo State.
                 </p>
@@ -127,10 +127,10 @@ export default function AboutPage() {
 
               <div className="grid grid-cols-2 gap-4 mt-8">
                 {[
-                  { label: 'State',       value: 'Edo State' },
-                  { label: 'District',    value: 'Edo South' },
-                  { label: 'Party',       value: 'ADC' },
-                  { label: 'Position',    value: 'Senatorial Candidate' },
+                  { label: 'State', value: 'Edo State' },
+                  { label: 'District', value: 'Edo South' },
+                  { label: 'Party', value: 'ADC' },
+                  { label: 'Position', value: 'Senatorial Candidate' },
                 ].map(item => (
                   <div key={item.label} className="bg-gray-50 rounded-xl p-4">
                     <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
@@ -161,9 +161,8 @@ export default function AboutPage() {
               {TIMELINE.map((item, i) => (
                 <div
                   key={i}
-                  className={`relative flex flex-col md:flex-row gap-6 md:gap-0 ${
-                    i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                  }`}
+                  className={`relative flex flex-col md:flex-row gap-6 md:gap-0 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                    }`}
                 >
                   {/* Dot */}
                   <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-[#f97316] rounded-full -translate-x-1/2 mt-6 z-10" />

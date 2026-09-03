@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 const LGAS = [
-  'Akoko-Edo','Egor','Esan Central','Esan North-East','Esan South-East','Esan West',
-  'Etsako Central','Etsako East','Etsako West','Igueben','Ikpoba-Okha','Orhionmwon',
-  'Oredo','Ovia North-East','Ovia South-West','Owan East','Owan West','Uhunmwonde',
+  'Akoko-Edo', 'Egor', 'Esan Central', 'Esan North-East', 'Esan South-East', 'Esan West',
+  'Etsako Central', 'Etsako East', 'Etsako West', 'Igueben', 'Ikpoba-Okha', 'Orhionmwon',
+  'Oredo', 'Ovia North-East', 'Ovia South-West', 'Owan East', 'Owan West', 'Uhunmwonde',
 ]
 const INDUSTRIES = ['Healthcare', 'Education', 'Agriculture', 'Technology', 'Finance', 'Manufacturing', 'Construction', 'Public Service', 'Business', 'Other']
 const PROJECTS = ['Borehole', 'Road Construction', 'Solar Street Lights', 'Health Centre', 'School Renovation', 'ICT Centre', 'Skills Acquisition Centre', 'Market Development', 'Agricultural Support', 'Other']
@@ -71,7 +71,7 @@ export default function DiasporaPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if(file.size > 2 * 1024 * 1024) {
+    if (file.size > 2 * 1024 * 1024) {
       toast.error('Photo is too large. Maximum size is 2MB.');
       e.target.value = ''
       setPhoto(null);
@@ -117,9 +117,9 @@ export default function DiasporaPage() {
     }
   }
   useEffect(() => {
-  if (submitted) {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    if (submitted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }, [submitted])
 
   if (submitted) {
@@ -131,11 +131,11 @@ export default function DiasporaPage() {
           <p className="text-[#667065] text-sm leading-relaxed mb-6">
             Thank you for joining the MAI Diaspora Network. We will be in touch shortly.
           </p>
-           <p className="text-[#f97316] font-black text-sm tracking-widest uppercase">Scroll down to download your card</p>
+          <p className="text-[#f97316] font-black text-sm tracking-widest uppercase">Scroll down to download your card</p>
         </div>
-          <section className="bg-gray-50 py-12">
-            <DiasporaIDCard member={submittedMember} />
-          </section>
+        <section className="bg-gray-50 py-12">
+          <DiasporaIDCard member={submittedMember} />
+        </section>
       </div>
     )
   }
@@ -198,15 +198,15 @@ export default function DiasporaPage() {
 
                 {/* 3. Edo South Connection */}
                 <div>
-                  <SectionHead num={3} title="Edo South Connection" note="Tell us your origin in Edo South." />     
+                  <SectionHead num={3} title="Edo South Connection" note="Tell us your origin in Edo South." />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="mb-4">
-                    <label className={labelClass}>LGA of Origin <span className="text-[#f97316]">*</span></label>
-                    <select name="lga_origin" value={form.lga_origin} onChange={handleChange} required className={inputClass}>
+                      <label className={labelClass}>LGA of Origin <span className="text-[#f97316]">*</span></label>
+                      <select name="lga_origin" value={form.lga_origin} onChange={handleChange} required className={inputClass}>
                         <option value="">Select LGA...</option>
                         {LGAS.map(l => <option key={l} value={l}>{l}</option>)}
-                    </select>
-                  </div>
+                      </select>
+                    </div>
                     <div><label className={labelClass}>Ward <span className="text-[#f97316]">*</span></label><input type="text" name="ward" value={form.ward} onChange={handleChange} required placeholder="Ward" className={inputClass} /></div>
                     <div><label className={labelClass}>Community / Polling Unit<span className="text-[#f97316]">*</span></label><input type="text" name="community" value={form.community} onChange={handleChange} required placeholder="Community" className={inputClass} /></div>
                   </div>
@@ -309,29 +309,29 @@ export default function DiasporaPage() {
                   <div><label className={labelClass}>What development project would you like to see in Edo South?</label><textarea name="message_to_mai" value={form.message_to_mai} onChange={handleChange} rows={4} className={`${inputClass} resize-y`} /></div>
                 </div>
 
-              {/* 11 Photo Upload */}
-              <div className="flex flex-col items-start gap-3 pb-6 pt-6 border-b border-gray-100">
-                <SectionHead num={11} title="Photo Upload" note="Take a photo for id card" />
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-36 h-36 rounded-full border-4 border-dashed border-[#f97316] flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
-                >
-                  {photoPreview ? (
-                    <Image src={photoPreview} alt="Preview" width={100} height={100} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="text-center"><div className="text-2xl">📷</div><p className="text-md text-gray-400 mt-1">Upload Photo</p></div>
-                  )}
+                {/* 11 Photo Upload */}
+                <div className="flex flex-col items-start gap-3 pb-6 pt-6 border-b border-gray-100">
+                  <SectionHead num={11} title="Photo Upload" note="Take a photo for id card" />
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-36 h-36 rounded-full border-4 border-dashed border-[#f97316] flex items-center justify-center cursor-pointer hover:border-[#f97316] transition-colors overflow-hidden bg-gray-50"
+                  >
+                    {photoPreview ? (
+                      <Image src={photoPreview} alt="Preview" width={100} height={100} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-center"><div className="text-2xl">📷</div><p className="text-md text-gray-400 mt-1">Upload Photo</p></div>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
+                  <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" required />
                 </div>
-                <p className="text-sm text-gray-400">Passport photo • JPG, PNG or WebP • Max 2MB</p>
-                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoChange} className="hidden" required />
-              </div>
 
                 {/* 12. Pledge */}
                 <div>
                   <SectionHead num={12} title="MAI Diaspora Network Pledge" note="Please accept the pledge to complete registration." />
                   <div className="bg-[#eef3ea] border-[1.5px] border-[#015b2d]/[0.12] rounded-[18px] p-5">
                     <p className="text-[#667065] leading-[1.8] mb-4 text-sm">
-                      &apos;I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities.&apos;
+                      &apos;I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities.&apos;
                     </p>
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input type="checkbox" name="pledge" checked={form.pledge} onChange={handleChange} className="w-4 h-4 accent-[#015b2d] mt-0.5 shrink-0" />

@@ -5,7 +5,7 @@ const MISSION_PILLARS = [
   {
     icon: (
       <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
       </svg>
     ),
     title: 'Effective Representation',
@@ -14,7 +14,7 @@ const MISSION_PILLARS = [
   {
     icon: (
       <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+        <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z" />
       </svg>
     ),
     title: 'Infrastructure & Development',
@@ -23,7 +23,7 @@ const MISSION_PILLARS = [
   {
     icon: (
       <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
       </svg>
     ),
     title: 'Education & Youth Empowerment',
@@ -32,7 +32,7 @@ const MISSION_PILLARS = [
   {
     icon: (
       <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
       </svg>
     ),
     title: 'Healthcare Access for All',
@@ -41,7 +41,7 @@ const MISSION_PILLARS = [
   {
     icon: (
       <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/>
+        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z" />
       </svg>
     ),
     title: 'Jobs & Economic Growth',
@@ -54,7 +54,7 @@ const EXPERIENCE = [
   { years: '1999 – 2003', title: 'Majority Leader, Edo State House of Assembly', icon: '🤝' },
   { years: '2005 – 2009', title: 'Edo State Commissioner, Niger Delta Development Commission (NDDC)', icon: '🏅' },
   { years: '2012 | 2016', title: 'Governorship Aspirant, Edo State', icon: '🚩' },
-  { years: '2022',        title: 'PDP Candidate, Edo South Senatorial District', icon: '👤' },
+  { years: '2022', title: 'PDP Candidate, Edo South Senatorial District', icon: '👤' },
 ]
 
 export default function HomePage() {
@@ -90,7 +90,7 @@ export default function HomePage() {
                 <span className="text-[#f97316]">READY TO SERVE.</span>
               </h1>
               <p className="text-gray-200 text-lg leading-relaxed max-w-lg mb-8">
-                Hon. Mathew Aigbuhenze Iduoriyekemwen (MAI) is a tested leader with a proven
+                Hon. Mattew Aigbuhuenze Iduoriyekemwen (MAI) is a tested leader with a proven
                 record of service, legislative excellence, and people-first representation.
                 Now, he seeks your mandate to take Edo South to the Senate in 2027.
               </p>
@@ -114,7 +114,7 @@ export default function HomePage() {
             <div className="order-1 lg:order-2">
               <div className="relative">
                 <div className="bg-linear-to-b h-100 md:h-full from-[#015b2d] to-[#01381d] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-                  
+
                   {/* ADC Logo — top left */}
                   <div className="absolute top-4 left-4 z-10">
                     <Image
@@ -128,13 +128,13 @@ export default function HomePage() {
 
                   {/* Candidate photo */}
                   <Image
-                  src="/image-24.png"
-                  alt="Hon. Matthew Aigbuhenze Iduoriyekemwen"
-                  width={480}
-                  height={560}
-                  className="object-cover object-top w-full h-full"
-                  priority
-                />
+                    src="/image-24.png"
+                    alt="Hon. Matthew Aigbuhuenze Iduoriyekemwen"
+                    width={480}
+                    height={560}
+                    className="object-cover object-top w-full h-full"
+                    priority
+                  />
                 </div>
 
                 {/* MAI Badge — top right */}
@@ -150,7 +150,7 @@ export default function HomePage() {
                     Edo South 2027
                   </p>
                   <p className="text-[9px] text-gray-500 leading-tight">
-                    Hon Mathew Aigbuhenze<br />Iduoriyekemwen
+                    Hon Mattew Aigbuhuenze<br />Iduoriyekemwen
                   </p>
                   <div className="mt-1 bg-[#f97316] text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
                     4 SENATE
@@ -165,7 +165,7 @@ export default function HomePage() {
         {/* Wave separator */}
         <div className="absolute bottom-[-3px] left-0 right-0">
           <svg className="block w-full" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 80L60 70C120 60 240 40 360 35C480 30 600 40 720 45C840 50 960 50 1080 45C1200 40 1320 30 1380 25L1440 20V80H0Z" fill="white"/>
+            <path d="M0 80L60 70C120 60 240 40 360 35C480 30 600 40 720 45C840 50 960 50 1080 45C1200 40 1320 30 1380 25L1440 20V80H0Z" fill="white" />
           </svg>
         </div>
       </section>
@@ -311,7 +311,7 @@ export default function HomePage() {
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <svg className="w-6 h-6 text-[#015b2d] shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                     </svg>
                     <div>
                       <h5 className="font-bold text-sm">{item.title}</h5>

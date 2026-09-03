@@ -12,7 +12,7 @@ const dancingScript = Dancing_Script({
   variable: '--font-dancing',
 })
 
-const outfit = Outfit({subsets:['latin'], variable:'--font-outfit', display: 'swap'});
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' });
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -22,14 +22,14 @@ const bebasNeue = Bebas_Neue({
 });
 
 const SITE_NAME = 'MAI EDO SOUTH'
-const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mai4senate.com'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mai4senate.com'
 const SITE_DESC = 'Driven by Experience, Inspired by the People and Committed to Real Representation. Vote MAI for Edo South Senatorial District 2027.'
 
 export const metadata: Metadata = {
-  title: 'MAI Edo South 2027 — Hon. Matthew Aigbuhenze Iduoriyekemwen',
+  title: 'MAI Edo South 2027 — Hon. Matthew Aigbuhuenze Iduoriyekemwen',
   description: 'Driven by Experience, Inspired by the People and Committed to Real Representation. Vote MAI for Edo South Senatorial District 2027.',
-  keywords: ['MAI', 'Edo South', '2027', 'Senate', 'Matthew Aigbuhenze Iduoriyekemwen', 'ADC', 'Edo State'],
-  authors: [{name: SITE_NAME, url: SITE_URL }],
+  keywords: ['MAI', 'Edo South', '2027', 'Senate', 'Matthew Aigbuhuenze Iduoriyekemwen', 'ADC', 'Edo State'],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
   openGraph: {
@@ -69,8 +69,8 @@ export default function RootLayout({
       {/* Add suppressHydrationWarning here to the body tag */}
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
-        <AuthRedirectHandler/>
-        <Toaster position="bottom-right" richColors/>
+        <AuthRedirectHandler />
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );

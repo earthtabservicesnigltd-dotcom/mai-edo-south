@@ -17,41 +17,41 @@ interface VolunteerData {
 
 export default function VolunteerIDCard({ volunteer }: { volunteer: VolunteerData }) {
   const frontRef = useRef<HTMLDivElement>(null)
-  const backRef  = useRef<HTMLDivElement>(null)
+  const backRef = useRef<HTMLDivElement>(null)
 
-  const fullName       = `${volunteer.first_name} ${volunteer.last_name}`.toUpperCase()
-  const areaOfService  = volunteer.volunteer_areas?.[0]?.toUpperCase() ?? 'GENERAL'
+  const fullName = `${volunteer.first_name} ${volunteer.last_name}`.toUpperCase()
+  const areaOfService = volunteer.volunteer_areas?.[0]?.toUpperCase() ?? 'GENERAL'
   const dateRegistered = new Date(volunteer.created_at).toLocaleDateString('en-GB', {
     day: '2-digit', month: 'long', year: 'numeric'
   }).toUpperCase()
   const verifyUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/verify/${volunteer.volunteer_id.replace(/\//g, '-')}`
 
-async function downloadCard(ref: React.MutableRefObject<HTMLDivElement | null>, filename: string) {
-  if (!ref.current) return
-  const html2canvas = (await import('html2canvas-pro')).default
-  const jsPDF = (await import('jspdf')).default
+  async function downloadCard(ref: React.MutableRefObject<HTMLDivElement | null>, filename: string) {
+    if (!ref.current) return
+    const html2canvas = (await import('html2canvas-pro')).default
+    const jsPDF = (await import('jspdf')).default
 
-  const canvas = await html2canvas(ref.current, {
-    scale: 3,
-    useCORS: true,
-    logging: false,
-    onclone: (clonedDoc) => {
-      // Replace oklch/lab colors with hex equivalents on the cloned element
-      const el = clonedDoc.body
-      el.style.setProperty('--color-ink', '#1a1a1a')
-      el.style.setProperty('--color-ink-light', '#444444')
-      el.style.setProperty('--color-ink-muted', '#767676')
-      el.style.setProperty('--color-ink-faint', '#999999')
-      el.style.setProperty('--color-navy', '#1B2D5E')
-      el.style.setProperty('--color-navy-light', '#2a4080')
-    },
-  })
+    const canvas = await html2canvas(ref.current, {
+      scale: 3,
+      useCORS: true,
+      logging: false,
+      onclone: (clonedDoc) => {
+        // Replace oklch/lab colors with hex equivalents on the cloned element
+        const el = clonedDoc.body
+        el.style.setProperty('--color-ink', '#1a1a1a')
+        el.style.setProperty('--color-ink-light', '#444444')
+        el.style.setProperty('--color-ink-muted', '#767676')
+        el.style.setProperty('--color-ink-faint', '#999999')
+        el.style.setProperty('--color-navy', '#1B2D5E')
+        el.style.setProperty('--color-navy-light', '#2a4080')
+      },
+    })
 
-  const imgData = canvas.toDataURL('image/png')
-  const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [canvas.width / 3, canvas.height / 3] })
-  pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 3, canvas.height / 3)
-  pdf.save(`${filename}.pdf`)
-}
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [canvas.width / 3, canvas.height / 3] })
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 3, canvas.height / 3)
+    pdf.save(`${filename}.pdf`)
+  }
   return (
     <div className="flex flex-col items-center gap-8 py-8 px-4">
       <h2 className="font-heading text-3xl text-center">YOUR <span className="text-[#f97316]">ID CARD</span></h2>
@@ -161,7 +161,7 @@ async function downloadCard(ref: React.MutableRefObject<HTMLDivElement | null>, 
               <p className="text-white text-center mb-0.5" style={{ fontFamily: 'var(--font-dancing), cursive', fontSize: '22px' }}>
                 Alhimfocerafo
               </p>
-              <p className="text-white font-black text-[10px] text-center tracking-wide">HON. MATHEW AIGBUHENZE IDUORIYEKEMWEN</p>
+              <p className="text-white font-black text-[10px] text-center tracking-wide">HON. Mattew AIGBUHUENZE IDUORIYEKEMWEN</p>
               <p className="text-[#f97316] text-[9px] text-center font-bold tracking-widest">SENATORIAL CANDIDATE, EDO SOUTH</p>
             </div>
           </div>
@@ -198,7 +198,7 @@ async function downloadCard(ref: React.MutableRefObject<HTMLDivElement | null>, 
               <p className="text-[#01381d] font-black text-sm tracking-wide mb-2">ABOUT US</p>
               <p className="text-gray-600 text-xs leading-relaxed">
                 We are a people-driven movement committed to electing{' '}
-                <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> as Senator representing Edo South Senatorial District.
+                <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> as Senator representing Edo South Senatorial District.
               </p>
             </div>
 

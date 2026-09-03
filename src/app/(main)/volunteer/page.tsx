@@ -6,37 +6,37 @@ import { toast } from 'sonner'
 import VolunteerIDCard from '@/components/VolunteerIDCard'
 
 const ROLES = [
-  { icon: '📢', title: 'Campaign Mobilizers',       desc: 'Help organize rallies, door-to-door campaigns, and community outreach programs across Edo South.', badge: 'Field Work' },
-  { icon: '🤝', title: 'Community Coordinators',    desc: 'Engage with local leaders, women groups, and youth to strengthen grassroots support.', badge: 'Community' },
-  { icon: '📸', title: 'Media & Documentation',     desc: 'Take photos, record videos, and help manage social media content during events.', badge: 'Creative' },
-  { icon: '📊', title: 'Data & Research Volunteers',desc: 'Collect feedback, conduct surveys, and support strategy planning.', badge: 'Research' },
-  { icon: '🎤', title: 'Event Support Team',         desc: 'Assist in planning and executing town halls, summits, and major campaign events.', badge: 'Logistics' },
-  { icon: '💻', title: 'Digital Volunteers',         desc: 'Help with online campaigns, content creation, and supporter engagement.', badge: 'Online' },
+  { icon: '📢', title: 'Campaign Mobilizers', desc: 'Help organize rallies, door-to-door campaigns, and community outreach programs across Edo South.', badge: 'Field Work' },
+  { icon: '🤝', title: 'Community Coordinators', desc: 'Engage with local leaders, women groups, and youth to strengthen grassroots support.', badge: 'Community' },
+  { icon: '📸', title: 'Media & Documentation', desc: 'Take photos, record videos, and help manage social media content during events.', badge: 'Creative' },
+  { icon: '📊', title: 'Data & Research Volunteers', desc: 'Collect feedback, conduct surveys, and support strategy planning.', badge: 'Research' },
+  { icon: '🎤', title: 'Event Support Team', desc: 'Assist in planning and executing town halls, summits, and major campaign events.', badge: 'Logistics' },
+  { icon: '💻', title: 'Digital Volunteers', desc: 'Help with online campaigns, content creation, and supporter engagement.', badge: 'Online' },
 ]
 
 const BENEFITS = [
-  { icon: '🌍', title: 'Make Real Impact',  desc: 'Directly contribute to positive change in your community.' },
-  { icon: '🤝', title: 'Build Networks',    desc: 'Connect with leaders, professionals, and like-minded individuals.' },
-  { icon: '📈', title: 'Gain Experience',   desc: 'Develop leadership, communication, and organizational skills.' },
+  { icon: '🌍', title: 'Make Real Impact', desc: 'Directly contribute to positive change in your community.' },
+  { icon: '🤝', title: 'Build Networks', desc: 'Connect with leaders, professionals, and like-minded individuals.' },
+  { icon: '📈', title: 'Gain Experience', desc: 'Develop leadership, communication, and organizational skills.' },
 ]
 
 const LGAS = [
-  'Akoko-Edo','Egor','Esan Central','Esan North-East','Esan South-East','Esan West',
-  'Etsako Central','Etsako East','Etsako West','Igueben','Ikpoba-Okha','Orhionmwon',
-  'Oredo','Ovia North-East','Ovia South-West','Owan East','Owan West','Uhunmwonde',
+  'Akoko-Edo', 'Egor', 'Esan Central', 'Esan North-East', 'Esan South-East', 'Esan West',
+  'Etsako Central', 'Etsako East', 'Etsako West', 'Igueben', 'Ikpoba-Okha', 'Orhionmwon',
+  'Oredo', 'Ovia North-East', 'Ovia South-West', 'Owan East', 'Owan West', 'Uhunmwonde',
 ]
 
 const VOLUNTEER_AREAS = [
-  'Grassroots Mobilization','Social Media Advocacy','Media & Publicity',
-  'Event Planning','Community Engagement','Voter Education','Fundraising',
-  'Security & Protocol','Logistics','Youth Mobilization','Women Mobilization',
-  'ICT','Any Area Assigned',
+  'Grassroots Mobilization', 'Social Media Advocacy', 'Media & Publicity',
+  'Event Planning', 'Community Engagement', 'Voter Education', 'Fundraising',
+  'Security & Protocol', 'Logistics', 'Youth Mobilization', 'Women Mobilization',
+  'ICT', 'Any Area Assigned',
 ]
 
 const SKILLS = [
-  'Graphic Design','Photography','Videography','Public Speaking',
-  'Writing & Content Creation','ICT & Technology','Community Organizing',
-  'Legal Services','Accounting & Finance','Project Management',
+  'Graphic Design', 'Photography', 'Videography', 'Public Speaking',
+  'Writing & Content Creation', 'ICT & Technology', 'Community Organizing',
+  'Legal Services', 'Accounting & Finance', 'Project Management',
 ]
 
 const inputClass = 'w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors bg-white'
@@ -74,21 +74,21 @@ export default function VolunteerPage() {
     setSkills(prev => prev.includes(skill) ? prev.filter(s => s !== skill) : [...prev, skill])
   }
 
-    function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
-      const file = e.target.files?.[0]
-      if (!file) return
-  
-      if(file.size > 2 * 1024 * 1024) {
-        toast.error('Photo is too large. Maximum size is 2MB.');
-        e.target.value = ''
-        setPhoto(null);
-        setPhotoPreview(null);
-        return
-      }
-  
-      setPhoto(file)
-      setPhotoPreview(URL.createObjectURL(file))
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Photo is too large. Maximum size is 2MB.');
+      e.target.value = ''
+      setPhoto(null);
+      setPhotoPreview(null);
+      return
     }
+
+    setPhoto(file)
+    setPhotoPreview(URL.createObjectURL(file))
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -98,7 +98,7 @@ export default function VolunteerPage() {
       return
     }
 
-     if (!form.declaration) {
+    if (!form.declaration) {
       toast.error('Please agree to the declaration before submitting.')
       return
     }
@@ -392,21 +392,21 @@ export default function VolunteerPage() {
                     className="w-4 h-4 accent-[#f97316] mt-0.5 shrink-0"
                   />
                   <span className="text-sm text-gray-700 leading-relaxed">
-                    I support the vision of <strong>Hon. Mathew Aigbuhenze Iduoriyekemwen</strong> and agree to volunteer peacefully and responsibly in support of the campaign.
+                    I support the vision of <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> and agree to volunteer peacefully and responsibly in support of the campaign.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="declaration"
-                  checked={form.declaration}
-                  onChange={handleChange}
-                  className="w-4 h-4 accent-[#f97316] mt-0.5 shrink-0"
-                />
-                <span className="text-sm text-gray-700 leading-relaxed">
-                  I hereby declare that the information provided is true and correct to the best of my knowledge.
-                </span>
-              </label>
+                  <input
+                    type="checkbox"
+                    name="declaration"
+                    checked={form.declaration}
+                    onChange={handleChange}
+                    className="w-4 h-4 accent-[#f97316] mt-0.5 shrink-0"
+                  />
+                  <span className="text-sm text-gray-700 leading-relaxed">
+                    I hereby declare that the information provided is true and correct to the best of my knowledge.
+                  </span>
+                </label>
               </div>
 
               <button
