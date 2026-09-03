@@ -309,7 +309,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <div className="text-right hidden xl:block">
               <p className="text-[11px] font-bold text-[#01381d] tracking-widest uppercase">
-                Hon. Mattew Aigbuhuenze Iduoriyekemwen
+                Hon. Matthew Aigbuhuenze Iduoriyekemwen
               </p>
               <p className="text-[10px] text-gray-400 tracking-wider">
                 Senatorial Candidate · Edo South Senatorial District

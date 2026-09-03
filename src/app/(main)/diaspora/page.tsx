@@ -331,7 +331,7 @@ export default function DiasporaPage() {
                   <SectionHead num={12} title="MAI Diaspora Network Pledge" note="Please accept the pledge to complete registration." />
                   <div className="bg-[#eef3ea] border-[1.5px] border-[#015b2d]/[0.12] rounded-[18px] p-5">
                     <p className="text-[#667065] leading-[1.8] mb-4 text-sm">
-                      &apos;I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities.&apos;
+                      &apos;I proudly join the MAI Diaspora Network and pledge to support the vision of <strong>Hon. Matthew Aigbuhuenze Iduoriyekemwen</strong> for a more prosperous, inclusive, and developed Edo South. I commit to contributing my ideas, expertise, experience, influence, and resources, where possible, towards the advancement of our people and communities.&apos;
                     </p>
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input type="checkbox" name="pledge" checked={form.pledge} onChange={handleChange} className="w-4 h-4 accent-[#015b2d] mt-0.5 shrink-0" />

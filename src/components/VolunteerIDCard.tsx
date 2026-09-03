@@ -161,7 +161,7 @@ export default function VolunteerIDCard({ volunteer }: { volunteer: VolunteerDat
               <p className="text-white text-center mb-0.5" style={{ fontFamily: 'var(--font-dancing), cursive', fontSize: '22px' }}>
                 Alhimfocerafo
               </p>
-              <p className="text-white font-black text-[10px] text-center tracking-wide">HON. Mattew AIGBUHUENZE IDUORIYEKEMWEN</p>
+              <p className="text-white font-black text-[10px] text-center tracking-wide">HON. Matthew AIGBUHUENZE IDUORIYEKEMWEN</p>
               <p className="text-[#f97316] text-[9px] text-center font-bold tracking-widest">SENATORIAL CANDIDATE, EDO SOUTH</p>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function VolunteerIDCard({ volunteer }: { volunteer: VolunteerDat
               <p className="text-[#01381d] font-black text-sm tracking-wide mb-2">ABOUT US</p>
               <p className="text-gray-600 text-xs leading-relaxed">
                 We are a people-driven movement committed to electing{' '}
-                <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> as Senator representing Edo South Senatorial District.
+                <strong>Hon. Matthew Aigbuhuenze Iduoriyekemwen</strong> as Senator representing Edo South Senatorial District.
               </p>
             </div>
 

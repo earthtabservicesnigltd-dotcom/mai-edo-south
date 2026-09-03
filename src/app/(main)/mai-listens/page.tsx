@@ -96,7 +96,7 @@ export default function MAIListensPage() {
         <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
           <p className="text-[#f97316] font-bold text-[0.8rem] uppercase tracking-[3px] mb-3">MAI Listens</p>
           <h1 className="font-heading text-[clamp(3rem,8vw,5.2rem)] leading-[0.95]">COMMUNITY <span className="text-[#f97316]">FEEDBACK FORM</span></h1>
-          <p className="max-w-3xl mx-auto mt-4 opacity-90 text-base leading-[1.75]">Tell MAI what your community needs. Your feedback helps Hon. Mattew Aigbuhuenze Iduoriyekemwen identify key areas to advocate for Edo South development.</p>
+          <p className="max-w-3xl mx-auto mt-4 opacity-90 text-base leading-[1.75]">Tell MAI what your community needs. Your feedback helps Hon. Matthew Aigbuhuenze Iduoriyekemwen identify key areas to advocate for Edo South development.</p>
         </div>
       </section>
 

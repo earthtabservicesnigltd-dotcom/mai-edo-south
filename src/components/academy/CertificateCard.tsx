@@ -170,10 +170,10 @@ export default function CertificateCard({ cert, showDownload = true }: Certifica
               <div className="flex items-end justify-between mt-4 px-8">
                 <div className="text-center w-[200px]">
                   <p className="text-[#01381d] text-md mb-1 whitespace-nowrap" style={{ fontFamily: 'var(--font-dancing), cursive' }}>
-                    Mattew A. Iduoriyekemwen
+                    Matthew A. Iduoriyekemwen
                   </p>
                   <div className="border-t border-gray-400 pt-1">
-                    <p className="text-[10px] font-bold text-gray-800">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+                    <p className="text-[10px] font-bold text-gray-800">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
                     <p className="text-[9px] text-[#c9a227] font-semibold">Founder, MAI Academy</p>
                   </div>
                 </div>

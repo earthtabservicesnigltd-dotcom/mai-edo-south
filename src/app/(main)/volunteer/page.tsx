@@ -392,7 +392,7 @@ export default function VolunteerPage() {
                     className="w-4 h-4 accent-[#f97316] mt-0.5 shrink-0"
                   />
                   <span className="text-sm text-gray-700 leading-relaxed">
-                    I support the vision of <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> and agree to volunteer peacefully and responsibly in support of the campaign.
+                    I support the vision of <strong>Hon. Matthew Aigbuhuenze Iduoriyekemwen</strong> and agree to volunteer peacefully and responsibly in support of the campaign.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">

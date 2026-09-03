@@ -15,7 +15,7 @@ export function volunteerConfirmationEmail(firstName: string, volunteerId: strin
           Thank you for registering as a volunteer with the <strong>MAI Senatorial Campaign Organization</strong>.
         </p>
         <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          We are delighted to welcome you to a growing movement of committed individuals who believe in the vision, leadership, and aspirations of <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> for Edo South Senatorial District.
+          We are delighted to welcome you to a growing movement of committed individuals who believe in the vision, leadership, and aspirations of <strong>Hon. Matthew Aigbuhuenze Iduoriyekemwen</strong> for Edo South Senatorial District.
         </p>
         <p style="color: #555; line-height: 1.8; margin: 0 0 24px;">
           Your registration has been successfully received and your Volunteer ID has been generated.
@@ -151,7 +151,7 @@ export function donationConfirmationEmail(data: {
         <h2 style="color: #111; font-size: 24px; margin: 0 0 24px;">Dear ${data.donorName},</h2>
 
         <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-          On behalf of <strong>Hon. Mattew Aigbuhuenze Iduoriyekemwen</strong> and the entire MAI Senatorial Campaign Organization, we extend our heartfelt appreciation for your generous contribution to our movement.
+          On behalf of <strong>Hon. Matthew Aigbuhuenze Iduoriyekemwen</strong> and the entire MAI Senatorial Campaign Organization, we extend our heartfelt appreciation for your generous contribution to our movement.
         </p>
         <p style="color: #555; line-height: 1.8; margin: 0 0 24px;">
           Your donation has been successfully received and recorded.
@@ -199,7 +199,7 @@ export function donationConfirmationEmail(data: {
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">We sincerely appreciate your support and partnership.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
         </div>
@@ -410,7 +410,7 @@ export function diasporaWelcomeEmail(firstName: string, diasporaId: string, date
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can build a stronger, more prosperous, and globally connected Edo South.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Diaspora Network</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Founder & Convener</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">Edo South Beyond Borders</p>
           <p style="color: #888; font-size: 11px; margin: 4px 0 0; font-style: italic;">Connecting Edo South to the World.</p>
@@ -557,7 +557,7 @@ export function volunteerApprovalEmail(firstName: string, volunteerId: string) {
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
         </div>
@@ -608,7 +608,7 @@ export function volunteerRejectionEmail(firstName: string) {
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
         </div>
@@ -673,7 +673,7 @@ export function diasporaApprovalEmail(fullName: string, diasporaId: string) {
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Diaspora Network</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
         </div>
@@ -722,7 +722,7 @@ export function diasporaApprovalEmail(fullName: string, diasporaId: string) {
 //           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
 //           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
 //           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Diaspora Network</p>
-//           <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+//           <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
 //           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
 //           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
 //         </div>
@@ -760,7 +760,7 @@ export function diasporaApprovalEmail(fullName: string, diasporaId: string) {
 //           Thank you for reaching out through the <strong>MAI Listens</strong> platform. Your feedback has been received and is currently under review by our team.
 //         </p>
 //         <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">
-//           Your voice is important to us. Hon. Mattew Aigbuhuenze Iduoriyekemwen is committed to identifying and addressing the key issues affecting communities across Edo South, and your submission helps us do exactly that.
+//           Your voice is important to us. Hon. Matthew Aigbuhuenze Iduoriyekemwen is committed to identifying and addressing the key issues affecting communities across Edo South, and your submission helps us do exactly that.
 //         </p>
 //         <p style="color: #555; line-height: 1.8; margin: 0 0 32px;">
 //           We will follow up where necessary. Thank you for believing in a better Edo South.
@@ -771,7 +771,7 @@ export function diasporaApprovalEmail(fullName: string, diasporaId: string) {
 //           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
 //           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
 //           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
-//           <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+//           <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
 //           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
 //           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
 //         </div>
@@ -866,7 +866,7 @@ export function maiListensReplyEmail(fullName: string, reply: string) {
         </p>
         <div style="border-top: 1px solid #e5e5e5; padding-top: 24px; margin-top: 32px;">
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Senatorial Campaign Organization</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Senatorial Candidate, Edo South Senatorial District</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
         </div>
@@ -937,7 +937,7 @@ export function diasporaConfirmationEmail(fullName: string, memberId: string) {
           <p style="color: #555; line-height: 1.8; margin: 0 0 4px;">Together, we can make a difference.</p>
           <p style="color: #555; line-height: 1.8; margin: 0 0 16px;">Warm regards,</p>
           <p style="color: #01381d; font-weight: bold; margin: 0; font-size: 14px;">MAI Diaspora Network</p>
-          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Mattew Aigbuhuenze Iduoriyekemwen</p>
+          <p style="color: #555; font-size: 13px; margin: 4px 0 0;">Hon. Matthew Aigbuhuenze Iduoriyekemwen</p>
           <p style="color: #888; font-size: 12px; margin: 2px 0 0;">Diaspora Representative, Edo South Diaspora District</p>
           <p style="color: #f97316; font-size: 12px; font-weight: bold; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase;">The Time Is MAI</p>
         </div>

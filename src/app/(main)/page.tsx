@@ -90,7 +90,7 @@ export default function HomePage() {
                 <span className="text-[#f97316]">READY TO SERVE.</span>
               </h1>
               <p className="text-gray-200 text-lg leading-relaxed max-w-lg mb-8">
-                Hon. Mattew Aigbuhuenze Iduoriyekemwen (MAI) is a tested leader with a proven
+                Hon. Matthew Aigbuhuenze Iduoriyekemwen (MAI) is a tested leader with a proven
                 record of service, legislative excellence, and people-first representation.
                 Now, he seeks your mandate to take Edo South to the Senate in 2027.
               </p>
@@ -150,7 +150,7 @@ export default function HomePage() {
                     Edo South 2027
                   </p>
                   <p className="text-[9px] text-gray-500 leading-tight">
-                    Hon Mattew Aigbuhuenze<br />Iduoriyekemwen
+                    Hon Matthew Aigbuhuenze<br />Iduoriyekemwen
                   </p>
                   <div className="mt-1 bg-[#f97316] text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
                     4 SENATE
