@@ -91,7 +91,7 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       {/* Footer — dynamic user */}
-      <Link href="/academy/account" className="mt-auto px-5 py-4 border-t border-white/[0.08] flex items-center gap-2.5">
+      <Link href="/academy" className="mt-auto px-5 py-4 border-t border-white/[0.08] flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-full bg-[#f97316] flex items-center justify-center text-[12px] font-bold text-white shrink-0">
           {initials}
         </div>

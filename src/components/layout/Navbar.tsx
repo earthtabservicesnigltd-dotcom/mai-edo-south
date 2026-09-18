@@ -272,7 +272,7 @@ export function Navbar() {
             <div className="w-px h-4 bg-white/20" />
             {user ? (
               <div className="flex items-center gap-4">
-                <Link href="/account" className="text-[11px] text-white/70 hover:text-white transition-colors">
+                <Link href="/academy" className="text-[11px] text-white/70 hover:text-white transition-colors">
                   Hello, {user.user_metadata?.first_name?.split(' ')[0] ?? 'Account'}
                 </Link>
                 <button
