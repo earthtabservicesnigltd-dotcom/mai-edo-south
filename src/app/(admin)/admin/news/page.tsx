@@ -106,10 +106,39 @@ export default function AdminNewsPage() {
     }
   }
 
+  // Validate image file size and dimensions
+  async function validateImageFile(file: File): Promise<boolean> {
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size exceeds 5MB limit. Please upload an image under 5MB.')
+      return false
+    }
+
+    return new Promise((resolve) => {
+      const img = new window.Image()
+      img.onload = () => {
+        window.URL.revokeObjectURL(img.src)
+        const ratio = img.width / img.height
+        if (ratio < 1.1) {
+          toast.warning('Tip: This image is portrait/square. A 16:9 landscape image (e.g. 1200×675 px) fits the hero banner best!')
+        } else if (img.width < 600) {
+          toast.warning('Notice: Low resolution. For crisp display across all devices, 1200×675 px or higher is recommended.')
+        }
+        resolve(true)
+      }
+      img.onerror = () => resolve(true)
+      img.src = window.URL.createObjectURL(file)
+    })
+  }
+
   // Upload handler for Create form
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) return
     const file = e.target.files[0]
+    const valid = await validateImageFile(file)
+    if (!valid) {
+      e.target.value = ''
+      return
+    }
     setUploadingImage(true)
     try {
       const supabase = supabaseBrowser()
@@ -130,6 +159,11 @@ export default function AdminNewsPage() {
   async function handleEditImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) return
     const file = e.target.files[0]
+    const valid = await validateImageFile(file)
+    if (!valid) {
+      e.target.value = ''
+      return
+    }
     setEditUploadingImage(true)
     try {
       const supabase = supabaseBrowser()
@@ -470,7 +504,7 @@ export default function AdminNewsPage() {
                       <Upload className="w-3.5 h-3.5" />
                       {uploadingImage ? 'Uploading Image...' : 'Choose File from Device'}
                     </label>
-                    {form.image_url ? (
+                    {form.image_url && (
                       <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
                         <Image
                           src={form.image_url}
@@ -488,9 +522,13 @@ export default function AdminNewsPage() {
                           <X className="w-3.5 h-3.5" />
                         </button>
                       </div>
-                    ) : (
-                      <p className="text-[11px] text-gray-400 mt-2">Landscape, portrait, or square - auto fits beautifully</p>
                     )}
+                    <div className="mt-2.5 flex items-center justify-between text-[11px] text-gray-500 bg-white/80 border border-gray-100 rounded-lg px-2.5 py-1.5">
+                      <span className="font-medium text-[#01381d]">
+                        📐 <strong>Recommended:</strong> 1200 × 675 px (16:9 ratio)
+                      </span>
+                      <span className="text-gray-400">Max 5MB</span>
+                    </div>
                   </div>
                 </div>
 
@@ -895,6 +933,12 @@ export default function AdminNewsPage() {
                       </button>
                     </div>
                   ) : null}
+                  <div className="mt-2.5 flex items-center justify-between text-[11px] text-gray-500 bg-white/80 border border-gray-100 rounded-lg px-2.5 py-1.5">
+                    <span className="font-medium text-[#01381d]">
+                      📐 <strong>Recommended:</strong> 1200 × 675 px (16:9 ratio)
+                    </span>
+                    <span className="text-gray-400">Max 5MB</span>
+                  </div>
                 </div>
               </div>
 

@@ -122,7 +122,7 @@ export default function NewsDetailPage() {
       {/* FEATURED IMAGE CONTAINER */}
       {article.image_url && (
         <section className="max-w-4xl mx-auto px-4 -mt-8 sm:-mt-12 md:-mt-14 relative z-20">
-          <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl bg-[#012613] border border-white/10">
+          <div className="relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl bg-[#012613] border border-white/10">
             <Image 
               src={article.image_url} 
               alt={article.title} 
