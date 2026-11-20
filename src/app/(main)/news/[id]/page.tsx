@@ -9,6 +9,22 @@ const TAG_COLORS: Record<string, string> = {
   Community: 'bg-green-100 text-green-700',
   Politics: 'bg-blue-100 text-blue-700',
   Development: 'bg-purple-100 text-purple-700',
+  'Press Release': 'bg-amber-100 text-amber-700',
+  Announcement: 'bg-teal-100 text-teal-700',
+}
+
+function shareArticle(platform: string, title: string) {
+  if (typeof window === 'undefined') return
+  const url = window.location.href
+  const links: Record<string, string> = {
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${url}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(title + '\n' + url)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+  }
+  if (links[platform]) {
+    window.open(links[platform], '_blank')
+  }
 }
 
 export default function NewsDetailPage() {
@@ -24,6 +40,7 @@ export default function NewsDetailPage() {
           setArticle(data.article)
           setLoading(false)
         })
+        .catch(() => setLoading(false))
     }
   }, [id])
 
@@ -51,35 +68,74 @@ export default function NewsDetailPage() {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* HERO IMAGE / HEADER */}
-      <section className="relative h-[50vh] min-h-[400px] w-full bg-[#01381d]">
-        {article.image_url && (
-          <Image 
-            src={article.image_url} 
-            alt={article.title} 
-            fill 
-            className="object-cover opacity-60" 
-            priority
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#01381d] via-[#01381d]/60 to-transparent" />
-        
-        <div className="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto p-6 md:p-10 text-white">
-          <Link href="/news" className="inline-flex items-center gap-2 pr-4 text-white/80 hover:text-white text-sm font-semibold mb-4 transition-colors">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+      {/* HERO / HEADER SECTION */}
+      <section className="relative bg-gradient-to-br from-[#01381d] via-[#012d17] to-[#015b2d] text-white pt-8 pb-12 sm:pb-16 md:pb-20 px-4 overflow-hidden">
+        {/* Subtle decorative circles aligned with main site branding */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#f97316]/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto relative z-10">
+          <Link 
+            href="/news" 
+            className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm font-semibold mb-6 transition-colors group"
+          >
+            <span className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-[#f97316] flex items-center justify-center transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </span>
             Back to News
           </Link>
           
-          <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-4 ${TAG_COLORS[article.tag] ?? 'bg-gray-100 text-gray-700'}`}>
-            {article.tag}
-          </span>
-          <h1 className="font-heading text-4xl md:text-5xl leading-tight mb-4">{article.title}</h1>
-          <p className="text-gray-300 text-sm">{formatDate(article.date)}</p>
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${TAG_COLORS[article.tag] ?? 'bg-white/20 text-white'}`}>
+              {article.tag}
+            </span>
+            <span className="text-white/40 text-sm">•</span>
+            <p className="text-gray-300 text-xs sm:text-sm font-medium">
+              📅 {formatDate(article.date)}
+            </p>
+          </div>
+          
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-5xl leading-tight text-white mb-4">
+            {article.title}
+          </h1>
+
+          {/* Social share buttons */}
+          <div className="flex items-center gap-2 pt-2">
+            <span className="text-xs text-white/60 font-medium mr-1">Share:</span>
+            {['twitter', 'facebook', 'whatsapp', 'linkedin'].map(p => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => shareArticle(p, article.title)}
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-[#f97316] hover:text-white transition-colors flex items-center justify-center text-xs font-bold text-white/90"
+                title={`Share on ${p}`}
+              >
+                {p === 'twitter' ? '𝕏' : p === 'facebook' ? 'f' : p === 'whatsapp' ? '💬' : 'in'}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* FEATURED IMAGE CONTAINER */}
+      {article.image_url && (
+        <section className="max-w-4xl mx-auto px-4 -mt-8 sm:-mt-12 md:-mt-14 relative z-20">
+          <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl bg-[#012613] border border-white/10">
+            <Image 
+              src={article.image_url} 
+              alt={article.title} 
+              fill 
+              className="object-cover object-center" 
+              priority
+            />
+          </div>
+        </section>
+      )}
+
       {/* ARTICLE CONTENT */}
-      <section className="py-12 md:py-16">
+      <section className="py-10 md:py-16">
         <div className="max-w-3xl mx-auto px-4">
           {/* Render full content. Using whitespace-pre-wrap preserves line breaks from the admin textarea */}
           <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
