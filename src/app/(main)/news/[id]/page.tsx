@@ -31,6 +31,7 @@ export default function NewsDetailPage() {
   const { id } = useParams()
   const [article, setArticle] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [imgDimensions, setImgDimensions] = useState<{ width: number; height: number; ratio: number } | null>(null)
 
   useEffect(() => {
     if (id) {
@@ -43,6 +44,22 @@ export default function NewsDetailPage() {
         .catch(() => setLoading(false))
     }
   }, [id])
+
+  useEffect(() => {
+    if (article?.image_url) {
+      const img = new window.Image()
+      img.src = article.image_url
+      img.onload = () => {
+        if (img.naturalWidth && img.naturalHeight) {
+          setImgDimensions({
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+            ratio: img.naturalWidth / img.naturalHeight,
+          })
+        }
+      }
+    }
+  }, [article?.image_url])
 
   if (loading) {
     return (
@@ -122,13 +139,33 @@ export default function NewsDetailPage() {
       {/* FEATURED IMAGE CONTAINER */}
       {article.image_url && (
         <section className="max-w-4xl mx-auto px-4 -mt-8 sm:-mt-12 md:-mt-14 relative z-20">
-          <div className="relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl">
-            <Image 
+          <div
+            className={`mx-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 flex items-center justify-center ${
+              imgDimensions && imgDimensions.ratio < 0.95
+                ? 'max-w-md md:max-w-lg'
+                : 'w-full'
+            }`}
+            style={{
+              aspectRatio: imgDimensions ? `${imgDimensions.width} / ${imgDimensions.height}` : undefined,
+              maxHeight: '80vh',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
               src={article.image_url} 
               alt={article.title} 
-              fill 
-              className="object-cover object-center" 
-              priority
+              className="w-full h-full object-cover object-center block"
+              loading="eager"
+              onLoad={(e) => {
+                const target = e.currentTarget
+                if (target.naturalWidth && target.naturalHeight) {
+                  setImgDimensions({
+                    width: target.naturalWidth,
+                    height: target.naturalHeight,
+                    ratio: target.naturalWidth / target.naturalHeight,
+                  })
+                }
+              }}
             />
           </div>
         </section>

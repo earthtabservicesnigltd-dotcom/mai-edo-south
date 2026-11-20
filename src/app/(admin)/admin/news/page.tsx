@@ -505,13 +505,12 @@ export default function AdminNewsPage() {
                       {uploadingImage ? 'Uploading Image...' : 'Choose File from Device'}
                     </label>
                     {form.image_url && (
-                      <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                        <Image
+                      <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center p-2 min-h-40">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           src={form.image_url}
                           alt="Cover Preview"
-                          width={400}
-                          height={160}
-                          className="w-full h-32 object-cover object-center"
+                          className="max-h-56 w-auto max-w-full rounded object-contain shadow-sm"
                         />
                         <button
                           type="button"
@@ -915,13 +914,12 @@ export default function AdminNewsPage() {
                     {editUploadingImage ? 'Uploading Image...' : 'Replace Cover Image'}
                   </label>
                   {editForm.image_url ? (
-                    <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                      <Image
+                    <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center p-2 min-h-40">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={editForm.image_url}
                         alt="Preview"
-                        width={400}
-                        height={160}
-                        className="w-full h-32 object-cover object-center"
+                        className="max-h-56 w-auto max-w-full rounded object-contain shadow-sm"
                       />
                       <button
                         type="button"
